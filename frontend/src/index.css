@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #ff5733;
+  --dark: #18181b;
+  --light: #f5f5f5;
+  --dim: #c6c6c6;
+}
+@font-face {
+  font-family: "heading";
+  src: url("/fonts/heading.woff2");
+}
+
+html, body{
+  width: -100%;
+  height: -100%;
+  box-sizing: border-box;
+  background-color: var(--dark);
+  color: var(--light);
+  font-family: "Inter", sans-serif;
+}
+
+.head-txt{
+  font-family: heading;
+}
+.prime-bg{
+  background-color: var(--accent);
+}
+.dark-bg{
+  background-color: var(--dark);
+}
+.light-bg{
+  background-color: var(--light);
+}
+.prime-txt{
+  color: var(--accent);
+}
+.dark-txt{
+  color: var(--dark);
+}
+.light-txt{
+  color: var(--light);
+}
+.dim-txt{
+  color: var(--dim);
+}
