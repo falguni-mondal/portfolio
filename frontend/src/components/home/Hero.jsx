@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 
 const Hero = () => {
   const heroRef = useRef(null);
+  const fillRef = useRef(null); // Reference for the directional hover blob
 
   // --- CLOCK STATE ---
   const [time, setTime] = useState(new Date());
@@ -42,7 +43,8 @@ const Hero = () => {
         scale: 1.05, 
         opacity: 0, 
         filter: "blur(12px)", 
-        y: 10 
+        y: 10,
+        willChange: "filter, transform, opacity"
       });
 
       // Physical Sliding Door state
@@ -54,6 +56,9 @@ const Hero = () => {
 
       gsap.set(".loc-time", { y: 20, opacity: 0 });
       gsap.set(".book-badge-wrap", { scale: 0 });
+
+      // Center the directional hover blob precisely on its own coordinates
+      gsap.set(fillRef.current, { xPercent: -50, yPercent: -50, scale: 0 });
 
       // --- ANIMATION TIMELINE ---
       tl.to(
@@ -75,17 +80,26 @@ const Hero = () => {
           },
           "hero-reveal",
         )
-        // High-end cinematic blur to focus reveal
+        // High-end cinematic reveal (Physical Movement & Opacity)
         .to(
           ".first-name",
           {
             scale: 1,
             opacity: 1,
-            filter: "blur(0px)",
             y: 0,
-            duration: 2.2,
-            ease: "power3.inOut",
+            duration: 2.4,
+            ease: "power3.out",
             force3D: true,
+          },
+          "hero-reveal"
+        )
+        // Decoupled Blur Animation
+        .to(
+          ".first-name",
+          {
+            filter: "blur(0px)",
+            duration: 1.8,
+            ease: "power2.inOut",
           },
           "hero-reveal"
         )
@@ -125,15 +139,41 @@ const Hero = () => {
     { scope: heroRef },
   );
 
+  // --- DIRECTIONAL HOVER LOGIC ---
+  const handleMouseEnter = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    gsap.set(fillRef.current, { top: y, left: x });
+    gsap.to(fillRef.current, {
+      scale: 1,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  };
+
+  const handleMouseLeave = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    gsap.to(fillRef.current, {
+      top: y,
+      left: x,
+      scale: 0,
+      duration: 0.5,
+      ease: "power3.out",
+    });
+  };
+
   return (
     <section
       ref={heroRef}
       className="h-[calc(100dvh-60px)] relative overflow-hidden"
       id="hero-section"
     >
-      {/* Added lg:px-10 to match the bottom container */}
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
-        {/* Added -ml-[1vw] for mobile and lg:-ml-[0.5vw] for desktop to pull the text flush left to counter the font's internal side-bearing */}
         <h1 className="my-name uppercase text-[23.5vw] lg:text-[25vw] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
           <span className="first-name relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]">
             falguni
@@ -159,7 +199,7 @@ const Hero = () => {
           <div className="loc-time body-txt text-left mt-6 lg:mt-12 text-[0.65rem] lg:text-[0.75rem] font-medium uppercase tracking-[0.2em] dim-txt flex items-center gap-3 w-full">
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
-              Based in Kolkata, India
+              Based in Durgapur, India
             </span>
             <span className="w-[1px] h-[12px] bg-zinc-600"></span>
             <span>
@@ -184,17 +224,28 @@ const Hero = () => {
           </div>
 
           <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 z-20">
-            {/* CSS Hover Wrapper */}
-            <div className="w-[110px] h-[110px] lg:w-[140px] lg:h-[140px] prime-bg rounded-full flex items-center justify-center text-zinc-900 cursor-pointer shadow-xl hover:scale-105 transition-transform duration-300">
+            {/* REMOVED: hover:scale-105 and transition-transform */}
+            <div 
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              className="w-[110px] h-[110px] lg:w-[140px] lg:h-[140px] prime-bg rounded-full flex items-center justify-center text-zinc-900 cursor-pointer shadow-xl relative overflow-hidden group"
+            >
+              {/* Expanding Hover Fill Blob */}
+              <div
+                ref={fillRef}
+                className="absolute w-[250%] aspect-square rounded-full bg-[#f3f3f3] pointer-events-none z-0"
+              ></div>
+
+              {/* ADDED: transition-transform duration-500 and group-hover:rotate-[45deg] */}
               <Icon
                 icon="material-symbols:arrow-outward"
-                className="absolute text-4xl lg:text-5xl pointer-events-none"
+                className="absolute text-4xl lg:text-5xl pointer-events-none z-10 transition-all duration-500 ease-out group-hover:text-[#FF5733] group-hover:rotate-[20deg]"
               />
 
               {/* Infinite Spin SVG */}
               <svg
                 viewBox="0 0 100 100"
-                className="w-full h-full animate-[spin_8s_linear_infinite] pointer-events-none"
+                className="w-full h-full animate-[spin_8s_linear_infinite] pointer-events-none z-10 relative transition-colors duration-300 group-hover:text-zinc-900"
               >
                 <path
                   id="circlePath"
