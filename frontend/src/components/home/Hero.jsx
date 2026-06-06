@@ -256,9 +256,7 @@ const Hero = () => {
                   className="text-[0.6rem] uppercase tracking-[0.18em]"
                   fill="currentColor"
                 >
-                  <textPath href="#circlePath" startOffset="0%">
-                    book a call • book a call •
-                  </textPath>
+                  <textPath href="#circlePath" startOffset="0%">• book a call • book a call</textPath>
                 </text>
               </svg>
             </div>
