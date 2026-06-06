@@ -2,13 +2,9 @@
 
 :root {
   --accent: #ff5733;
-  --dark: #18181b;
-  --light: #f5f5f5;
-  --dim: #c6c6c6;
-}
-@font-face {
-  font-family: "heading";
-  src: url("/fonts/heading.woff2");
+  --dark: #0e0d0d;
+  --light: #f3f3f3;
+  --dim: #c3c3c3;
 }
 
 html, body{
@@ -21,7 +17,10 @@ html, body{
 }
 
 .head-txt{
-  font-family: heading;
+  font-family: "Instrument Serif", serif;
+}
+.body-txt{
+  font-family: "Inter", sans-serif;
 }
 .prime-bg{
   background-color: var(--accent);

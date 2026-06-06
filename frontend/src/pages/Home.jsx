@@ -3,7 +3,7 @@ import Hero from '../components/home/Hero'
 
 const Home = () => {
   return (
-    <div className='w-full px-5 '>
+    <div className='w-full h-[500vh]'>
         <Hero />
     </div>
   )

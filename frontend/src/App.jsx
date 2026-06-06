@@ -4,11 +4,11 @@ import PageRouter from "./router/PageRouter";
 
 const App = () => {
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[1600px] mx-auto">
       <header className="w-full">
         <Navbar />
       </header>
-      <main className="w-full pt-[80px]">
+      <main className="w-full">
         <PageRouter />
       </main>
     </div>
