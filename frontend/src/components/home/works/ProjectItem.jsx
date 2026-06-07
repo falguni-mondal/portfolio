@@ -33,10 +33,14 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
       ref={itemRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="w-full py-16 lg:py-20 border-b border-zinc-800 cursor-pointer group relative overflow-hidden"
+      className="w-full py-10 lg:py-18 border-b border-zinc-800 cursor-pointer group relative overflow-hidden"
     >
-      {/* Animated Bottom Line */}
-      <div className="absolute bottom-0 left-0 w-full h-[0.5px] bg-[#FF5733] transform scale-x-0 origin-center transition-transform duration-700 ease-out lg:group-hover:scale-x-100 z-10" />
+      {/* FIXED: Changed to h-[2px] and added will-change-transform to force consistent GPU pixel rendering */}
+      <div 
+        className={`absolute bottom-0 left-0 w-full h-[1px] bg-[#FF5733] transform origin-center transition-transform duration-700 ease-out z-20 will-change-transform ${
+          activeIndex === index ? 'scale-x-100' : 'scale-x-0'
+        }`} 
+      />
 
       {/* THE NEW GRID LAYOUT: Organizes the row into 12 perfect columns on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-6 items-center relative z-10 w-full">
@@ -44,7 +48,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
         {/* NUMBER (Cols 1-2): Locks to the far left */}
         <div className="lg:col-span-2 flex items-start">
           <span
-            className={`text-2xl lg:text-4xl italic head-txt font-medium transition-colors duration-500 lg:group-hover:text-[#FF5733] ${activeIndex === index ? 'text-[#FF5733]' : 'text-transparent'}`}
+            className={`text-3xl lg:text-5xl italic head-txt font-medium transition-colors duration-500 lg:group-hover:text-[#FF5733] ${activeIndex === index ? 'text-[#FF5733]' : 'text-transparent'}`}
             style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}
           >
             0{index + 1}
@@ -53,8 +57,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
 
         {/* TITLE (Cols 3-8): Placed directly in the middle of the monitor */}
         <div className="lg:col-span-6">
-          {/* FIXED: Added lg:group-hover:text-zinc-600 to dim the text when the user hovers over the row */}
-          <h3 className="head-txt text-4xl lg:text-5xl xl:text-[4.5rem] leading-[1.05em] text-[#f3f3f3] transition-all duration-500 transform lg:group-hover:translate-x-6 lg:group-hover:text-zinc-500 will-change-transform">
+          <h3 className="text-4xl lg:text-5xl xl:text-[4rem] leading-[1.05em] text-[#f3f3f3] transition-all duration-500 transform lg:group-hover:-translate-x-10 lg:group-hover:text-zinc-500 will-change-transform">
             {project.title}
           </h3>
         </div>
@@ -65,7 +68,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
             {project.description}
           </p>
           
-          <div className="mt-6 flex items-center gap-2 text-[#FF5733] transition-all duration-500 opacity-100 lg:opacity-0 lg:group-hover:opacity-100">
+          <div className={`mt-6 flex items-center gap-2 transition-all duration-500 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 ${activeIndex === index ? 'text-[#FF5733]' : 'text-transparent'}`}>
             <span className="text-[0.65rem] uppercase tracking-[0.2em] font-bold">
               Explore
             </span>

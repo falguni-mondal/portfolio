@@ -5,7 +5,9 @@ import { Icon } from "@iconify/react";
 
 const Hero = () => {
   const heroRef = useRef(null);
-  const fillRef = useRef(null); // Reference for the directional hover blob
+  const btnRef = useRef(null);
+  const textRef = useRef(null);
+  const fillRef = useRef(null);
 
   // --- CLOCK STATE ---
   const [time, setTime] = useState(new Date());
@@ -32,13 +34,12 @@ const Hero = () => {
     () => {
       const tl = gsap.timeline();
 
-      // --- INITIAL STATES (PREMIUM) ---
+      // --- INITIAL STATES ---
       gsap.set(".hero-img", {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
       });
       gsap.set(".hero-img img", { scale: 1.2 });
 
-      // Cinematic Lens Focus state
       gsap.set(".first-name", { 
         scale: 1.05, 
         opacity: 0, 
@@ -47,7 +48,6 @@ const Hero = () => {
         willChange: "filter, transform, opacity"
       });
 
-      // Physical Sliding Door state
       gsap.set(".hero-txt", {
         yPercent: 120,
         skewY: 6,
@@ -57,8 +57,8 @@ const Hero = () => {
       gsap.set(".loc-time", { y: 20, opacity: 0 });
       gsap.set(".book-badge-wrap", { scale: 0 });
 
-      // Center the directional hover blob precisely on its own coordinates
-      gsap.set(fillRef.current, { xPercent: -50, yPercent: -50, scale: 0 });
+      // Initialize the liquid fill for the CTA button
+      gsap.set(fillRef.current, { xPercent: -50, yPercent: 100 });
 
       // --- ANIMATION TIMELINE ---
       tl.to(
@@ -80,7 +80,6 @@ const Hero = () => {
           },
           "hero-reveal",
         )
-        // High-end cinematic reveal (Physical Movement & Opacity)
         .to(
           ".first-name",
           {
@@ -93,7 +92,6 @@ const Hero = () => {
           },
           "hero-reveal"
         )
-        // Decoupled Blur Animation
         .to(
           ".first-name",
           {
@@ -103,7 +101,6 @@ const Hero = () => {
           },
           "hero-reveal"
         )
-        // Solid physical mask reveal
         .to(
           ".hero-txt",
           {
@@ -125,7 +122,6 @@ const Hero = () => {
           },
           "hero-reveal+=1.0",
         )
-        // Clean, direct, bounce-free scale pop
         .to(
           ".book-badge-wrap",
           {
@@ -139,31 +135,42 @@ const Hero = () => {
     { scope: heroRef },
   );
 
-  // --- DIRECTIONAL HOVER LOGIC ---
-  const handleMouseEnter = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  // --- MAGNETIC BUTTON INTERACTION LOGIC --- //
 
-    gsap.set(fillRef.current, { top: y, left: x });
-    gsap.to(fillRef.current, {
-      scale: 1,
-      duration: 0.5,
-      ease: "power3.out",
-    });
+  const handleMouseEnter = () => {
+    gsap.killTweensOf(fillRef.current);
+    gsap.killTweensOf(textRef.current);
+
+    gsap.fromTo(fillRef.current, 
+      { yPercent: 100, xPercent: -50 }, 
+      { yPercent: -25, xPercent: -50, duration: 0.8, ease: 'power3.out' }
+    );
+    gsap.to(textRef.current, { color: '#18181b', duration: 0.3 });
   };
 
-  const handleMouseLeave = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+  const handleMouseMove = (e) => {
+    if (!btnRef.current || !textRef.current) return;
+    
+    const { left, top, width, height } = btnRef.current.getBoundingClientRect();
+    const x = e.clientX - (left + width / 2);
+    const y = e.clientY - (top + height / 2);
 
-    gsap.to(fillRef.current, {
-      top: y,
-      left: x,
-      scale: 0,
-      duration: 0.5,
-      ease: "power3.out",
+    gsap.to(btnRef.current, { x: x * 0.5, y: y * 0.5, duration: 0.6, ease: 'power3.out' });
+    gsap.to(textRef.current, { x: x * 0.2, y: y * 0.2, duration: 0.6, ease: 'power3.out' });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.killTweensOf(fillRef.current);
+    gsap.killTweensOf(textRef.current);
+
+    gsap.to(fillRef.current, { yPercent: -150, xPercent: -50, duration: 0.6, ease: 'power3.inOut' });
+    gsap.to(textRef.current, { color: '#f3f3f3', duration: 0.5 });
+
+    gsap.to([btnRef.current, textRef.current], {
+      x: 0,
+      y: 0,
+      duration: 0.8,
+      ease: 'elastic.out(1.2, 0.4)',
     });
   };
 
@@ -223,43 +230,33 @@ const Hero = () => {
             />
           </div>
 
+          {/* THE WRAPPER: Handles the initial timeline scale animation */}
           <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 z-20">
-            {/* REMOVED: hover:scale-105 and transition-transform */}
-            <div 
+            
+            {/* THE MAGNETIC BUTTON */}
+            <button
+              ref={btnRef}
               onMouseEnter={handleMouseEnter}
+              onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="w-[110px] h-[110px] lg:w-[140px] lg:h-[140px] prime-bg rounded-full flex items-center justify-center text-zinc-900 cursor-pointer shadow-xl relative overflow-hidden group"
+              className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none shadow-xl"
             >
-              {/* Expanding Hover Fill Blob */}
-              <div
+              {/* Liquid Fill */}
+              <div 
                 ref={fillRef}
-                className="absolute w-[250%] aspect-square rounded-full bg-[#f3f3f3] pointer-events-none z-0"
+                className="absolute top-0 left-1/2 w-[150%] h-[150%] bg-[#f3f3f3] rounded-[50%] z-0 pointer-events-none"
               ></div>
-
-              {/* ADDED: transition-transform duration-500 and group-hover:rotate-[45deg] */}
-              <Icon
-                icon="material-symbols:arrow-outward"
-                className="absolute text-4xl lg:text-5xl pointer-events-none z-10 transition-all duration-500 ease-out group-hover:text-[#FF5733] group-hover:rotate-[20deg]"
-              />
-
-              {/* Infinite Spin SVG */}
-              <svg
-                viewBox="0 0 100 100"
-                className="w-full h-full animate-[spin_8s_linear_infinite] pointer-events-none z-10 relative transition-colors duration-300 group-hover:text-zinc-900"
+              
+              {/* Text + Arrow */}
+              <span 
+                ref={textRef} 
+                className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
               >
-                <path
-                  id="circlePath"
-                  d="M 50, 50 m -34, 0 a 34,34 0 1,1 68,0 a 34,34 0 1,1 -68,0"
-                  fill="transparent"
-                />
-                <text
-                  className="text-[0.6rem] uppercase tracking-[0.18em]"
-                  fill="currentColor"
-                >
-                  <textPath href="#circlePath" startOffset="0%">• book a call • book a call</textPath>
-                </text>
-              </svg>
-            </div>
+                Connect
+                <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
+              </span>
+            </button>
+
           </div>
         </div>
       </div>

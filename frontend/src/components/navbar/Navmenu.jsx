@@ -41,9 +41,9 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
 
   const navLinks = [
     { title: 'Works', path: '/#works' },
-    { title: 'Lab', path: '/#lab' },
     { title: 'About', path: '/#about' },
-    { title: 'Certs', path: '/#certifications' }, // Changed to 'Certs' to prevent text cutoff
+    { title: 'Lab', path: '/#lab' },
+    { title: 'Certs', path: '/#certifications' },
   ];
 
   return (

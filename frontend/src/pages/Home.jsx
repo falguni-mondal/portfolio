@@ -1,8 +1,9 @@
 import React from 'react';
 import Hero from '../components/home/Hero';
-// Update this path based on where you saved the canvas file
+import Experience from '../components/home/experience/Experience';
 import HomeCanvasBackground from '../components/home/HomeCanvasBackground';
 import Works from '../components/home/works/Works';
+import About from '../components/home/About';
 
 const Home = () => {
   return (
@@ -12,7 +13,9 @@ const Home = () => {
       </div> */}
       <div className="relative z-10 w-full">
         <Hero />
+        <Experience/>
         <Works />
+        <About />
       </div>
     </main>
   );

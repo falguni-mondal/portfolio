@@ -67,7 +67,7 @@ const VideoPortal = ({ projects, activeIndex }) => {
       className={`fixed z-50 overflow-hidden scale-0 rounded-xl pointer-events-none shadow-2xl ${
         isMobile 
           ? "bottom-8 right-5 w-[200px] h-[125px] origin-bottom-right border border-zinc-800" 
-          : "top-0 left-0 w-[340px] h-[220px] origin-center"
+          : "top-0 left-0 w-[400px] h-[240px] origin-center"
       }`}
     >
       <div ref={filmstripRef} className="w-full h-full flex flex-col will-change-transform">

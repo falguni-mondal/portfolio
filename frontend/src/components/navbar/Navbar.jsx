@@ -83,8 +83,8 @@ const Navbar = () => {
 
   const navLinks = [
     { title: 'Works', path: '/#works' },
-    { title: 'Lab', path: '/#lab' },
     { title: 'About', path: '/#about' },
+    { title: 'Lab', path: '/#lab' },
     { title: 'Certifications', path: '/#certifications' }, 
   ];
 

@@ -48,7 +48,7 @@ const Ring = ({ isMobile }) => {
       y: -0.2, 
       ease: "power2.out",
       scrollTrigger: {
-        trigger: "#works-section",
+        trigger: "#canvas-section",
         start: "top 30%", 
         end: "top -20%", 
         scrub: 1,
@@ -59,7 +59,7 @@ const Ring = ({ isMobile }) => {
       y: 6, 
       ease: "power2.in", 
       scrollTrigger: {
-        trigger: "#works-section",
+        trigger: "#canvas-section",
         start: "bottom 60%", 
         end: "bottom top",   
         scrub: 1,
@@ -68,7 +68,7 @@ const Ring = ({ isMobile }) => {
 
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: "#works-section",
+        trigger: "#canvas-section",
         start: "top top",
         end: "bottom bottom",
         scrub: 1,
