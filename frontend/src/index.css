@@ -14,10 +14,12 @@ html, body{
   background-color: var(--dark);
   color: var(--light);
   font-family: "Inter", sans-serif;
+  user-select: none;
 }
 
 .head-txt{
-  font-family: "Instrument Serif", serif;
+  /* font-family: "Instrument Serif", serif; */
+  font-family: "Playfair Display", serif;
 }
 .body-txt{
   font-family: "Inter", sans-serif;

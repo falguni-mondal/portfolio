@@ -12,10 +12,9 @@ gsap.registerPlugin(ScrollTrigger);
 const Ring = ({ isMobile }) => {
   const { scene } = useGLTF('/falguni_ring_metal.glb');
   
-  // 3-Tier Architecture for flawless physics isolation
-  const scrollGroupRef = useRef(); // Handles X/Y positioning (Entrance/Exit)
-  const mouseGroupRef = useRef();  // Handles precise Mouse tilting
-  const ringRef = useRef();        // Handles GSAP Scroll Scrub rotation & scale
+  const scrollGroupRef = useRef(); 
+  const mouseGroupRef = useRef();  
+  const ringRef = useRef();        
   
   const mouse = useRef({ x: 0, y: -0.8 });
 
@@ -39,15 +38,14 @@ const Ring = ({ isMobile }) => {
       }
     });
 
-    // 1. Initial Position Setup (Applied to the outermost anchor)
-    scrollGroupRef.current.position.set(-2.7, -6, 0); 
+    // FIXED 1: The Object Position
+    // Changed x from -2.7 to -1.8 to pull it closer to the center of the new aspect ratio
+    scrollGroupRef.current.position.set(-2.0, -6, 0); 
     
-    // 2. Initial Rotation Setup (Applied to the innermost ring)
     ringRef.current.rotation.set(-Math.PI / 16, Math.PI / 8, 0);
 
-    // 3. The Entrance Animation (Slides UP to center from bottom)
     gsap.to(scrollGroupRef.current.position, {
-      y: 0, 
+      y: -0.2, 
       ease: "power2.out",
       scrollTrigger: {
         trigger: "#works-section",
@@ -57,7 +55,6 @@ const Ring = ({ isMobile }) => {
       }
     });
 
-    // 4. The Exit Animation (Slides UP to exit at section end)
     gsap.to(scrollGroupRef.current.position, {
       y: 6, 
       ease: "power2.in", 
@@ -69,7 +66,6 @@ const Ring = ({ isMobile }) => {
       }
     });
 
-    // 5. The Interactive Scroll Rotation & Scale
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: "#works-section",
@@ -79,7 +75,7 @@ const Ring = ({ isMobile }) => {
       }
     });
 
-    const targetScale = isMobile ? 0.75 : 0.85;
+    const targetScale = isMobile ? 0.45 : 0.60;
 
     tl.to(ringRef.current.rotation, {
       y: -Math.PI / 2, 
@@ -94,7 +90,6 @@ const Ring = ({ isMobile }) => {
     }, 0);
   }, [isMobile]);
 
-  // 6. Flawless Mouse Parallax (Zero Z-Axis swinging)
   useFrame(() => {
     if (mouseGroupRef.current) {
       const targetX = (mouse.current.y * Math.PI) / 16; 
@@ -109,19 +104,12 @@ const Ring = ({ isMobile }) => {
 
   return (
     <Float speed={1.5} rotationIntensity={0.05} floatIntensity={0.3}>
-      {/* Tier 1: Anchor handles GSAP positioning (x: -2.7) */}
       <group ref={scrollGroupRef}>
-        
-        {/* Tier 2: Pivot sits exactly at the anchor's local 0,0,0, so it tilts perfectly */}
         <group ref={mouseGroupRef}>
-          
-          {/* Tier 3: The Ring rotates on scroll */}
           <group ref={ringRef} scale={initialScale}>
             <primitive object={scene} position={[0, 0, 0]} />
           </group>
-
         </group>
-
       </group>
     </Float>
   );
@@ -146,7 +134,9 @@ const HomeCanvasBackground = () => {
 
   return (
     <Canvas 
-      camera={{ position: [0, 0, 5], fov: 45 }}
+      // FIXED 2: The Camera Pan
+      // Moved the camera X from 0 to -0.5. This effectively pans the entire scene slightly right
+      camera={{ position: [-0.5, -0.5, 5], fov: 45 }}
       dpr={[1, 1.5]} 
       gl={{ powerPreference: "high-performance", antialias: false }}
     >
@@ -168,7 +158,7 @@ const HomeCanvasBackground = () => {
 
       <EffectComposer disableNormalPass>
         {!isMobile && <Noise opacity={0.02} />}
-        <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.3} mipmapBlur />
+        <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.1} mipmapBlur />
         <Vignette eskil={false} offset={0.1} darkness={1.1} />
       </EffectComposer>
     </Canvas>

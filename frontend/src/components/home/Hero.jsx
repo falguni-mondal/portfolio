@@ -170,7 +170,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="h-[calc(100dvh-60px)] relative overflow-hidden"
+      className="h-[calc(100svh-60px)] relative lg:overflow-hidden"
       id="hero-section"
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
@@ -182,16 +182,16 @@ const Hero = () => {
       </div>
 
       <div className="bottom-hero w-full flex flex-col lg:flex-row mt-10 lg:mt-0">
-        <div className="bottom-hero-left w-full lg:w-1/2 head-txt text-[2.4rem] lg:text-[3.2rem] px-5 lg:px-10 leading-[1.2em]">
+        <div className="bottom-hero-left w-full lg:w-1/2 head-txt text-[1.8rem] lg:text-[3rem] px-5 lg:px-10 leading-[1.2em]">
           <div className="overflow-hidden py-2 -my-2">
             <h2 className="w-full hero-txt">
-              Full stack <span className="italic prime-txt">MERN</span>{" "}
+              Full stack <span className="italic prime-txt body-txt">MERN</span>{" "}
               developer
             </h2>
           </div>
 
           <div className="overflow-hidden py-2 -my-2 mt-1 lg:mt-0">
-            <h2 className="w-full text-right dim-txt hero-txt">
+            <h2 className="w-full text-right hero-txt">
               Building your brand's unfair advantage.
             </h2>
           </div>

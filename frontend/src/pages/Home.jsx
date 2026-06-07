@@ -7,9 +7,9 @@ import Works from '../components/home/works/Works';
 const Home = () => {
   return (
     <main className="relative w-full">
-      <div className="fixed inset-0 w-full h-screen pointer-events-none z-0 translate-y-[15vh] lg:translate-y-[20vh]">
+      {/* <div className="fixed inset-0 w-full h-[115vh] lg:h-[130vh] pointer-events-none z-0">
         <HomeCanvasBackground />
-      </div>
+      </div> */}
       <div className="relative z-10 w-full">
         <Hero />
         <Works />
