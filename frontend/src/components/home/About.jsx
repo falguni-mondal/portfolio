@@ -73,7 +73,7 @@ const About = () => {
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        {/* EDITORIAL HEADER: Now acts as a sleek top border visible on all devices */}
+        {/* EDITORIAL HEADER */}
         <div className="w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-800 pb-4 about-elem">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Developer )
@@ -86,37 +86,43 @@ const About = () => {
         {/* THE SPLIT GRID BIOGRAPHY */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-12 lg:gap-x-12 w-full">
           
-          {/* LEFT SIDE: Brutalist Introduction (Now acting as the main <h2>) */}
-          <div className="lg:col-span-5 flex flex-col justify-start about-elem">
-            <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter">
-              Hi, I am <br className="hidden lg:block"/>
-              <span className="text-[#FF5733] italic head-txt pr-2">Falguni.</span>
-            </h2>
+          {/* LEFT SIDE: Brutalist Introduction & The Academic Cornerstone */}
+          <div className="lg:col-span-5 flex flex-col justify-between h-full">
+            
+            <div className="about-elem">
+              <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter">
+                Hi, I am <br className="hidden lg:block"/>
+                <span className="text-[#FF5733] italic head-txt pr-2">Falguni.</span>
+              </h2>
+            </div>
+
+            {/* THE CORNERSTONE: Anchors to the bottom of the grid row */}
+            <div className="mt-12 lg:mt-auto about-elem border-t border-zinc-800/50 lg:border-none pt-8 lg:pt-0">
+              <h4 className="lg:text-xl text-zinc-200 font-medium leading-snug">
+                Bachelors in <br className="hidden lg:block"/> Information Technology
+              </h4>
+              <div className="flex items-center gap-3 mt-4 lg:mt-6">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span>
+                <span className="text-xs text-zinc-400 font-medium tracking-[0.15em] uppercase">
+                  Class of <span className="text-[#f3f3f3]">2025</span>
+                </span>
+              </div>
+            </div>
+
           </div>
 
           {/* RIGHT SIDE: Narrative & Tech Stack */}
           <div className="lg:col-span-7 lg:col-start-6 flex flex-col gap-12 lg:gap-16">
             
-            {/* 
-              WRAPPER: 
-              - Mobile: Takes full width so text doesn't squish. 
-              - Desktop: Adds pr-40 to make room for the absolute button. 
-            */}
             <div className="about-elem relative w-full lg:pr-40">
               
-              {/* THE REFINED NARRATIVE */}
               <p className="text-xl lg:text-3xl text-zinc-200 font-medium leading-relaxed max-w-2xl">
                 Helping brands to have their unfair advantage by developing digital adrenaline.
               </p>
               <p className="text-sm lg:text-base text-zinc-400 leading-relaxed max-w-xl mt-6 lg:mt-8">
-                Currently leading full-stack development at a digital ad agency, I specialize in bridging the gap between robust, scalable backend architectures and fluid interactive interfaces. Whether it is building complex e-commerce applications or crafting highly responsive, Awwwards-level web experiences, my philosophy remains straightforward: write clean logic, design with purpose, and deliver digital products that truly perform.
+                Currently leading full-stack development within the agency space, I engineer the intersection of scalable data architecture and seamless UI. Whether building high-volume e-commerce platforms or immersive, Awwwards-level digital experiences, the baseline remains the same. Clean logic. Purpose-driven design. Digital products built for pure performance.
               </p>
 
-              {/* 
-                THE CTA: Advanced Circular Magnetic Button 
-                - Mobile: relative, mt-10 (sits below text nicely)
-                - Desktop: absolute, right-0, top-[85%] (architectural placement)
-              */}
               <button
                 ref={btnRef}
                 onMouseEnter={handleMouseEnter}
@@ -133,7 +139,7 @@ const About = () => {
                   ref={textRef} 
                   className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
                 >
-                  Resume
+                  My resume
                   <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
                 </span>
               </button>
@@ -141,7 +147,7 @@ const About = () => {
             </div>
 
             {/* The Tech Stack / Arsenal */}
-            <div className="pt-10 lg:pt-12 border-t border-zinc-800/50 about-elem">
+            <div className="pt-10 lg:pt-12 border-t border-zinc-800/50 about-elem mt-auto">
               <span className="text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold mb-6 block">
                 Core Arsenal
               </span>

@@ -4,7 +4,7 @@ const ExperienceItem = ({ exp }) => {
   return (
     <div 
       // The 'exp-fade' class allows the parent GSAP ScrollTrigger to find and animate this row
-      className="group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-800 cursor-pointer overflow-hidden px-5 lg:px-10 exp-fade"
+      className="group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-800 cursor-pointer overflow-hidden px-1 lg:px-10 exp-fade"
     >
       
       {/* Animated Orange Baseline */}

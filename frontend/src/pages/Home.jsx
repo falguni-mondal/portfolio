@@ -5,6 +5,8 @@ import HomeCanvasBackground from '../components/home/HomeCanvasBackground';
 import Works from '../components/home/works/Works';
 import About from '../components/home/About';
 import Lab from '../components/home/lab/Lab';
+import Certificates from '../components/home/certificate/Certificates';
+import Contact from '../components/home/contact/Contact';
 
 const Home = () => {
   return (
@@ -18,6 +20,8 @@ const Home = () => {
         <Works />
         <About />
         <Lab />
+        <Certificates />
+        <Contact />
       </div>
     </main>
   );

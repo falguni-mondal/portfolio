@@ -252,7 +252,7 @@ const Hero = () => {
                 ref={textRef} 
                 className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
               >
-                Connect
+                Hey there
                 <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
               </span>
             </button>

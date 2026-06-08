@@ -80,7 +80,7 @@ const Lab = () => {
             </h2>
 
             <p className="text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm">
-              An archive of technical experiments, shader explorations, and creative coding logic that push the boundaries of standard web architecture.
+              A personal archive of passion projects, technical experiments, and creative coding logic built to push the boundaries of my own learning and creativity.
             </p>
           </div>
 
