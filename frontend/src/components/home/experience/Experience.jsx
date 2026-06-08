@@ -39,25 +39,35 @@ const Experience = () => {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="experience-section" className="relative w-full pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 mt-10 lg:mt-14">
+    <section ref={sectionRef} id="experience-section" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 mt-20 lg:mt-24">
       
-      {/* THE HEADER: Massive, elegant, and perfectly centered */}
-      <div className="w-full flex justify-center mb-16 lg:mb-28 pointer-events-none exp-fade">
-        <h2 className="head-txt text-[20vw] lg:text-[11vw] leading-[0.85] tracking-tighter opacity-90 text-center text-[#f3f3f3]">
-          Experience
-        </h2>
-      </div>
-
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      {/* Wrapped everything in the max-w container for flawless left/right edge alignment across the site */}
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        {/* DESKTOP LEDGER HEADER */}
-        <div className="hidden lg:grid grid-cols-12 gap-8 pb-6 border-b border-zinc-800 text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold exp-fade">
-          <div className="col-span-3">Timeframe</div>
-          <div className="col-span-3">Organization</div>
-          <div className="col-span-3">Role</div>
-          <div className="col-span-3 text-right">Key Deliverables</div>
-        </div>
+        {/* COMBINED HEADER ROW: Heading on Left, Flanks on Right */}
+        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between lg:mb-20 border-b border-zinc-800 pb-8 lg:pb-12 exp-fade">
+          
+          {/* BRUTALIST HEADING */}
+          <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6rem] xl:text-[7rem] leading-[0.95em] tracking-tighter">
+            <span className="font-light italic text-zinc-500">
+              Career
+            </span>
+            <br />
+            <span className="text-[#f3f3f3] font-bold pr-2">Chapters.</span>
+          </h2>
 
+          {/* THE METADATA FLANKS (Sitting beside the heading) */}
+          <div className="flex flex-wrap items-center gap-6 lg:gap-12 mt-8 lg:mt-0 lg:pb-3">
+            <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+              ( Career Path )
+            </span>
+            <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+              ( 2025 — Present )
+            </span>
+          </div>
+
+        </div>
+        
         {/* THE EXPERIENCE ROWS */}
         <div className="flex flex-col w-full">
           {EXPERIENCES.map((exp) => (

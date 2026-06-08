@@ -8,6 +8,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
   const itemRef = useRef(null);
+  
+  // Strict active state management for flawless syncing with VideoPortal
+  const isActive = activeIndex === index;
 
   useGSAP(() => {
     let mm = gsap.matchMedia();
@@ -33,50 +36,45 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
       ref={itemRef}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="w-full py-10 lg:py-18 border-b border-zinc-800 cursor-pointer group relative overflow-hidden"
+      // Adopted the LabItem row spacing and open structure
+      className="group relative w-full py-12 lg:py-16 border-b border-zinc-800 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-0 cursor-pointer overflow-hidden px-5 lg:px-10"
     >
-      {/* FIXED: Changed to h-[2px] and added will-change-transform to force consistent GPU pixel rendering */}
+      {/* Animated Orange Baseline (Stable GPU rendering) */}
       <div 
         className={`absolute bottom-0 left-0 w-full h-[1px] bg-[#FF5733] transform origin-center transition-transform duration-700 ease-out z-20 will-change-transform ${
-          activeIndex === index ? 'scale-x-100' : 'scale-x-0'
+          isActive ? 'scale-x-100' : 'scale-x-0'
         }`} 
       />
 
-      {/* THE NEW GRID LAYOUT: Organizes the row into 12 perfect columns on desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-6 items-center relative z-10 w-full">
-        
-        {/* NUMBER (Cols 1-2): Locks to the far left */}
-        <div className="lg:col-span-2 flex items-start">
-          <span
-            className={`text-3xl lg:text-5xl italic head-txt font-medium transition-colors duration-500 lg:group-hover:text-[#FF5733] ${activeIndex === index ? 'text-[#FF5733]' : 'text-transparent'}`}
-            style={{ WebkitTextStroke: '1px rgba(255,255,255,0.3)' }}
-          >
-            0{index + 1}
-          </span>
-        </div>
-
-        {/* TITLE (Cols 3-8): Placed directly in the middle of the monitor */}
-        <div className="lg:col-span-6">
-          <h3 className="text-4xl lg:text-5xl xl:text-[4rem] leading-[1.05em] text-[#f3f3f3] transition-all duration-500 transform lg:group-hover:-translate-x-10 lg:group-hover:text-zinc-500 will-change-transform">
-            {project.title}
-          </h3>
-        </div>
-
-        {/* DESCRIPTION (Cols 9-12): Pushed to the right edge */}
-        <div className="lg:col-span-4 flex flex-col items-start lg:items-end w-full transform transition-all duration-500 lg:group-hover:-translate-x-4">
-          <p className="text-zinc-400 text-sm lg:text-base font-medium leading-relaxed max-w-xs text-left lg:text-right transition-colors duration-500 lg:group-hover:text-[#f3f3f3]">
-            {project.description}
-          </p>
-          
-          <div className={`mt-6 flex items-center gap-2 transition-all duration-500 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 ${activeIndex === index ? 'text-[#FF5733]' : 'text-transparent'}`}>
-            <span className="text-[0.65rem] uppercase tracking-[0.2em] font-bold">
-              Explore
-            </span>
-            <Icon icon="material-symbols:arrow-right-alt-rounded" className="text-xl" />
-          </div>
-        </div>
-
+      {/* 1. NUMBER (Left aligned - No Icon) */}
+      <div className={`w-full lg:w-2/12 flex items-center transition-transform duration-500 ${isActive ? 'lg:translate-x-4 text-[#FF5733]' : 'text-zinc-600'}`}>
+        <span className="text-xs lg:text-sm font-bold tracking-[0.2em] uppercase">
+          0{index + 1}
+        </span>
       </div>
+
+      {/* 2. TITLE (Massive typography pushing right on hover) */}
+      <div className="w-full lg:w-5/12">
+        <h3 className={`text-3xl lg:text-4xl xl:text-5xl font-medium transition-all duration-500 ease-out ${isActive ? 'text-[#f3f3f3] lg:translate-x-4' : 'text-zinc-300'}`}>
+          {project.title}
+        </h3>
+      </div>
+
+      {/* 3. DESCRIPTION (Pushing left on hover) */}
+      <div className="w-full lg:w-3/12 pr-0 lg:pr-10">
+        <p className={`text-sm lg:text-base leading-relaxed transition-all duration-500 ${isActive ? 'text-zinc-300 lg:-translate-x-2' : 'text-zinc-500'}`}>
+          {project.description}
+        </p>
+      </div>
+
+      {/* 4. EXPLORE CTA (Right aligned - Fades in on hover) */}
+      <div className={`w-full lg:w-2/12 flex items-center lg:justify-end gap-2 transition-all duration-500 ${isActive ? 'text-[#FF5733] lg:-translate-x-4' : 'opacity-100 text-zinc-600'}`}>
+        <span className="text-[0.65rem] uppercase tracking-[0.2em] font-bold">
+          Explore
+        </span>
+        <Icon icon="material-symbols:arrow-right-alt-rounded" className="text-xl" />
+      </div>
+
     </div>
   );
 };

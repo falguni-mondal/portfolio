@@ -4,7 +4,7 @@ const ExperienceItem = ({ exp }) => {
   return (
     <div 
       // The 'exp-fade' class allows the parent GSAP ScrollTrigger to find and animate this row
-      className="group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-800 cursor-pointer overflow-hidden lg:-mx-4 lg:px-4 exp-fade"
+      className="group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-800 cursor-pointer overflow-hidden px-5 lg:px-10 exp-fade"
     >
       
       {/* Animated Orange Baseline */}
@@ -33,14 +33,14 @@ const ExperienceItem = ({ exp }) => {
         <h3 className="text-xl lg:text-2xl font-medium text-zinc-300 transition-colors duration-500 lg:group-hover:text-[#f3f3f3] font-light">
           {exp.company}
         </h3>
-        <span className="text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold mt-1 lg:group-hover:text-[#FF5733] transition-colors duration-500">
+        <span className="text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-medium mt-1 lg:group-hover:text-zinc-400 transition-colors duration-500">
           {exp.type}
         </span>
       </div>
 
       {/* 3. ROLE (Inner Right: Pushes slightly Left) */}
       <div className="lg:col-span-3 flex items-center transition-transform duration-500 lg:group-hover:-translate-x-2">
-        <p className="text-base lg:text-lg text-zinc-400 font-medium transition-colors duration-500 lg:group-hover:text-[#f3f3f3]">
+        <p className="text-base lg:text-lg prime-txt font-medium transition-colors duration-500 lg:group-hover:text-[#f3f3f3]">
           {exp.role}
         </p>
       </div>

@@ -4,6 +4,7 @@ import Experience from '../components/home/experience/Experience';
 import HomeCanvasBackground from '../components/home/HomeCanvasBackground';
 import Works from '../components/home/works/Works';
 import About from '../components/home/About';
+import Lab from '../components/home/lab/Lab';
 
 const Home = () => {
   return (
@@ -16,6 +17,7 @@ const Home = () => {
         <Experience/>
         <Works />
         <About />
+        <Lab />
       </div>
     </main>
   );

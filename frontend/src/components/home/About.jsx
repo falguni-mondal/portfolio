@@ -71,7 +71,7 @@ const About = () => {
   return (
     <section ref={sectionRef} id="about-section" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
         {/* EDITORIAL HEADER: Now acts as a sleek top border visible on all devices */}
         <div className="w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-800 pb-4 about-elem">
@@ -108,7 +108,7 @@ const About = () => {
               <p className="text-xl lg:text-3xl text-zinc-200 font-medium leading-relaxed max-w-2xl">
                 Helping brands to have their unfair advantage by developing digital adrenaline.
               </p>
-              <p className="text-sm lg:text-base text-zinc-400 font-medium leading-relaxed max-w-xl mt-6 lg:mt-8">
+              <p className="text-sm lg:text-base text-zinc-400 leading-relaxed max-w-xl mt-6 lg:mt-8">
                 Currently leading full-stack development at a digital ad agency, I specialize in bridging the gap between robust, scalable backend architectures and fluid interactive interfaces. Whether it is building complex e-commerce applications or crafting highly responsive, Awwwards-level web experiences, my philosophy remains straightforward: write clean logic, design with purpose, and deliver digital products that truly perform.
               </p>
 

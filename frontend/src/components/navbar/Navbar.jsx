@@ -82,6 +82,7 @@ const Navbar = () => {
 
 
   const navLinks = [
+    { title: 'Experience', path: '/#experience' },
     { title: 'Works', path: '/#works' },
     { title: 'About', path: '/#about' },
     { title: 'Lab', path: '/#lab' },
