@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
@@ -43,22 +43,86 @@ const MOCK_CERTIFICATES = [
 
 const Certificates = () => {
   const sectionRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   useGSAP(() => {
-    gsap.fromTo(".cert-fade", 
-      { y: 40, opacity: 0 }, 
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
+    let mm = gsap.matchMedia();
+
+    // ==========================================
+    // DESKTOP: Master Timeline Sequence
+    // ==========================================
+    mm.add("(min-width: 1024px)", () => {
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 70%",
+          start: "top 65%",
         }
-      }
-    );
+      });
+
+      tl.to(".editorial-header", { opacity: 1, duration: 1, ease: "power3.out" });
+
+      tl.fromTo(".heading-block",
+        { 
+          y: 120, 
+          skewY: 8, 
+          filter: "blur(12px)", 
+          opacity: 0 
+        },
+        {
+          y: 0,
+          skewY: 0,
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 1.6, 
+          stagger: 0.15,
+          ease: "expo.out", 
+          force3D: true 
+        },
+        "-=0.8"
+      );
+
+      tl.to(".cert-item", 
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.2,
+          stagger: 0.1,
+          ease: "power3.out"
+        },
+        "-=1.2"
+      );
+    });
+
+    // ==========================================
+    // MOBILE / TABLET: Individual ScrollTriggers
+    // ==========================================
+    mm.add("(max-width: 1023px)", () => {
+      
+      // Reset the active state when leaving the entire section
+      ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: "top 50%",
+        end: "bottom 50%",
+        onLeave: () => setActiveIndex(null),
+        onLeaveBack: () => setActiveIndex(null),
+      });
+
+      gsap.to(".editorial-header", 
+        { opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".editorial-header", start: "top 75%" } }
+      );
+
+      gsap.fromTo(".heading-block",
+        { y: 80, skewY: 4, filter: "blur(8px)", opacity: 0 }, 
+        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, stagger: 0.15, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 75%" } }
+      );
+
+      gsap.utils.toArray(".cert-item").forEach((item) => {
+        gsap.to(item, 
+          { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: item, start: "top 75%" } }
+        );
+      });
+    });
+
   }, { scope: sectionRef });
 
   return (
@@ -67,17 +131,23 @@ const Certificates = () => {
       <div className="w-full max-w-[1500px] mx-auto flex flex-col">
         
         {/* COMBINED HEADER ROW */}
-        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-800 pb-8 lg:pb-12 cert-fade">
+        <div className="editorial-header opacity-0 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-800 pb-8 lg:pb-12">
           
-          {/* BRUTALIST HEADING */}
-          <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter">
-            <span className="font-light italic text-zinc-500">
-              Verified
-            </span> 
-            <br />
-            <span className="text-[#f3f3f3] font-bold pr-2">
-              Credentials.
+          {/* HIGH-END MASKED HEADING */}
+          <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex flex-col">
+            
+            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">
+              <span className="heading-block opacity-0 block font-light italic text-zinc-500 origin-bottom-left will-change-transform">
+                Verified
+              </span> 
             </span>
+            
+            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6 -mt-2 lg:-mt-4">
+              <span className="heading-block opacity-0 block text-[#f3f3f3] font-bold pr-2 origin-bottom-left will-change-transform">
+                Credentials.
+              </span>
+            </span>
+
           </h2>
 
           {/* METADATA FLANKS */}
@@ -93,9 +163,15 @@ const Certificates = () => {
         </div>
 
         {/* THE PLAQUE GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 w-full cert-fade">
-          {MOCK_CERTIFICATES.map((cert) => (
-            <CertificateItem key={cert.id} cert={cert} />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 w-full">
+          {MOCK_CERTIFICATES.map((cert, index) => (
+            <CertificateItem 
+              key={cert.id} 
+              cert={cert} 
+              index={index}
+              activeIndex={activeIndex}
+              setActiveIndex={setActiveIndex}
+            />
           ))}
         </div>
 

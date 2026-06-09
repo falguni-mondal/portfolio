@@ -4,7 +4,7 @@ import PageRouter from "./router/PageRouter";
 
 const App = () => {
   return (
-    <div className="w-full max-w-[1600px] mx-auto">
+    <div className="w-full max-w-[1600px] mx-auto overflow-x-clip relative">
       <header className="w-full">
         <Navbar />
       </header>

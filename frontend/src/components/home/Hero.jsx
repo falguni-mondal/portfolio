@@ -32,7 +32,11 @@ const Hero = () => {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline();
+      const tl = gsap.timeline({
+        onComplete: () => {
+          ScrollTrigger.refresh();
+        },
+      });
 
       // --- INITIAL STATES ---
       gsap.set(".hero-img", {
@@ -40,12 +44,12 @@ const Hero = () => {
       });
       gsap.set(".hero-img img", { scale: 1.2 });
 
-      gsap.set(".first-name", { 
-        scale: 1.05, 
-        opacity: 0, 
-        filter: "blur(12px)", 
+      gsap.set(".first-name", {
+        scale: 1.05,
+        opacity: 0,
+        filter: "blur(12px)",
         y: 10,
-        willChange: "filter, transform, opacity"
+        willChange: "filter, transform, opacity",
       });
 
       gsap.set(".hero-txt", {
@@ -90,7 +94,7 @@ const Hero = () => {
             ease: "power3.out",
             force3D: true,
           },
-          "hero-reveal"
+          "hero-reveal",
         )
         .to(
           ".first-name",
@@ -99,7 +103,7 @@ const Hero = () => {
             duration: 1.8,
             ease: "power2.inOut",
           },
-          "hero-reveal"
+          "hero-reveal",
         )
         .to(
           ".hero-txt",
@@ -141,36 +145,52 @@ const Hero = () => {
     gsap.killTweensOf(fillRef.current);
     gsap.killTweensOf(textRef.current);
 
-    gsap.fromTo(fillRef.current, 
-      { yPercent: 100, xPercent: -50 }, 
-      { yPercent: -25, xPercent: -50, duration: 0.8, ease: 'power3.out' }
+    gsap.fromTo(
+      fillRef.current,
+      { yPercent: 100, xPercent: -50 },
+      { yPercent: -25, xPercent: -50, duration: 0.8, ease: "power3.out" },
     );
-    gsap.to(textRef.current, { color: '#18181b', duration: 0.3 });
+    gsap.to(textRef.current, { color: "#18181b", duration: 0.3 });
   };
 
   const handleMouseMove = (e) => {
     if (!btnRef.current || !textRef.current) return;
-    
+
     const { left, top, width, height } = btnRef.current.getBoundingClientRect();
     const x = e.clientX - (left + width / 2);
     const y = e.clientY - (top + height / 2);
 
-    gsap.to(btnRef.current, { x: x * 0.5, y: y * 0.5, duration: 0.6, ease: 'power3.out' });
-    gsap.to(textRef.current, { x: x * 0.2, y: y * 0.2, duration: 0.6, ease: 'power3.out' });
+    gsap.to(btnRef.current, {
+      x: x * 0.5,
+      y: y * 0.5,
+      duration: 0.6,
+      ease: "power3.out",
+    });
+    gsap.to(textRef.current, {
+      x: x * 0.2,
+      y: y * 0.2,
+      duration: 0.6,
+      ease: "power3.out",
+    });
   };
 
   const handleMouseLeave = () => {
     gsap.killTweensOf(fillRef.current);
     gsap.killTweensOf(textRef.current);
 
-    gsap.to(fillRef.current, { yPercent: -150, xPercent: -50, duration: 0.6, ease: 'power3.inOut' });
-    gsap.to(textRef.current, { color: '#f3f3f3', duration: 0.5 });
+    gsap.to(fillRef.current, {
+      yPercent: -150,
+      xPercent: -50,
+      duration: 0.6,
+      ease: "power3.inOut",
+    });
+    gsap.to(textRef.current, { color: "#f3f3f3", duration: 0.5 });
 
     gsap.to([btnRef.current, textRef.current], {
       x: 0,
       y: 0,
       duration: 0.8,
-      ease: 'elastic.out(1.2, 0.4)',
+      ease: "elastic.out(1.2, 0.4)",
     });
   };
 
@@ -232,7 +252,6 @@ const Hero = () => {
 
           {/* THE WRAPPER: Handles the initial timeline scale animation */}
           <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 z-20">
-            
             {/* THE MAGNETIC BUTTON */}
             <button
               ref={btnRef}
@@ -242,21 +261,23 @@ const Hero = () => {
               className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none shadow-xl"
             >
               {/* Liquid Fill */}
-              <div 
+              <div
                 ref={fillRef}
                 className="absolute top-0 left-1/2 w-[150%] h-[150%] bg-[#f3f3f3] rounded-[50%] z-0 pointer-events-none"
               ></div>
-              
+
               {/* Text + Arrow */}
-              <span 
-                ref={textRef} 
+              <span
+                ref={textRef}
                 className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
               >
                 Hey there
-                <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
+                <Icon
+                  icon="material-symbols:arrow-outward-rounded"
+                  className="text-sm lg:text-base"
+                />
               </span>
             </button>
-
           </div>
         </div>
       </div>

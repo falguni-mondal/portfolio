@@ -66,7 +66,7 @@ const VideoPortal = ({ projects, activeIndex }) => {
       // FIXED: Dynamic classes based on isMobile
       className={`fixed z-50 overflow-hidden scale-0 rounded-xl pointer-events-none shadow-2xl ${
         isMobile 
-          ? "bottom-8 right-5 w-[200px] h-[125px] origin-bottom-right border border-zinc-800" 
+          ? "bottom-8 right-10 w-[200px] h-[125px] origin-bottom-right border border-zinc-800" 
           : "top-0 left-0 w-[340px] h-[200px] origin-center"
       }`}
     >

@@ -15,20 +15,92 @@ const Contact = () => {
   const phone = "+91 00000 00000";
 
   useGSAP(() => {
-    gsap.fromTo(".contact-fade", 
-      { y: 40, opacity: 0 }, 
-      {
-        y: 0,
-        opacity: 1,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
+    let mm = gsap.matchMedia();
+
+    // ==========================================
+    // DESKTOP: Master Timeline Sequence
+    // ==========================================
+    mm.add("(min-width: 1024px)", () => {
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
+          start: "top 65%",
         }
-      }
-    );
+      });
+
+      // 0. Editorial Header
+      tl.to(".editorial-header", { opacity: 1, duration: 1, ease: "power3.out" });
+
+      // 1. Cinematic Skew Reveal for the Heading
+      tl.fromTo(".heading-block",
+        { 
+          y: 120, 
+          skewY: 8, 
+          filter: "blur(12px)", 
+          opacity: 0 
+        },
+        {
+          y: 0,
+          skewY: 0,
+          filter: "blur(0px)",
+          opacity: 1,
+          duration: 1.6, 
+          stagger: 0.15,
+          ease: "expo.out", 
+          force3D: true 
+        },
+        "-=0.8"
+      );
+
+      // 2. Paragraph Reveal
+      tl.to(".p-line", 
+        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out" },
+        "-=1.2"
+      );
+
+      // 3. Contact Data List Stagger
+      tl.to(".contact-item", 
+        { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out" },
+        "-=1.0"
+      );
+
+      // 4. Footer Reveal
+      tl.to(".footer-fade", 
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
+        "-=0.8"
+      );
+    });
+
+    // ==========================================
+    // MOBILE / TABLET: Individual ScrollTriggers
+    // ==========================================
+    mm.add("(max-width: 1023px)", () => {
+      
+      gsap.to(".editorial-header", 
+        { opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".editorial-header", start: "top 80%" } }
+      );
+
+      gsap.fromTo(".heading-block",
+        { y: 80, skewY: 4, filter: "blur(8px)", opacity: 0 }, 
+        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, stagger: 0.15, ease: "expo.out", force3D: true, scrollTrigger: { trigger: "#contact-section", start: "top 80%" } }
+      );
+
+      gsap.to(".p-line", 
+        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".p-line", start: "top 85%" } }
+      );
+
+      // Trigger each contact block independently as the user scrolls
+      gsap.utils.toArray(".contact-item").forEach((item) => {
+        gsap.to(item, 
+          { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: item, start: "top 85%" } }
+        );
+      });
+
+      gsap.to(".footer-fade", 
+        { y: 0, opacity: 1, duration: 1, ease: "power3.out", scrollTrigger: { trigger: ".footer-fade", start: "top 90%" } }
+      );
+    });
+
   }, { scope: sectionRef });
 
   const handleCopy = async (text, type) => {
@@ -46,8 +118,8 @@ const Contact = () => {
       
       <div className="w-full max-w-[1500px] mx-auto flex flex-col">
         
-        {/* EDITORIAL TOP BORDER */}
-        <div className="w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-800 pb-4 contact-fade">
+        {/* EDITORIAL TOP BORDER (Starts invisible to prevent FOUC) */}
+        <div className="editorial-header opacity-0 w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-800 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Terminal )
           </span>
@@ -61,29 +133,38 @@ const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-y-16 lg:gap-x-16 w-full relative items-start">
           
           {/* LEFT SIDE: Brutalist Heading */}
-          <div className="lg:col-span-5 flex flex-col contact-fade">
+          <div className="lg:col-span-5 flex flex-col">
             
-            <h2 className="text-[24vw] sm:text-[12vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter">
-              <span className="font-medium italic text-[#f3f3f3]">
-                Let's
-              </span> 
-              <span className="prime-txt head-txt italic font-medium pr-2">
-                Talk.
+            {/* INLINE MASKED HEADING: Using flex-wrap so the text flows naturally */}
+            <h2 className="text-[24vw] sm:text-[12vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex lg:flex-wrap">
+              
+              <span className="overflow-hidden inline-block pb-2 lg:pb-4 pr-4">
+                <span className="heading-block opacity-0 inline-block font-medium italic text-[#f3f3f3] origin-bottom-left will-change-transform">
+                  Let's
+                </span> 
               </span>
+              
+              <span className="overflow-hidden inline-block pb-2 lg:pb-4">
+                <span className="heading-block opacity-0 inline-block prime-txt head-txt italic font-medium pr-2 origin-bottom-left will-change-transform">
+                  Talk.
+                </span>
+              </span>
+
             </h2>
 
-            <p className="text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm">
+            {/* Born invisible and shifted natively via CSS */}
+            <p className="p-line opacity-0 translate-y-10 text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm will-change-transform">
               Hey there. Every robust digital product begins with a single 'hello'. I am all ears, lets create something amazing together.
             </p>
           </div>
 
           {/* RIGHT SIDE: The Data List */}
-          <div className="lg:col-span-7 flex flex-col w-full contact-fade mt-4 lg:mt-0">
+          <div className="lg:col-span-7 flex flex-col w-full mt-4 lg:mt-0">
             
-            {/* EMAIL BLOCK (Kinetic Hover) */}
+            {/* EMAIL BLOCK (Born invisible and shifted) */}
             <div 
               onClick={() => handleCopy(email, 'email')}
-              className="group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
+              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
@@ -103,10 +184,10 @@ const Contact = () => {
               </span>
             </div>
 
-            {/* PHONE BLOCK (Kinetic Hover) */}
+            {/* PHONE BLOCK (Born invisible and shifted) */}
             <div 
               onClick={() => handleCopy(phone, 'phone')}
-              className="group flex flex-col border-t border-zinc-800 py-8 lg:py-10 cursor-pointer overflow-hidden"
+              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col border-t border-zinc-800 py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
@@ -126,25 +207,23 @@ const Contact = () => {
               </span>
             </div>
 
-            {/* DIGITAL / SOCIALS BLOCK */}
-            <div className="flex flex-col border-t border-zinc-800 py-8 lg:py-10">
+            {/* DIGITAL / SOCIALS BLOCK (Born invisible and shifted) */}
+            <div className="contact-item opacity-0 translate-y-10 will-change-transform flex flex-col border-t border-zinc-800 py-8 lg:py-10">
               <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase mb-6 lg:mb-8">
                 Digital Network
               </span>
               
               <div className="flex flex-col sm:flex-row flex-wrap gap-8 sm:gap-12 lg:gap-16">
                 
-                {/* LinkedIn - Vertical Text Roll with Arrows */}
+                {/* LinkedIn */}
                 <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
-                    {/* Top Default State */}
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-zinc-400">
                         LinkedIn
                       </span>
                       <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-zinc-600" />
                     </div>
-                    {/* Bottom Hover State */}
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3]">
                         LinkedIn
@@ -154,7 +233,7 @@ const Contact = () => {
                   </div>
                 </a>
 
-                {/* Instagram - Vertical Text Roll with Arrows */}
+                {/* Instagram */}
                 <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
@@ -172,7 +251,7 @@ const Contact = () => {
                   </div>
                 </a>
 
-                {/* GitHub - Vertical Text Roll with Arrows */}
+                {/* GitHub */}
                 <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
@@ -197,8 +276,8 @@ const Contact = () => {
 
         </div>
 
-        {/* ABSOLUTE BOTTOM FOOTER */}
-        <div className="w-full flex flex-col sm:flex-row items-center justify-between mt-24 lg:mt-32 pt-8 contact-fade gap-6 sm:gap-0">
+        {/* ABSOLUTE BOTTOM FOOTER (Born invisible and shifted) */}
+        <div className="footer-fade opacity-0 translate-y-10 will-change-transform w-full flex flex-col sm:flex-row items-center justify-between mt-24 lg:mt-32 pt-8 gap-6 sm:gap-0">
           
           <div className="flex items-center gap-2 text-zinc-500">
             <Icon icon="material-symbols:copyright-outline" className="text-sm" />
