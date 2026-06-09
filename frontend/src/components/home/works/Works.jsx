@@ -104,7 +104,7 @@ const Works = () => {
     >
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 lg:mb-20 border-b border-zinc-800 pb-8 lg:pb-12">
+        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
           
           <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6rem] xl:text-[7rem] leading-[0.75em] tracking-tighter flex flex-col">
             

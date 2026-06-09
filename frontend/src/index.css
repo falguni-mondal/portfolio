@@ -18,6 +18,11 @@ body{
   color: var(--light);
   font-family: "Inter", sans-serif;
   user-select: none;
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px; /* Size of the grid squares */
+  background-position: center center;
 }
 .head-txt{
   /* font-family: "Instrument Serif", serif; */

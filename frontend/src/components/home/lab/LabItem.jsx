@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import WebGLBlobHover from "../../../utils/WebGLBlobHover";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -35,6 +36,7 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
       );
 
       // 2. Subtle Image Parallax Scrub
+      // This physically moves the entire WebGL canvas up/down seamlessly
       gsap.to(imageRef.current, {
         yPercent: 15,
         ease: "none",
@@ -50,7 +52,7 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
       mm.add("(max-width: 1023px)", () => {
         ScrollTrigger.create({
           trigger: triggerRef.current,
-          start: "top 55%", // Triggers slightly above the center
+          start: "top 55%", 
           end: "bottom 45%",
           onEnter: () => setActiveIndex(index),
           onEnterBack: () => setActiveIndex(index),
@@ -64,7 +66,6 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
     <div ref={triggerRef} className="w-full">
       <div
         ref={animateRef}
-        // Added the dynamic click handler and 'is-active' class
         onClick={() => setActiveIndex(index)}
         className={`w-full flex flex-col group cursor-pointer will-change-transform ${isActive ? 'is-active' : ''}`}
       >
@@ -73,21 +74,20 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
           
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] lg:bg-[size:40px_40px] opacity-50 z-0"></div>
 
-          {/* Added group-[.is-active] variant to handle mobile zooming */}
+          {/* THE WEBGL PARALLAX WRAPPER */}
           <div
             ref={imageRef}
             className="absolute inset-[-10%] w-[120%] h-[120%] flex items-center justify-center z-10 scale-100 lg:group-hover:scale-105 group-[.is-active]:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
           >
-            {/* Added group-[.is-active] variant for icon color shift */}
-            <Icon
-              icon={project.icon}
-              className="text-[5rem] lg:text-[8rem] text-zinc-800 transition-colors duration-700 lg:group-hover:text-zinc-600 group-[.is-active]:text-zinc-600"
+            <WebGLBlobHover 
+              baseImage={project.baseImage} 
+              revealImage={project.revealImage} 
+              className="w-full h-full"
             />
           </div>
 
-          {/* Changed hidden to flex, relying on opacity-0. Added group-[.is-active] and pointer-events-none */}
+          {/* Hover Overlay Fade (Stays on top of the WebGL canvas) */}
           <div className="flex absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-700 z-20 items-center justify-center pointer-events-none">
-            {/* Added group-[.is-active] variants for the arrow translate and opacity */}
             <div className="w-16 h-16 rounded-full bg-[#FF5733] flex items-center justify-center transform translate-y-8 opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 group-[.is-active]:translate-y-0 group-[.is-active]:opacity-100 transition-all duration-500 ease-out">
               <Icon
                 icon="material-symbols:arrow-outward-rounded"
@@ -98,12 +98,11 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
         </div>
 
         {/* THE METADATA FOOTER */}
-        <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between border-t border-zinc-800 pt-4 gap-3 sm:gap-0">
+        <div className="w-full flex flex-col sm:flex-row sm:items-center justify-between border-t border-zinc-700 pt-4 gap-3 sm:gap-0">
           <div className="flex items-center gap-3 lg:gap-4">
             <span className="text-xs font-bold tracking-[0.2em] text-zinc-600">
               0{index + 1}
             </span>
-            {/* Added group-[.is-active] variant for title color shift */}
             <h3 className="text-xl lg:text-2xl font-medium text-[#f3f3f3] lg:group-hover:text-[#FF5733] group-[.is-active]:text-[#FF5733] transition-colors duration-500">
               {project.title}
             </h3>
@@ -112,7 +111,6 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
           <div className="flex flex-wrap gap-x-2 lg:gap-x-3 gap-y-1">
             {project.tech.map((tag, i) => (
               <React.Fragment key={tag}>
-                {/* Added group-[.is-active] variant for tech tag color shifts */}
                 <span className="text-[0.6rem] lg:text-[0.65rem] uppercase tracking-[0.2em] font-bold text-zinc-500 lg:group-hover:text-[#f3f3f3] group-[.is-active]:text-[#f3f3f3] transition-colors duration-500">
                   {tag}
                 </span>

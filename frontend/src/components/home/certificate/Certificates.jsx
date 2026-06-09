@@ -131,7 +131,7 @@ const Certificates = () => {
       <div className="w-full max-w-[1500px] mx-auto flex flex-col">
         
         {/* COMBINED HEADER ROW */}
-        <div className="editorial-header opacity-0 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-800 pb-8 lg:pb-12">
+        <div className="editorial-header opacity-0 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
           
           {/* HIGH-END MASKED HEADING */}
           <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex flex-col">

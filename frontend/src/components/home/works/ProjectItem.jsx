@@ -37,7 +37,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       // Adopted the LabItem row spacing and open structure
-      className="group relative w-full py-12 lg:py-16 border-b border-zinc-800 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-0 cursor-pointer overflow-hidden lg:px-10"
+      className="group relative w-full py-12 lg:py-16 border-b border-zinc-700 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-0 cursor-pointer overflow-hidden lg:px-10"
     >
       {/* Animated Orange Baseline (Stable GPU rendering) */}
       <div 

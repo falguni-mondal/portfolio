@@ -6,6 +6,7 @@ import Works from '../components/home/works/Works';
 import About from '../components/home/About';
 import Lab from '../components/home/lab/Lab';
 import Certificates from '../components/home/certificate/Certificates';
+import Signature from '../components/home/Signature';
 import Contact from '../components/home/contact/Contact';
 
 const Home = () => {
@@ -21,6 +22,7 @@ const Home = () => {
         <About />
         <Lab />
         <Certificates />
+        <Signature/>
         <Contact />
       </div>
     </main>

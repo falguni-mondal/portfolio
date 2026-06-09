@@ -116,10 +116,10 @@ const Contact = () => {
   return (
     <section ref={sectionRef} id="contact-section" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[5svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
         {/* EDITORIAL TOP BORDER (Starts invisible to prevent FOUC) */}
-        <div className="editorial-header opacity-0 w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-800 pb-4">
+        <div className="editorial-header opacity-0 w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-700 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Terminal )
           </span>
@@ -168,13 +168,13 @@ const Contact = () => {
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
-                  Direct Email
+                  Mail me at
                 </span>
                 <div className="flex items-center h-6 overflow-hidden">
                   {copiedData === 'email' ? (
                     <span className="text-[#FF5733] text-[0.65rem] tracking-widest uppercase font-bold animate-pulse">Copied</span>
                   ) : (
-                    <span className="text-zinc-600 text-[0.65rem] tracking-widest uppercase font-bold group-hover:text-[#f3f3f3] transition-colors">Copy</span>
+                    <span className="text-zinc-600 text-[0.65rem] tracking-widest uppercase font-bold group-hover:text-[#f3f3f3] transition-colors">Click to Copy</span>
                   )}
                 </div>
               </div>
@@ -187,17 +187,17 @@ const Contact = () => {
             {/* PHONE BLOCK (Born invisible and shifted) */}
             <div 
               onClick={() => handleCopy(phone, 'phone')}
-              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col border-t border-zinc-800 py-8 lg:py-10 cursor-pointer overflow-hidden"
+              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col border-t border-zinc-700 py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
-                  Direct Phone
+                  Call me at
                 </span>
                 <div className="flex items-center h-6 overflow-hidden">
                   {copiedData === 'phone' ? (
                     <span className="text-[#FF5733] text-[0.65rem] tracking-widest uppercase font-bold animate-pulse">Copied</span>
                   ) : (
-                    <span className="text-zinc-600 text-[0.65rem] tracking-widest uppercase font-bold group-hover:text-[#f3f3f3] transition-colors">Copy</span>
+                    <span className="text-zinc-600 text-[0.65rem] tracking-widest uppercase font-bold group-hover:text-[#f3f3f3] transition-colors">Click to Copy</span>
                   )}
                 </div>
               </div>
@@ -208,9 +208,9 @@ const Contact = () => {
             </div>
 
             {/* DIGITAL / SOCIALS BLOCK (Born invisible and shifted) */}
-            <div className="contact-item opacity-0 translate-y-10 will-change-transform flex flex-col border-t border-zinc-800 py-8 lg:py-10">
+            <div className="contact-item opacity-0 translate-y-10 will-change-transform flex flex-col border-t border-zinc-700 py-8 lg:py-10">
               <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase mb-6 lg:mb-8">
-                Digital Network
+                Connect with me
               </span>
               
               <div className="flex flex-col sm:flex-row flex-wrap gap-8 sm:gap-12 lg:gap-16">

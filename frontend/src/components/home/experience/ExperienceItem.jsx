@@ -25,7 +25,7 @@ const ExperienceItem = ({ exp }) => {
     <div 
       ref={itemRef}
       onClick={() => setIsClicked(!isClicked)}
-      className={`group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-800 cursor-pointer overflow-hidden px-1 lg:px-10 exp-fade ${isClicked ? 'is-clicked' : ''}`}
+      className={`group relative flex flex-col lg:grid lg:grid-cols-12 gap-y-4 lg:gap-8 items-start lg:items-center py-10 lg:py-12 border-b border-zinc-700 cursor-pointer overflow-hidden px-1 lg:px-10 exp-fade ${isClicked ? 'is-clicked' : ''}`}
     >
       
       {/* Animated Orange Baseline */}

@@ -28,14 +28,14 @@ const Navbar = () => {
   useGSAP(() => {
     if (location.pathname !== '/') {
       gsap.set(navRef.current, { y: 0, opacity: 1 });
-      gsap.set("#logo", { opacity: 1 });
+      // Ensures both logo and connect link are visible on other pages
+      gsap.set(["#logo", ".contact-nav"], { opacity: 1 });
       return; 
     }
 
     // --- ONLY RUNS ON THE HOME PAGE ('/') ---
     
-    // THE FIX: Instead of window.innerHeight, we pull the exact physical pixel height 
-    // of the Hero element. This eliminates address bar bugs and perfectly matches your 100dvh math.
+    // The exact physical pixel height of the Hero element
     const getOffset = () => {
       const heroSection = document.getElementById('hero-section');
       return heroSection ? heroSection.offsetHeight : window.innerHeight - navRef.current.offsetHeight;
@@ -43,7 +43,8 @@ const Navbar = () => {
 
     // A. INITIAL STATE
     gsap.set(navRef.current, { y: getOffset() });
-    gsap.set("#logo", { opacity: 0 });
+    // Hides both the logo and connect link initially
+    gsap.set(["#logo", ".contact-nav"], { opacity: 0 });
 
     gsap.from(navRef.current, {
       opacity: 0,
@@ -65,8 +66,9 @@ const Navbar = () => {
       }
     });
 
-    // C. THE LOGO REVEAL
-    gsap.to("#logo", {
+    // C. THE LOGO & CONNECT REVEAL
+    // Targets both elements to fade in simultaneously as it docks
+    gsap.to(["#logo", ".contact-nav"], {
       opacity: 1,
       duration: 0.3,
       ease: "power2.out",
@@ -79,7 +81,6 @@ const Navbar = () => {
     });
 
   }, [location.pathname]); 
-
 
   const navLinks = [
     { title: 'Experience', path: '/#experience' },
@@ -111,8 +112,9 @@ const Navbar = () => {
           </nav>
 
           <nav className="contact-nav uppercase text-xs hidden lg:block">
-                <Link to="/contact">( contact )</Link>
+                <Link to="/contact">( connect )</Link>
           </nav>
+          
           <div 
             className="nav-icon lg:hidden text-[0.7rem] font-medium cursor-pointer h-[1rem] overflow-hidden z-50 pointer-events-auto"
             onClick={() => setIsOpen(!isOpen)}

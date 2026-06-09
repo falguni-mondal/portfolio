@@ -176,7 +176,7 @@ const About = () => {
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-800 pb-4">
+        <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Developer )
           </span>
@@ -196,7 +196,7 @@ const About = () => {
               </h2>
             </div>
 
-            <div className="sub-heading-block mt-12 lg:mt-auto border-t border-zinc-800/50 lg:border-none pt-8 lg:pt-0">
+            <div className="sub-heading-block mt-12 lg:mt-auto border-t border-zinc-700/50 lg:border-none pt-8 lg:pt-0">
               <h4 className="lg:text-xl text-zinc-200 font-medium leading-snug">
                 Bachelors in <br className="hidden lg:block"/> Information Technology
               </h4>
@@ -251,7 +251,7 @@ const About = () => {
 
             </div>
 
-            <div className="arsenal-block pt-10 lg:pt-12 border-t border-zinc-800/50 mt-auto">
+            <div className="arsenal-block pt-10 lg:pt-12 border-t border-zinc-700/50 mt-auto">
               <span className="arsenal-header text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold mb-6 block">
                 Core Arsenal
               </span>

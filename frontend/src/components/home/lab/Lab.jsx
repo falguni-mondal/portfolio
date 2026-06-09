@@ -6,23 +6,27 @@ import LabItem from './LabItem';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Updated with the new base and reveal image paths
 const LAB_PROJECTS = [
   {
     id: 1,
     title: "Fluid Waving Textures",
-    icon: "material-symbols:waves",
+    baseImage: "/lab_img1.jpg",
+    revealImage: "/lab_img1a.jpg",
     tech: ["WebGL", "GLSL Shaders", "GSAP"],
   },
   {
     id: 2,
     title: "Interactive 3D Owl",
-    icon: "material-symbols:view-in-ar-outline",
+    baseImage: "/lab_img2.jpg",
+    revealImage: "/lab_img2a.jpg",
     tech: ["Three.js", "React Three Fiber"],
   },
   {
     id: 3,
     title: "Nexus Image Engine",
-    icon: "material-symbols:image-outline",
+    baseImage: "/lab_img3.jpg",
+    revealImage: "/lab_img3a.jpg",
     tech: ["JavaScript", "Canvas API"],
   }
 ];
@@ -103,7 +107,7 @@ const Lab = () => {
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
         {/* EDITORIAL TOP BORDER */}
-        <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-800 pb-4">
+        <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-700 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( R & D )
           </span>
