@@ -1,13 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Icon } from "@iconify/react";
+
+import { LoadingContext } from "../../App";
 
 const Hero = () => {
   const heroRef = useRef(null);
   const btnRef = useRef(null);
   const textRef = useRef(null);
   const fillRef = useRef(null);
+
+  // Grab the loading state from our Context
+  const hasLoaded = useContext(LoadingContext);
 
   // --- CLOCK STATE ---
   const [time, setTime] = useState(new Date());
@@ -32,13 +37,6 @@ const Hero = () => {
 
   useGSAP(
     () => {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          ScrollTrigger.refresh();
-        },
-      });
-
-      // --- INITIAL STATES ---
       gsap.set(".hero-img", {
         clipPath: "polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)",
       });
@@ -64,7 +62,18 @@ const Hero = () => {
       // Initialize the liquid fill for the CTA button
       gsap.set(fillRef.current, { xPercent: -50, yPercent: 100 });
 
-      // --- ANIMATION TIMELINE ---
+      // ==========================================
+      if (!hasLoaded) return;
+
+      // ==========================================
+      // ANIMATION TIMELINE
+      // ==========================================
+      const tl = gsap.timeline({
+        onComplete: () => {
+          ScrollTrigger.refresh();
+        },
+      });
+
       tl.to(
         ".hero-img",
         {
@@ -136,7 +145,10 @@ const Hero = () => {
           "hero-reveal+=1.0",
         );
     },
-    { scope: heroRef },
+    { 
+      scope: heroRef, 
+      dependencies: [hasLoaded]
+    },
   );
 
   // --- MAGNETIC BUTTON INTERACTION LOGIC --- //
@@ -202,7 +214,7 @@ const Hero = () => {
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
         <h1 className="my-name uppercase text-[23.5vw] lg:text-[25vw] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
-          <span className="first-name relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]">
+          <span className="first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]">
             falguni
           </span>
         </h1>

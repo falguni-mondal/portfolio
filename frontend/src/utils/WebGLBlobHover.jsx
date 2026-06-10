@@ -168,26 +168,35 @@ const Scene = ({ img1, img2 }) => {
     const canvasRect = canvasRectRef.current;
     const hitboxRect = hitboxRectRef.current;
     
-    // TRIGGER MATH: Only check if the mouse is inside the strictly visible square
+    // Check if we are on a mobile breakpoint
+    const isMobile = window.innerWidth < 1024;
+    
+    // VIRTUAL CURSOR LOGIC
+    // If mobile, anchor the "mouse" to the dead center of the screen.
+    // If desktop, use the actual physical mouse position.
+    const cursorX = isMobile ? window.innerWidth / 2 : globalMouse.x;
+    const cursorY = isMobile ? window.innerHeight / 2 : globalMouse.y;
+
+    // TRIGGER MATH: Check if the virtual cursor is inside the visible square
     const isInside = (
-      globalMouse.x >= hitboxRect.left &&
-      globalMouse.x <= hitboxRect.right &&
-      globalMouse.y >= hitboxRect.top &&
-      globalMouse.y <= hitboxRect.bottom
+      cursorX >= hitboxRect.left &&
+      cursorX <= hitboxRect.right &&
+      cursorY >= hitboxRect.top &&
+      cursorY <= hitboxRect.bottom
     );
 
     if (isInside) {
       targetRadius.current = 0.20;
       
-      // UV MATH: Calculate the mouse position relative to the oversized 120% canvas
-      // This ensures the blob aligns perfectly with the cursor without detaching
-      const uvX = (globalMouse.x - canvasRect.left) / canvasRect.width;
-      const uvY = 1.0 - ((globalMouse.y - canvasRect.top) / canvasRect.height);
+      // UV MATH: Map the virtual cursor to the 120% oversized canvas
+      const uvX = (cursorX - canvasRect.left) / canvasRect.width;
+      const uvY = 1.0 - ((cursorY - canvasRect.top) / canvasRect.height);
       targetMouse.current.set(uvX, uvY);
     } else {
       targetRadius.current = 0.0;
     }
 
+    // Smoothly interpolate the actual shader uniforms toward our calculated targets
     materialRef.current.uMouse.lerp(targetMouse.current, 0.08);
     materialRef.current.uRadius = THREE.MathUtils.lerp(
       materialRef.current.uRadius,
