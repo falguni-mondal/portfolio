@@ -9,7 +9,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
   const triggerRef = useRef(null); 
-  const animateRef = useRef(null); 
   const imageRef = useRef(null);
 
   const isActive = activeIndex === index;
@@ -18,23 +17,7 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
     () => {
       let mm = gsap.matchMedia();
 
-      // 1. Entrance Animation
-      gsap.fromTo(
-        animateRef.current,
-        { y: 80, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: triggerRef.current, 
-            start: "top 75%",
-          },
-        }
-      );
-
-      // 2. Subtle Image Parallax Scrub
+      // 1. Subtle Image Parallax Scrub (Kept for visual depth)
       gsap.to(imageRef.current, {
         yPercent: 15,
         ease: "none",
@@ -46,7 +29,7 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
         },
       });
 
-      // 3. Mobile Scroll Active State Trigger
+      // 2. Mobile Scroll Active State Trigger
       mm.add("(max-width: 1023px)", () => {
         ScrollTrigger.create({
           trigger: triggerRef.current,
@@ -63,12 +46,10 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
   return (
     <div ref={triggerRef} className="w-full">
       <div
-        ref={animateRef}
         onClick={() => setActiveIndex(index)}
         className={`w-full flex flex-col group cursor-pointer will-change-transform ${isActive ? 'is-active' : ''}`}
       >
         {/* THE CANVAS / MEDIA BLOCK */}
-        {/* FIX: Changed to aspect-square to force a perfect square on all devices */}
         <div className="w-full aspect-square bg-[#0a0a0a] overflow-hidden relative mb-4 lg:mb-6 rounded-sm">
           
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] lg:bg-[size:40px_40px] opacity-50 z-0"></div>

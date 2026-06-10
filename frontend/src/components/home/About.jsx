@@ -63,7 +63,7 @@ const About = () => {
       tl.fromTo(".p-word",
         { yPercent: 120, opacity: 0, rotateZ: 2 },
         { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1.2, stagger: 0.015, ease: "power4.out" },
-        "-=1.0"
+        "-=1.2"
       );
 
       // CTA Button
@@ -76,7 +76,7 @@ const About = () => {
       // Arsenal Line Expansion
       tl.to(".arsenal-block .animated-line", 
         { scaleX: 1, duration: 1.2, ease: "power3.out" }, 
-        "-=0.6"
+        "-=1.7"
       );
 
       tl.fromTo(".arsenal-header", { opacity: 0 }, { opacity: 1, duration: 0.8 }, "-=0.8");
@@ -84,7 +84,7 @@ const About = () => {
       tl.fromTo(".arsenal-item",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.05, ease: "power3.out" },
-        "-=0.6"
+        "-=1.7"
       );
     });
 
