@@ -66,14 +66,21 @@ const About = () => {
         "-=1.0"
       );
 
-      // 4. CTA Button (Fires at the exact same time as the paragraphs using "<", without opacity shifts)
+      // CTA Button
       tl.fromTo(".cta-block",
         { y: 400 }, 
         { y: 0, duration: 1.2, ease: "power3.out" },
         "<" 
       );
 
-      tl.fromTo(".arsenal-header", { opacity: 0 }, { opacity: 1, duration: 0.8 }, "-=0.6");
+      // Arsenal Line Expansion
+      tl.to(".arsenal-block .animated-line", 
+        { scaleX: 1, duration: 1.2, ease: "power3.out" }, 
+        "-=0.6"
+      );
+
+      tl.fromTo(".arsenal-header", { opacity: 0 }, { opacity: 1, duration: 0.8 }, "-=0.8");
+      
       tl.fromTo(".arsenal-item",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.05, ease: "power3.out" },
@@ -95,6 +102,11 @@ const About = () => {
         { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 75%" } }
       );
 
+      // Sub-heading mobile animated line
+      gsap.to(".sub-heading-block .animated-line", { 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } 
+      });
+
       gsap.fromTo(".sub-heading-block",
         { y: 40, opacity: 0 },
         { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } }
@@ -105,16 +117,21 @@ const About = () => {
         { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1, stagger: 0.015, ease: "power4.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
       );
 
-      // CTA Button (Tied to the .paragraphs-block trigger to run simultaneously)
       gsap.fromTo(".cta-block",
         { y: 400 },
         { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
       );
 
+      // Arsenal block animated line
+      gsap.to(".arsenal-block .animated-line", { 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } 
+      });
+
       gsap.fromTo(".arsenal-header", 
         { opacity: 0 }, 
         { opacity: 1, duration: 0.8, scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
       );
+      
       gsap.fromTo(".arsenal-item",
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 1, stagger: 0.08, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
@@ -176,6 +193,7 @@ const About = () => {
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
+        {/* Top Horizontal Line (Ignored for animation per requirements) */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Developer )
@@ -196,7 +214,11 @@ const About = () => {
               </h2>
             </div>
 
-            <div className="sub-heading-block mt-12 lg:mt-auto border-t border-zinc-700/50 lg:border-none pt-8 lg:pt-0">
+            {/* Added relative positioning and the animated-line div. Removed native border classes. */}
+            <div className="sub-heading-block relative mt-12 lg:mt-auto pt-8 lg:pt-0">
+              {/* Only shows on mobile to replicate the original lg:border-none behavior */}
+              <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0 lg:hidden"></div>
+              
               <h4 className="lg:text-xl text-zinc-200 font-medium leading-snug">
                 Bachelors in <br className="hidden lg:block"/> Information Technology
               </h4>
@@ -251,7 +273,10 @@ const About = () => {
 
             </div>
 
-            <div className="arsenal-block pt-10 lg:pt-12 border-t border-zinc-700/50 mt-auto">
+            {/* Added relative positioning and the animated-line div. Removed native border classes. */}
+            <div className="arsenal-block relative pt-10 lg:pt-12 mt-auto">
+              <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0"></div>
+              
               <span className="arsenal-header text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold mb-6 block">
                 Core Arsenal
               </span>

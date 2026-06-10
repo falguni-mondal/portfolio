@@ -12,7 +12,6 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
   const animateRef = useRef(null); 
   const imageRef = useRef(null);
 
-  // Derive the active state
   const isActive = activeIndex === index;
 
   useGSAP(
@@ -36,7 +35,6 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
       );
 
       // 2. Subtle Image Parallax Scrub
-      // This physically moves the entire WebGL canvas up/down seamlessly
       gsap.to(imageRef.current, {
         yPercent: 15,
         ease: "none",
@@ -70,7 +68,8 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
         className={`w-full flex flex-col group cursor-pointer will-change-transform ${isActive ? 'is-active' : ''}`}
       >
         {/* THE CANVAS / MEDIA BLOCK */}
-        <div className="w-full aspect-[4/3] lg:aspect-square bg-[#0a0a0a] overflow-hidden relative mb-4 lg:mb-6 rounded-sm">
+        {/* FIX: Changed to aspect-square to force a perfect square on all devices */}
+        <div className="w-full aspect-square bg-[#0a0a0a] overflow-hidden relative mb-4 lg:mb-6 rounded-sm">
           
           <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] lg:bg-[size:40px_40px] opacity-50 z-0"></div>
 
@@ -82,12 +81,12 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
             <WebGLBlobHover 
               baseImage={project.baseImage} 
               revealImage={project.revealImage} 
-              className="w-full h-full"
+              className="w-full h-full pointer-events-auto"
             />
           </div>
 
-          {/* Hover Overlay Fade (Stays on top of the WebGL canvas) */}
-          <div className="flex absolute inset-0 bg-black/40 opacity-0 lg:group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-700 z-20 items-center justify-center pointer-events-none">
+          {/* Hover Overlay Fade */}
+          <div className="flex absolute inset-0 bg-black/20 opacity-0 lg:group-hover:opacity-100 group-[.is-active]:opacity-100 transition-opacity duration-700 z-20 items-center justify-center pointer-events-none">
             <div className="w-16 h-16 rounded-full bg-[#FF5733] flex items-center justify-center transform translate-y-8 opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 group-[.is-active]:translate-y-0 group-[.is-active]:opacity-100 transition-all duration-500 ease-out">
               <Icon
                 icon="material-symbols:arrow-outward-rounded"

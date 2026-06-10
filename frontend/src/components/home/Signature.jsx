@@ -46,8 +46,8 @@ const Signature = () => {
       const desktopTl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 65%", 
-          end: "bottom 40%", 
+          start: "top 70%", 
+          end: "bottom 50%", 
           scrub: 1.2, 
         }
       });
@@ -62,7 +62,7 @@ const Signature = () => {
         scrollTrigger: {
           trigger: sectionRef.current,
           start: "top 60%", 
-          end: "bottom 20%", 
+          end: "bottom 30%", 
           scrub: 1.2,
         }
       });
@@ -83,7 +83,7 @@ const Signature = () => {
 
         {/* THE BRAND COLLAPSE ANIMATION */}
         <div className="brand-collapse-container cursor-default flex justify-center">
-          <h2 className="text-[16vw] sm:text-[12vw] lg:text-[10rem] xl:text-[12rem] leading-[0.8em] font-semibold tracking-tighter flex items-end justify-center text-[#f3f3f3] uppercase">
+          <h2 className="text-[16vw] sm:text-[14vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.8em] font-semibold tracking-tighter flex items-end justify-center text-[#f3f3f3] uppercase">
             
             <span className="inline-block">B</span>
             <span className="inline-block">Y</span>
