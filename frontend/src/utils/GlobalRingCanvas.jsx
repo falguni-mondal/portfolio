@@ -50,7 +50,7 @@ const Ring = ({ isMobile }) => {
     // RESPONSIVE SIZING & COORDINATES
     // ==========================================
     const baseScale = isMobile ? 0.30 : 0.60; 
-    const sigScale = isMobile ? 0.35 : 0.60 * 1.8; 
+    const sigScale = isMobile ? 0.45 : 0.60 * 1.8; 
     const travelDistance = isMobile ? 0.55 : 2.5; 
     const centerOffset = isMobile ? 0 : -0.5; 
     const initialYOffset = isMobile ? 1.0 : 0; 
