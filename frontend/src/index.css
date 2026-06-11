@@ -25,6 +25,8 @@ body {
   background-size: 50px 50px;
   /* Size of the grid squares */
   background-position: center center;
+  position: relative;
+  z-index: 0;
 }
 
 .head-txt {

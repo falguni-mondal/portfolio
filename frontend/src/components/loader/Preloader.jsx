@@ -38,7 +38,7 @@ const Preloader = ({ setHasLoaded }) => {
           },
           "start"
         )
-        // Exit Sequence 1: Main branding drops away
+        // Main branding drops away
         .to(
           ".reveal-text",
           {
@@ -50,7 +50,7 @@ const Preloader = ({ setHasLoaded }) => {
           },
           "+=0.2"
         )
-        // Exit Sequence 2: FADE ONLY for counter, %, and progress line
+        // FADE ONLY for counter, %, and progress line
         .to(
           [counterRef.current, ".percent-sign", ".progress-container"],
           {
@@ -60,7 +60,7 @@ const Preloader = ({ setHasLoaded }) => {
           },
           "<0.6"
         )
-        // 1. Wake up the Hero
+        // Wake up the Hero
         .call(() => {
           document.body.style.overflow = "auto";
           if (setHasLoaded) setHasLoaded(true);
