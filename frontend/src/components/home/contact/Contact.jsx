@@ -140,13 +140,13 @@ const Contact = () => {
             <h2 className="text-[24vw] sm:text-[12vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex lg:flex-wrap">
               
               <span className="overflow-hidden inline-block pb-2 lg:pb-4 pr-4">
-                <span className="heading-block opacity-0 inline-block font-medium italic text-[#f3f3f3] origin-bottom-left will-change-transform">
+                <span className="heading-block opacity-0 inline-block font-medium italic text-[#f3f3f3] origin-bottom-left">
                   Let's
                 </span> 
               </span>
               
               <span className="overflow-hidden inline-block pb-2 lg:pb-4">
-                <span className="heading-block opacity-0 inline-block prime-txt head-txt italic font-medium pr-2 origin-bottom-left will-change-transform">
+                <span className="heading-block opacity-0 inline-block prime-txt head-txt italic font-medium pr-2 origin-bottom-left">
                   Talk.
                 </span>
               </span>
@@ -154,7 +154,7 @@ const Contact = () => {
             </h2>
 
             {/* Born invisible and shifted natively via CSS */}
-            <p className="p-line opacity-0 translate-y-10 text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm will-change-transform">
+            <p className="p-line opacity-0 translate-y-10 text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm">
               Hey there. Every robust digital product begins with a single 'hello'. I am all ears, lets create something amazing together.
             </p>
           </div>
@@ -165,7 +165,7 @@ const Contact = () => {
             {/* EMAIL BLOCK (Born invisible and shifted) */}
             <div 
               onClick={() => handleCopy(mail, 'email')}
-              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
+              className="contact-item opacity-0 translate-y-10 group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
@@ -188,7 +188,7 @@ const Contact = () => {
             {/* PHONE BLOCK (Born invisible and shifted) */}
             <div 
               onClick={() => handleCopy(`+91${phone}`, 'phone')}
-              className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col border-t border-zinc-700 py-8 lg:py-10 cursor-pointer overflow-hidden"
+              className="contact-item opacity-0 translate-y-10 group flex flex-col border-t border-zinc-700 py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
                 <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
@@ -209,7 +209,7 @@ const Contact = () => {
             </div>
 
             {/* DIGITAL / SOCIALS BLOCK (Born invisible and shifted) */}
-            <div className="contact-item opacity-0 translate-y-10 will-change-transform flex flex-col border-t border-zinc-700 py-8 lg:py-10">
+            <div className="contact-item opacity-0 translate-y-10 flex flex-col border-t border-zinc-700 py-8 lg:py-10">
               <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase mb-6 lg:mb-8">
                 Connect with me
               </span>
@@ -278,7 +278,7 @@ const Contact = () => {
         </div>
 
         {/* ABSOLUTE BOTTOM FOOTER (Born invisible and shifted) */}
-        <div className="footer-fade opacity-0 translate-y-10 will-change-transform w-full flex flex-col sm:flex-row items-center justify-between mt-24 lg:mt-32 pt-8 gap-6 sm:gap-0">
+        <div className="footer-fade opacity-0 translate-y-10 w-full flex flex-col sm:flex-row items-center justify-between mt-24 lg:mt-32 pt-8 gap-6 sm:gap-0">
           
           <div className="flex items-center gap-2 text-zinc-500">
             <Icon icon="material-symbols:copyright-outline" className="text-sm" />

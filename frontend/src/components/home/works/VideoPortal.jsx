@@ -69,7 +69,7 @@ const VideoPortal = ({ projects, activeIndex }) => {
           : "top-0 left-0 w-[420px] h-[240px] origin-center"
       }`}
     >
-      <div ref={filmstripRef} className="w-full h-full flex flex-col will-change-transform">
+      <div ref={filmstripRef} className="w-full h-full flex flex-col">
         
         {projects.map((project, index) => (
           <div key={index} className="w-full h-full flex-shrink-0 bg-zinc-900 relative">

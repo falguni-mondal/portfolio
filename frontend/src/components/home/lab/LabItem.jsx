@@ -54,7 +54,7 @@ const LabItem = ({ project, index, activeIndex, setActiveIndex }) => {
       <ContentWrapper
         {...wrapperProps}
         onClick={() => setActiveIndex(index)}
-        className={`w-full flex flex-col group cursor-pointer will-change-transform ${isActive ? 'is-active' : ''}`}
+        className={`w-full flex flex-col group cursor-pointer ${isActive ? 'is-active' : ''}`}
       >
         {/* THE CANVAS / MEDIA BLOCK */}
         <div className="w-full aspect-square bg-[#0a0a0a] overflow-hidden relative mb-4 lg:mb-6 rounded-sm">

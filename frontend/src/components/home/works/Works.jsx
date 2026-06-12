@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import data from '../../../data.json';
+import SectionHeading from "../global/SectionHeading";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -34,7 +35,7 @@ const Works = () => {
         }
       });
 
-      tl.fromTo(".heading-line",
+      tl.fromTo(".heading-block",
         { 
           y: 120, 
           skewY: 8, 
@@ -78,23 +79,7 @@ const Works = () => {
         
         <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12 px-5 lg:px-10">
           
-          <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6rem] xl:text-[7rem] leading-[0.75em] tracking-tighter flex flex-col">
-            
-            {/* Line 1: Added pr-6 to widen the masking box for the italic lean */}
-            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">
-              <span className="block heading-line font-light italic text-zinc-500 origin-bottom-left will-change-transform pr-2">
-                Professional
-              </span>
-            </span>
-            
-            {/* Line 2: Added pr-6 here as well just to keep the geometry safe */}
-            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">
-              <span className="block heading-line text-[#f3f3f3] font-bold pr-2 origin-bottom-left will-change-transform">
-                Works.
-              </span>
-            </span>
-            
-          </h2>
+          <SectionHeading line1="Professional" line2="Works." />
 
           <div className="flex flex-wrap items-center gap-6 lg:gap-12 mt-8 lg:mt-0 lg:pb-3 works-fade">
             <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">

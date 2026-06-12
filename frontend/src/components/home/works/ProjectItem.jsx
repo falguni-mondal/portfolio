@@ -52,7 +52,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
     >
       {/* Animated Baseline (Black to pop against the new orange background) */}
       <div 
-        className={`absolute bottom-0 left-0 w-full h-[1px] bg-black transform origin-center transition-transform duration-700 ease-out z-20 will-change-transform ${
+        className={`absolute bottom-0 left-0 w-full h-[1px] bg-black transform origin-center transition-transform duration-700 ease-out z-20 ${
           isActive ? 'scale-x-100' : 'scale-x-0'
         }`} 
       />

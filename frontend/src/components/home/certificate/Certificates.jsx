@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import CertificateItem from './CertificateItem';
 import data from '../../../data.json';
+import SectionHeading from '../global/SectionHeading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -103,21 +104,7 @@ const Certificates = () => {
         <div className="editorial-header opacity-0 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
           
           {/* HIGH-END MASKED HEADING */}
-          <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex flex-col">
-            
-            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">
-              <span className="heading-block opacity-0 block font-light italic text-zinc-500 origin-bottom-left will-change-transform">
-                Verified
-              </span> 
-            </span>
-            
-            <span className="overflow-hidden block pb-2 lg:pb-4 pr-6 -mt-2 lg:-mt-4">
-              <span className="heading-block opacity-0 block text-[#f3f3f3] font-bold pr-2 origin-bottom-left will-change-transform">
-                Credentials.
-              </span>
-            </span>
-
-          </h2>
+          <SectionHeading line1="Verified" line2="Credentials." />
 
           {/* METADATA FLANKS */}
           <div className="flex flex-wrap items-center gap-6 lg:gap-12 mt-8 lg:mt-0 lg:pb-3">

@@ -2,32 +2,17 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { Icon } from '@iconify/react'; 
-import data from '../../data.json';
+import SplitText from './SplitText';
+import MagneticButton from './MagneticButton';
+import Arsenal from './Arsenal';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Dynamically pull the arsenal array
-const arsenalData = data.arsenal;
-
-// Smart chunking to automatically divide the array into 3 balanced columns for the UI
-const chunkSize = Math.ceil(arsenalData.length / 3);
-const arsenalColumns = [
-  arsenalData.slice(0, chunkSize),
-  arsenalData.slice(chunkSize, chunkSize * 2),
-  arsenalData.slice(chunkSize * 2)
-];
-
 const About = () => {
   const sectionRef = useRef(null);
-  const btnRef = useRef(null);
-  const textRef = useRef(null);
-  const fillRef = useRef(null);
   const parallaxWrapperRef = useRef(null); 
 
   useGSAP(() => {
-    gsap.set(fillRef.current, { xPercent: -50, yPercent: 100 });
-
     let mm = gsap.matchMedia();
 
     // ==========================================
@@ -152,60 +137,12 @@ const About = () => {
 
   }, { scope: sectionRef });
 
-  // --- MAGNETIC BUTTON LOGIC ---
-  const handleMouseEnter = () => {
-    gsap.killTweensOf(fillRef.current);
-    gsap.killTweensOf(textRef.current);
-
-    gsap.fromTo(fillRef.current, 
-      { yPercent: 100, xPercent: -50 }, 
-      { yPercent: -25, xPercent: -50, duration: 0.8, ease: 'power3.out' }
-    );
-    gsap.to(textRef.current, { color: '#18181b', duration: 0.3 });
-  };
-
-  const handleMouseMove = (e) => {
-    if (!btnRef.current || !textRef.current) return;
-    
-    const { left, top, width, height } = btnRef.current.getBoundingClientRect();
-    const x = e.clientX - (left + width / 2);
-    const y = e.clientY - (top + height / 2);
-
-    gsap.to(btnRef.current, { x: x * 0.5, y: y * 0.5, duration: 0.6, ease: 'power3.out' });
-    gsap.to(textRef.current, { x: x * 0.2, y: y * 0.2, duration: 0.6, ease: 'power3.out' });
-  };
-
-  const handleMouseLeave = () => {
-    gsap.killTweensOf(fillRef.current);
-    gsap.killTweensOf(textRef.current);
-
-    gsap.to(fillRef.current, { yPercent: -150, xPercent: -50, duration: 0.6, ease: 'power3.inOut' });
-    gsap.to(textRef.current, { color: '#f3f3f3', duration: 0.5 });
-
-    gsap.to([btnRef.current, textRef.current], {
-      x: 0,
-      y: 0,
-      duration: 0.8,
-      ease: 'elastic.out(1.2, 0.4)',
-    });
-  };
-
-  const splitTextToWords = (text) => {
-    return text.split(" ").map((word, index) => (
-      <span key={index} className="inline-flex overflow-hidden pb-1 lg:pb-2 -mb-1 lg:-mb-2 mr-[0.25em]">
-        <span className="p-word origin-bottom-left inline-block">
-          {word}
-        </span>
-      </span>
-    ));
-  };
-
   return (
     <section ref={sectionRef} id="about" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        {/* Top Horizontal Line (Ignored for animation per requirements) */}
+        {/* Top Horizontal Line */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( The Developer )
@@ -248,61 +185,21 @@ const About = () => {
               
               <div className="paragraphs-block">
                 <p className="text-xl lg:text-3xl text-zinc-200 font-medium leading-relaxed max-w-2xl flex flex-wrap">
-                  {splitTextToWords("Helping brands to have their unfair advantage by developing digital adrenaline.")}
+                  <SplitText text="Helping brands to have their unfair advantage by developing digital adrenaline." />
                 </p>
                 
                 <p className="text-sm lg:text-base text-zinc-400 leading-relaxed max-w-xl mt-6 lg:mt-8 flex flex-wrap">
-                  {splitTextToWords("Currently leading full-stack development within the agency space, I engineer the intersection of scalable data architecture and seamless UI. Whether building high-volume e-commerce platforms or immersive, Awwwards-level digital experiences, the baseline remains the same. Clean logic. Purpose-driven design. Digital products built for pure performance.")}
+                  <SplitText text="Currently leading full-stack development within the agency space, I engineer the intersection of scalable data architecture and seamless UI. Whether building high-volume e-commerce platforms or immersive, Awwwards-level digital experiences, the baseline remains the same. Clean logic. Purpose-driven design. Digital products built for pure performance." />
                 </p>
               </div>
 
               <div ref={parallaxWrapperRef} className="cta-parallax-wrapper w-fit relative left-2/3 top-48 lg:left-auto mt-10 lg:mt-0 lg:absolute lg:right-0 lg:top-[160%] lg:-translate-y-1/2 z-20">
-                <div className="cta-block">
-                  <button
-                    ref={btnRef}
-                    onMouseEnter={handleMouseEnter}
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={handleMouseLeave}
-                    className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none"
-                  >
-                    <div 
-                      ref={fillRef}
-                      className="absolute top-0 left-1/2 w-[150%] h-[150%] bg-[#f3f3f3] rounded-[50%] z-0 pointer-events-none"
-                    ></div>
-                    
-                    <span 
-                      ref={textRef} 
-                      className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
-                    >
-                      My resume
-                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
-                    </span>
-                  </button>
-                </div>
+                <MagneticButton />
               </div>
 
             </div>
 
-            <div className="arsenal-block relative pt-10 lg:pt-12 mt-auto">
-              <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0"></div>
-              
-              <span className="arsenal-header text-[0.65rem] tracking-[0.2em] uppercase text-zinc-600 font-bold mb-6 block">
-                Core Arsenal
-              </span>
-              
-              {/* Dynamically Mapped Arsenal Columns */}
-              <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
-                {arsenalColumns.map((column, colIndex) => (
-                  <ul key={colIndex} className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
-                    {column.map((item, itemIndex) => (
-                      <li key={itemIndex} className="arsenal-item flex items-center gap-3">
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> {item}
-                      </li>
-                    ))}
-                  </ul>
-                ))}
-              </div>
-            </div>
+            <Arsenal />
 
           </div>
         </div>

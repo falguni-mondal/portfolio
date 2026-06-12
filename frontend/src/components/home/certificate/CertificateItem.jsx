@@ -34,7 +34,7 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
       rel="noopener noreferrer"
       ref={itemRef}
       onClick={() => setActiveIndex(index)}
-      className={`cert-item opacity-0 translate-y-[40px] will-change-transform group relative w-full flex flex-col justify-between border p-8 lg:p-10 h-[280px] lg:h-[320px] transition-colors duration-500 cursor-pointer ${isActive ? 'is-active bg-[#0a0a0a] border-zinc-700/80' : 'bg-[#0e0e0e] border-zinc-800'} hover:bg-[#0a0a0a] hover:border-zinc-700/80`}
+      className={`cert-item opacity-0 translate-y-[40px] group relative w-full flex flex-col justify-between border p-8 lg:p-10 h-[280px] lg:h-[320px] transition-colors duration-500 cursor-pointer ${isActive ? 'is-active bg-[#0a0a0a] border-zinc-700/80' : 'bg-[#0e0e0e] border-zinc-800'} hover:bg-[#0a0a0a] hover:border-zinc-700/80`}
     >
       
       {/* TOP: Year & Issuer (organization mapped from JSON) */}

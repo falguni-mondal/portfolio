@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import LabItem from './LabItem';
 import data from '../../../data.json';
+import SectionHeading from '../global/SectionHeading';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -100,21 +101,7 @@ const Lab = () => {
           
           <div className="lg:col-span-5 relative lg:sticky lg:top-[15svh] flex flex-col z-20">
             
-            <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6rem] xl:text-[7rem] leading-[0.95em] tracking-tighter flex flex-col">
-              
-              <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">
-                <span className="heading-block block font-light italic text-zinc-500 origin-bottom-left will-change-transform">
-                  Digital
-                </span> 
-              </span>
-              
-              <span className="overflow-hidden block pb-2 lg:pb-4 pr-6 -mt-2 lg:-mt-4">
-                <span className="heading-block block text-[#f3f3f3] font-bold pr-2 origin-bottom-left will-change-transform">
-                  Playground.
-                </span>
-              </span>
-
-            </h2>
+            <SectionHeading line1="Digital" line2="Playground." />
 
             <p className="p-line text-zinc-400 text-sm lg:text-base leading-relaxed mt-6 lg:mt-8 max-w-sm">
               A personal archive of passion projects, technical experiments, and creative coding logic built to push the boundaries of my own learning and creativity.

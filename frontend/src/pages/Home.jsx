@@ -3,7 +3,7 @@ import Hero from '../components/home/Hero';
 import Experience from '../components/home/experience/Experience';
 import HomeCanvasBackground from '../components/home/HomeCanvasBackground';
 import Works from '../components/home/works/Works';
-import About from '../components/home/About';
+import About from '../components/home/about/About';
 import Lab from '../components/home/lab/Lab';
 import Certificates from '../components/home/certificate/Certificates';
 import Signature from '../components/home/Signature';

@@ -77,7 +77,7 @@ const Signature = () => {
       <div className="w-full max-w-[1600px] mx-auto flex flex-col items-center text-center">
         
         {/* THE QUOTE TEXT */}
-        <span className="quote-text opacity-0 font-light italic text-lg sm:text-xl lg:text-3xl mb-4 lg:mb-8 block will-change-transform">
+        <span className="quote-text opacity-0 font-light italic text-lg sm:text-xl lg:text-3xl mb-4 lg:mb-8 block">
           "You were experiencing the portfolio —"
         </span>
 
@@ -99,7 +99,7 @@ const Signature = () => {
               {["a", "l", "g", "u", "n", "i"].map((char, index) => (
                 <span 
                   key={index} 
-                  className="drop-char inline-block origin-top will-change-transform"
+                  className="drop-char inline-block origin-top"
                 >
                   {char}
                 </span>

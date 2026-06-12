@@ -96,7 +96,7 @@ const Preloader = ({ setHasLoaded }) => {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className="curtain-strip w-[20.5%] h-full bg-[#0a0a0a] will-change-transform"
+            className="curtain-strip w-[20.5%] h-full bg-[#0a0a0a]"
           />
         ))}
       </div>
