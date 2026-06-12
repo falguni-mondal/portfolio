@@ -190,7 +190,7 @@ const GlobalRingCanvas = () => {
       <Canvas 
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
         dpr={[1, 1.5]} 
-        gl={{ powerPreference: "high-performance", antialias: true, alpha: true }}
+        gl={{ powerPreference: "default", antialias: true, alpha: true }}
       >
         <ambientLight intensity={0.4} />
         
