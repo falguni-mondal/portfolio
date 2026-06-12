@@ -86,52 +86,55 @@ const About = () => {
     });
 
     // ==========================================
-    // MOBILE / TABLET: Individual ScrollTriggers
+    // MOBILE / TABLET: Individual ScrollTriggers (Waterfall Optimized)
     // ==========================================
     mm.add("(max-width: 1023px)", () => {
+      
       gsap.fromTo(".editorial-header", 
         { opacity: 0 }, 
-        { opacity: 1, duration: 1, scrollTrigger: { trigger: ".editorial-header", start: "top 75%" } }
+        { opacity: 1, duration: 1, scrollTrigger: { trigger: ".editorial-header", start: "top 85%" } }
       );
 
       gsap.fromTo(".heading-block",
         { y: 80, skewY: 4, filter: "blur(8px)", opacity: 0 },
-        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 75%" } }
+        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 85%" } }
       );
 
       // Sub-heading mobile animated line
       gsap.to(".sub-heading-block .animated-line", { 
-        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 80%" } 
       });
 
       gsap.fromTo(".sub-heading-block",
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } }
+        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 80%" } }
       );
 
-      gsap.fromTo(".p-word",
-        { yPercent: 120, opacity: 0, rotateZ: 2 },
-        { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1, stagger: 0.015, ease: "power4.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
+      // Animates the simplified mobile text block instead of individual words
+      gsap.fromTo(".p-mobile-text",
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
       );
 
       gsap.fromTo(".cta-block",
         { y: 400 },
-        { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
+        { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
       );
 
       // Arsenal block animated line
       gsap.to(".arsenal-block .animated-line", { 
-        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } 
       });
 
       gsap.fromTo(".arsenal-header", 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.8, scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
+        { opacity: 1, duration: 0.8, scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } }
       );
       
-      gsap.fromTo(".arsenal-item",
+      // OPTIMIZED: Animate the 3 columns instead of the 15+ individual items
+      gsap.fromTo(".arsenal-column",
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.08, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
+        { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } }
       );
     });
 

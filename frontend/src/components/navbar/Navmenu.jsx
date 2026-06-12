@@ -2,6 +2,10 @@ import React, { useRef } from 'react'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { Link } from 'react-router-dom'
+import data from '../../data.json'
+
+// Extract contact data directly from JSON
+const { linkedin, github } = data.contact;
 
 const Navmenu = ({ isOpen, setIsOpen }) => {
   const containerRef = useRef(null);
@@ -50,7 +54,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 z-40 bg-zinc-900/80 backdrop-blur-md flex flex-col justify-center px-8 md:px-16 pointer-events-none"
+      className="fixed inset-0 z-40 bg-zinc-900/90 backdrop-blur-md flex flex-col justify-center px-8 md:px-16 pointer-events-none"
       style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
     >
       <div className="flex flex-col gap-4 md:gap-6 max-w-7xl w-full mx-auto">
@@ -75,18 +79,21 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
                 ref={(el) => (linksRef.current[navLinks.length] = el)} 
                 className="flex flex-wrap gap-6 md:gap-10 font-mono text-[0.75rem] md:text-sm tracking-[0.2em] text-gray-300 font-semibold uppercase"
             >
-                <a href="https://linkedin.com" target="_blank" rel="noreferrer" className="group hover:text-white transition-colors duration-300">
+                {/* Dynamically mapped LinkedIn from data.json */}
+                <a href={linkedin} target="_blank" rel="noreferrer" className="group hover:text-white transition-colors duration-300">
                     <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">[</span>
                     LINKEDIN
                     <span className="text-gray-500 ml-2 group-hover:text-[#FF5733] transition-colors">]</span>
                 </a>
                 
-                <a href="https://github.com" target="_blank" rel="noreferrer" className="group hover:text-white transition-colors duration-300">
+                {/* Dynamically mapped GitHub from data.json */}
+                <a href={github} target="_blank" rel="noreferrer" className="group hover:text-white transition-colors duration-300">
                     <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">[</span>
                     GITHUB
                     <span className="text-gray-500 ml-2 group-hover:text-[#FF5733] transition-colors">]</span>
                 </a>
                 
+                {/* Standard Public Folder Resume Link */}
                 <a href="/resume.pdf" target="_blank" rel="noreferrer" className="group hover:text-white transition-colors duration-300">
                     <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">[</span>
                     RESUME

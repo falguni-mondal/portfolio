@@ -264,8 +264,9 @@ const Hero = () => {
 
           {/* THE WRAPPER: Handles the initial timeline scale animation */}
           <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 z-20">
-            {/* THE MAGNETIC BUTTON */}
-            <button
+            
+            <a
+              href="#contact"
               ref={btnRef}
               onMouseEnter={handleMouseEnter}
               onMouseMove={handleMouseMove}
@@ -289,7 +290,8 @@ const Hero = () => {
                   className="text-sm lg:text-base"
                 />
               </span>
-            </button>
+            </a>
+            
           </div>
         </div>
       </div>

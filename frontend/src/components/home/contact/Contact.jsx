@@ -8,8 +8,8 @@ import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Extract contact data directly from JSON
-const { mail, phone, linkedin, github, insta } = data.contact;
+// Extract contact data directly from JSON (Phone removed)
+const { mail, linkedin, github, insta } = data.contact;
 
 const Contact = () => {
   const sectionRef = useRef(null);
@@ -162,7 +162,7 @@ const Contact = () => {
           {/* RIGHT SIDE: The Data List */}
           <div className="lg:col-span-7 flex flex-col w-full mt-4 lg:mt-0">
             
-            {/* EMAIL BLOCK (Born invisible and shifted) */}
+            {/* EMAIL BLOCK */}
             <div 
               onClick={() => handleCopy(mail, 'email')}
               className="contact-item opacity-0 translate-y-10 group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
@@ -180,35 +180,13 @@ const Contact = () => {
                 </div>
               </div>
               
-              <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-zinc-300 group-hover:text-[#f3f3f3] transform group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pb-2 leading-normal break-all sm:break-normal">
+              {/* UPDATED: Text is bright #f3f3f3 on mobile, dull on desktop until hovered */}
+              <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-[#f3f3f3] lg:text-zinc-300 group-hover:text-[#f3f3f3] transform group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pb-2 leading-normal break-all sm:break-normal">
                 {mail}
               </span>
             </div>
 
-            {/* PHONE BLOCK (Born invisible and shifted) */}
-            <div 
-              onClick={() => handleCopy(`+91${phone}`, 'phone')}
-              className="contact-item opacity-0 translate-y-10 group flex flex-col border-t border-zinc-700 py-8 lg:py-10 cursor-pointer overflow-hidden"
-            >
-              <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
-                <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase transition-colors group-hover:text-[#FF5733]">
-                  Call me at
-                </span>
-                <div className="flex items-center h-6 overflow-hidden">
-                  {copiedData === 'phone' ? (
-                    <span className="text-[#FF5733] text-[0.65rem] tracking-widest uppercase font-bold animate-pulse">Copied</span>
-                  ) : (
-                    <span className="text-zinc-600 text-[0.65rem] tracking-widest uppercase font-bold group-hover:text-[#f3f3f3] transition-colors">Click to Copy</span>
-                  )}
-                </div>
-              </div>
-              
-              <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-zinc-300 group-hover:text-[#f3f3f3] transform group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pb-2 leading-normal">
-                +91 {phone}
-              </span>
-            </div>
-
-            {/* DIGITAL / SOCIALS BLOCK (Born invisible and shifted) */}
+            {/* DIGITAL / SOCIALS BLOCK */}
             <div className="contact-item opacity-0 translate-y-10 flex flex-col border-t border-zinc-700 py-8 lg:py-10">
               <span className="text-[0.65rem] tracking-[0.2em] font-bold text-zinc-500 uppercase mb-6 lg:mb-8">
                 Connect with me
@@ -220,10 +198,11 @@ const Contact = () => {
                 <a href={linkedin} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
-                      <span className="text-2xl lg:text-4xl font-light text-zinc-400">
+                      {/* UPDATED: Links are bright #f3f3f3 on mobile, dull on desktop */}
+                      <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3] lg:text-zinc-400">
                         LinkedIn
                       </span>
-                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-zinc-600" />
+                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-[#f3f3f3] lg:text-zinc-600" />
                     </div>
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3]">
@@ -238,10 +217,11 @@ const Contact = () => {
                 <a href={insta} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
-                      <span className="text-2xl lg:text-4xl font-light text-zinc-400">
+                      {/* UPDATED: Links are bright #f3f3f3 on mobile, dull on desktop */}
+                      <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3] lg:text-zinc-400">
                         Instagram
                       </span>
-                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-zinc-600" />
+                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-[#f3f3f3] lg:text-zinc-600" />
                     </div>
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3]">
@@ -256,10 +236,11 @@ const Contact = () => {
                 <a href={github} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
-                      <span className="text-2xl lg:text-4xl font-light text-zinc-400">
+                      {/* UPDATED: Links are bright #f3f3f3 on mobile, dull on desktop */}
+                      <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3] lg:text-zinc-400">
                         GitHub
                       </span>
-                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-zinc-600" />
+                      <Icon icon="material-symbols:arrow-outward-rounded" className="text-xl lg:text-2xl text-[#f3f3f3] lg:text-zinc-600" />
                     </div>
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-[#f3f3f3]">
@@ -278,7 +259,7 @@ const Contact = () => {
         </div>
 
         {/* ABSOLUTE BOTTOM FOOTER (Born invisible and shifted) */}
-        <div className="footer-fade opacity-0 translate-y-10 w-full flex flex-col sm:flex-row items-center justify-between mt-24 lg:mt-32 pt-8 gap-6 sm:gap-0">
+        <div className="footer-fade opacity-0 translate-y-10 w-full flex flex-col sm:flex-row items-center justify-between mt-20 lg:mt-24 pt-8 gap-6 sm:gap-0">
           
           <div className="flex items-center gap-2 text-zinc-500">
             <Icon icon="material-symbols:copyright-outline" className="text-sm" />

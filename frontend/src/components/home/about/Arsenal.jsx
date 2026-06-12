@@ -24,7 +24,7 @@ const Arsenal = () => {
       {/* Dynamically Mapped Arsenal Columns */}
       <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
         {arsenalColumns.map((column, colIndex) => (
-          <ul key={colIndex} className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
+          <ul key={colIndex} className="arsenal-column flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
             {column.map((item, itemIndex) => (
               <li key={itemIndex} className="arsenal-item flex items-center gap-3">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> {item}
