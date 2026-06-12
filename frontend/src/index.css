@@ -27,6 +27,7 @@ body {
   background-position: center center;
   position: relative;
   z-index: 0;
+  scroll-behavior: smooth;
 }
 
 .head-txt {
