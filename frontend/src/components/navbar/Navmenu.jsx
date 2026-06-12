@@ -44,7 +44,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
     { title: 'Works', path: '/#works' },
     { title: 'About', path: '/#about' },
     { title: 'Lab', path: '/#lab' },
-    { title: 'Certs', path: '/#certifications' },
+    { title: 'Certs', path: '/#certificates' },
   ];
 
   return (
@@ -58,14 +58,14 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
         {/* SPA Internal Navigation Links via React Router */}
         {navLinks.map((link, index) => (
           <div key={index} className="overflow-hidden">
-            <Link 
+            <a 
               ref={(el) => (linksRef.current[index] = el)}
-              to={link.path} 
+              href={link.path} 
               onClick={() => setIsOpen(false)} 
               className="font-display text-6xl md:text-[7rem] uppercase leading-[0.85em] text-[#f8f8f8] hover:text-[#FF5733] transition-colors inline-block w-fit tracking-tighter"
             >
               {link.title}
-            </Link>
+            </a>
           </div>
         ))}
 

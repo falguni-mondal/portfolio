@@ -81,7 +81,7 @@ const Lab = () => {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="lab-section" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
+    <section ref={sectionRef} id="lab" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         

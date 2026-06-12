@@ -210,7 +210,7 @@ const Hero = () => {
     <section
       ref={heroRef}
       className="h-[calc(100svh-60px)] relative lg:overflow-hidden"
-      id="hero-section"
+      id="hero"
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
         <h1 className="my-name uppercase text-[23.5vw] lg:text-[25vw] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">

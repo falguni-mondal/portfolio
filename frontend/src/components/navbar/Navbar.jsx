@@ -87,7 +87,7 @@ const Navbar = () => {
     { title: 'Works', path: '/#works' },
     { title: 'About', path: '/#about' },
     { title: 'Lab', path: '/#lab' },
-    { title: 'Certifications', path: '/#certifications' }, 
+    { title: 'Certificates', path: '/#certificates' }, 
   ];
 
   return (
@@ -105,14 +105,14 @@ const Navbar = () => {
               <ul className='hidden lg:flex gap-10 text-xs'>
                 {navLinks.map((link, index) => (
                   <li key={index} className='nav-link cursor-pointer relative uppercase'>
-                    <Link to={link.path}>{link.title}</Link>
+                    <a href={link.path}>{link.title}</a>
                   </li>
                 ))}
               </ul>
           </nav>
 
           <nav className="contact-nav uppercase text-xs hidden lg:block">
-                <Link to="/contact">( connect )</Link>
+                <a href="/#contact">( connect )</a>
           </nav>
           
           <div 

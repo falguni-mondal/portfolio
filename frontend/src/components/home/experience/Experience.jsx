@@ -57,7 +57,7 @@ const Experience = () => {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="experience-section" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 mt-20 lg:mt-24">
+    <section ref={sectionRef} id="experience" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 mt-20 lg:mt-24">
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         

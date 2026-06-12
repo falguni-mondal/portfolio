@@ -71,7 +71,7 @@ const Works = () => {
   return (
     <section
       ref={worksRef}
-      id="works-section"
+      id="works"
       className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] z-10 lg:mt-14"
     >
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">

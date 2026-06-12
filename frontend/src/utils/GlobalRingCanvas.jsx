@@ -71,7 +71,6 @@ const Ring = ({ isMobile }) => {
     // THE TIMELINES (Flawless Master Arc Architecture)
     // ==========================================
 
-    // Transition 1: About -> Lab (Glides from Left to Right)
     gsap.fromTo(scrollGroupRef.current.position,
       { 
         x: -travelDistance + centerOffset, 
@@ -83,7 +82,7 @@ const Ring = ({ isMobile }) => {
         ease: "power2.inOut",
         immediateRender: false, 
         scrollTrigger: {
-          trigger: "#lab-section",
+          trigger: "#lab",
           start: "top bottom", 
           end: "top top",      
           scrub: 1,
@@ -95,7 +94,7 @@ const Ring = ({ isMobile }) => {
     // This single timeline spans the entire lifespan of the Signature section visibility
     const sigTl = gsap.timeline({
       scrollTrigger: {
-        trigger: "#signature-section",
+        trigger: "#signature",
         start: "top bottom", // Triggers when Signature enters the bottom of the screen
         end: "bottom top",   // Ends when Signature completely leaves the top of the screen
         scrub: 1,

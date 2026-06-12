@@ -72,7 +72,7 @@ const Signature = () => {
   }, { scope: sectionRef });
 
   return (
-    <section ref={sectionRef} id="signature-section" className="relative w-full py-[15svh] lg:py-[25svh] px-5 lg:px-10 z-10 flex flex-col items-center justify-center overflow-hidden">
+    <section ref={sectionRef} id="signature" className="relative w-full py-[15svh] lg:py-[25svh] px-5 lg:px-10 z-10 flex flex-col items-center justify-center overflow-hidden">
       
       <div className="w-full max-w-[1600px] mx-auto flex flex-col items-center text-center">
         
