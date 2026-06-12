@@ -208,13 +208,19 @@ const GlobalRingCanvas = () => {
 
         <Ring isMobile={isMobile} />
 
-        {!isMobile && (
+        {/* {!isMobile && (
           <EffectComposer disableNormalPass>
             <Noise opacity={0.02} />
             <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.1} mipmapBlur />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
-        )}
+        )} */}
+
+        <EffectComposer disableNormalPass>
+            <Noise opacity={0.02} />
+            <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.1} mipmapBlur />
+            <Vignette eskil={false} offset={0.1} darkness={1.1} />
+          </EffectComposer>
       </Canvas>
     </div>
   );
