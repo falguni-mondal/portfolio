@@ -42,7 +42,8 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
         <span className="text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 transition-colors duration-500 group-hover:text-zinc-400 group-[.is-active]:text-zinc-400">
           {cert.year}
         </span>
-        <span className="text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase transition-colors duration-500 group-hover:text-zinc-400 group-[.is-active]:text-zinc-400">
+        {/* Changed hover and active states to #FF5733 */}
+        <span className="text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase transition-colors duration-500 group-hover:text-[#FF5733] group-[.is-active]:text-[#FF5733]">
           {cert.organization}
         </span>
       </div>
@@ -55,7 +56,7 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
       </div>
 
       {/* BOTTOM: Minimal Ledger */}
-      <div className="flex items-end justify-between w-full mt-8 pt-6 border-t border-dotted border-zinc-800/50 transition-colors duration-500 group-hover:border-zinc-700 group-[.is-active]:border-zinc-700">
+      <div className="flex items-end justify-between w-full mt-8 pt-6 border-t border-dotted border-zinc-800/50 transition-colors duration-500 group-hover:border-zinc-600 group-[.is-active]:border-zinc-600">
         
         <div className="flex flex-col gap-1.5">
           <span className="text-[0.55rem] uppercase tracking-[0.2em] text-zinc-600 transition-colors duration-500">
