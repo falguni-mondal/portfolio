@@ -28,27 +28,29 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
   }, { scope: itemRef });
 
   return (
-    <div 
+    <a 
+      href={cert.url}
+      target="_blank"
+      rel="noopener noreferrer"
       ref={itemRef}
       onClick={() => setActiveIndex(index)}
-      // FIXED: Native React ternary logic for the parent's background and border.
       className={`cert-item opacity-0 translate-y-[40px] will-change-transform group relative w-full flex flex-col justify-between border p-8 lg:p-10 h-[280px] lg:h-[320px] transition-colors duration-500 cursor-pointer ${isActive ? 'is-active bg-[#0a0a0a] border-zinc-700/80' : 'bg-[#0e0e0e] border-zinc-800'} hover:bg-[#0a0a0a] hover:border-zinc-700/80`}
     >
       
-      {/* TOP: Year & Issuer */}
+      {/* TOP: Year & Issuer (organization mapped from JSON) */}
       <div className="flex justify-between items-center w-full">
         <span className="text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 transition-colors duration-500 group-hover:text-zinc-400 group-[.is-active]:text-zinc-400">
           {cert.year}
         </span>
         <span className="text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase transition-colors duration-500 group-hover:text-zinc-400 group-[.is-active]:text-zinc-400">
-          {cert.issuer}
+          {cert.organization}
         </span>
       </div>
 
-      {/* CENTER: Typography */}
+      {/* CENTER: Typography (name mapped from JSON) */}
       <div className="mt-8 mb-auto pr-4">
         <h3 className="text-xl lg:text-3xl font-medium text-zinc-300 group-hover:text-[#f3f3f3] group-[.is-active]:text-[#f3f3f3] transition-colors duration-500 leading-tight">
-          {cert.title}
+          {cert.name}
         </h3>
       </div>
 
@@ -59,8 +61,9 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
           <span className="text-[0.55rem] uppercase tracking-[0.2em] text-zinc-600 transition-colors duration-500">
             Credential ID
           </span>
+          {/* Conditional rendering for empty certId */}
           <span className="text-xs sm:text-sm font-mono tracking-widest text-zinc-400 transition-colors duration-500 group-hover:text-zinc-300 group-[.is-active]:text-zinc-300">
-            {cert.credentialId}
+            {cert.certId ? cert.certId : "N/A"}
           </span>
         </div>
 
@@ -75,7 +78,7 @@ const CertificateItem = ({ cert, index, activeIndex, setActiveIndex }) => {
         
       </div>
 
-    </div>
+    </a>
   );
 };
 

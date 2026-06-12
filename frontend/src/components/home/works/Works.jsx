@@ -4,39 +4,11 @@ import VideoPortal from "./VideoPortal";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const MOCK_PROJECTS = [
-  {
-    id: 1,
-    title: "Nabajagaran",
-    description:
-      "A comprehensive digital ecosystem balancing traditional aesthetics with modern MERN stack architecture.",
-    imgUrl: "/me.webp",
-  },
-  {
-    id: 2,
-    title: "Command Center",
-    description:
-      "A centralized, high-performance dashboard for tracking daily gaming routines and server resets.",
-    imgUrl: "/me.webp",
-  },
-  {
-    id: 3,
-    title: "Lighting AI",
-    description:
-      "An interactive interface for generating cinematic, editorial-quality image prompts with precise volumetric control.",
-    imgUrl: "/me.webp",
-  },
-  {
-    id: 4,
-    title: "Retail Backend",
-    description:
-      "A robust, scalable Node.js/Express architecture engineered to handle high-volume e-commerce transactions.",
-    imgUrl: "/me.webp",
-  },
-];
+const worksData = data.works;
 
 const Works = () => {
   const [activeIndex, setActiveIndex] = useState(null);
@@ -100,11 +72,11 @@ const Works = () => {
     <section
       ref={worksRef}
       id="works-section"
-      className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14"
+      className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] z-10 lg:mt-14"
     >
       <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
-        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
+        <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-8 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12 px-5 lg:px-10">
           
           <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6rem] xl:text-[7rem] leading-[0.75em] tracking-tighter flex flex-col">
             
@@ -135,9 +107,9 @@ const Works = () => {
         </div>
 
         <div className="w-full flex flex-col works-fade">
-          {MOCK_PROJECTS.map((project, index) => (
+          {worksData.map((project, index) => (
             <ProjectItem
-              key={project.id}
+              key={index}
               project={project}
               index={index}
               activeIndex={activeIndex}
@@ -147,7 +119,7 @@ const Works = () => {
         </div>
       </div>
 
-      <VideoPortal projects={MOCK_PROJECTS} activeIndex={activeIndex} />
+      <VideoPortal projects={worksData} activeIndex={activeIndex} />
     </section>
   );
 };

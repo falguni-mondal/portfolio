@@ -4,15 +4,16 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { Icon } from '@iconify/react';
 import LocalTime from './LocalTime';
+import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Extract contact data directly from JSON
+const { mail, phone, linkedin, github, insta } = data.contact;
 
 const Contact = () => {
   const sectionRef = useRef(null);
   const [copiedData, setCopiedData] = useState(null);
-
-  const email = "hello@falguni.dev";
-  const phone = "+91 00000 00000";
 
   useGSAP(() => {
     let mm = gsap.matchMedia();
@@ -163,7 +164,7 @@ const Contact = () => {
             
             {/* EMAIL BLOCK (Born invisible and shifted) */}
             <div 
-              onClick={() => handleCopy(email, 'email')}
+              onClick={() => handleCopy(mail, 'email')}
               className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
@@ -180,13 +181,13 @@ const Contact = () => {
               </div>
               
               <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-zinc-300 group-hover:text-[#f3f3f3] transform group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pb-2 leading-normal break-all sm:break-normal">
-                {email}
+                {mail}
               </span>
             </div>
 
             {/* PHONE BLOCK (Born invisible and shifted) */}
             <div 
-              onClick={() => handleCopy(phone, 'phone')}
+              onClick={() => handleCopy(`+91${phone}`, 'phone')}
               className="contact-item opacity-0 translate-y-10 will-change-transform group flex flex-col border-t border-zinc-700 py-8 lg:py-10 cursor-pointer overflow-hidden"
             >
               <div className="flex items-center justify-between w-full mb-2 lg:mb-4">
@@ -203,7 +204,7 @@ const Contact = () => {
               </div>
               
               <span className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light text-zinc-300 group-hover:text-[#f3f3f3] transform group-hover:translate-x-2 lg:group-hover:translate-x-4 transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] pb-2 leading-normal">
-                {phone}
+                +91 {phone}
               </span>
             </div>
 
@@ -216,7 +217,7 @@ const Contact = () => {
               <div className="flex flex-col sm:flex-row flex-wrap gap-8 sm:gap-12 lg:gap-16">
                 
                 {/* LinkedIn */}
-                <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
+                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-zinc-400">
@@ -234,7 +235,7 @@ const Contact = () => {
                 </a>
 
                 {/* Instagram */}
-                <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
+                <a href={insta} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-zinc-400">
@@ -252,7 +253,7 @@ const Contact = () => {
                 </a>
 
                 {/* GitHub */}
-                <a href="#" target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
+                <a href={github} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden h-[32px] lg:h-[40px] w-fit">
                   <div className="flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] group-hover:-translate-y-1/2">
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
                       <span className="text-2xl lg:text-4xl font-light text-zinc-400">

@@ -3,23 +3,15 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import ExperienceItem from './ExperienceItem';
+import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const EXPERIENCES = [
-  {
-    id: 1,
-    role: "Lead Full Stack Web Developer",
-    company: "Graphitage",
-    type: "Digital Ad Agency",
-    duration: "Nov 2025 — Present",
-    projects: ["SIHM", "Mritsna", "Ankuran", "StemQuest"],
-    isActive: true, 
-  }
-];
+const experiences = data.experience;
 
 const Experience = () => {
   const sectionRef = useRef(null);
+  
 
   useGSAP(() => {
     const tl = gsap.timeline({
@@ -103,7 +95,7 @@ const Experience = () => {
         
         {/* THE EXPERIENCE ROWS */}
         <div className="flex flex-col w-full exp-fade">
-          {EXPERIENCES.map((exp) => (
+          {experiences.map((exp) => (
             <ExperienceItem key={exp.id} exp={exp} />
           ))}
         </div>

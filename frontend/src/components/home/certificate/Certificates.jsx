@@ -3,43 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import CertificateItem from './CertificateItem';
+import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const MOCK_CERTIFICATES = [
-  {
-    id: 1,
-    title: "Advanced React & Interactive UI",
-    issuer: "Meta",
-    year: "2025",
-    credentialId: "MT-88291X",
-    link: "#"
-  },
-  {
-    id: 2,
-    title: "Back-End Web Architecture (Node.js)",
-    issuer: "IBM",
-    year: "2024",
-    credentialId: "IB-40922A",
-    link: "#"
-  },
-  {
-    id: 3,
-    title: "JavaScript Algorithms & Data Structures",
-    issuer: "freeCodeCamp",
-    year: "2024",
-    credentialId: "FC-11099B",
-    link: "#"
-  },
-  {
-    id: 4,
-    title: "MongoDB Data Modeling",
-    issuer: "MongoDB University",
-    year: "2024",
-    credentialId: "MG-33420C",
-    link: "#"
-  }
-];
+// Dynamically pulling the certificates array from your JSON data
+const certificatesData = data.certificates;
 
 const Certificates = () => {
   const sectionRef = useRef(null);
@@ -164,9 +133,9 @@ const Certificates = () => {
 
         {/* THE PLAQUE GRID */}
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 w-full">
-          {MOCK_CERTIFICATES.map((cert, index) => (
+          {certificatesData.map((cert, index) => (
             <CertificateItem 
-              key={cert.id} 
+              key={index} 
               cert={cert} 
               index={index}
               activeIndex={activeIndex}

@@ -63,22 +63,33 @@ const VideoPortal = ({ projects, activeIndex }) => {
   return (
     <div 
       ref={portalRef}
-      // FIXED: Dynamic classes based on isMobile
-      className={`fixed z-50 overflow-hidden scale-0 rounded-xl pointer-events-none shadow-2xl ${
+      className={`fixed z-50 overflow-hidden scale-0 rounded-sm pointer-events-none shadow-2xl ${
         isMobile 
           ? "bottom-8 right-10 w-[200px] h-[125px] origin-bottom-right border border-zinc-800" 
-          : "top-0 left-0 w-[340px] h-[200px] origin-center"
+          : "top-0 left-0 w-[420px] h-[240px] origin-center"
       }`}
     >
       <div ref={filmstripRef} className="w-full h-full flex flex-col will-change-transform">
         
-        {projects.map((project) => (
-          <div key={project.id} className="w-full h-full flex-shrink-0 bg-zinc-900">
-            <img 
-              src={project.imgUrl} 
-              alt={project.title} 
-              className="w-full h-full object-cover opacity-80"
-            />
+        {projects.map((project, index) => (
+          <div key={index} className="w-full h-full flex-shrink-0 bg-zinc-900 relative">
+            
+            {/* Conditional Rendering: Video vs Fallback */}
+            {project.videoUrl ? (
+              <video 
+                src={project.videoUrl} 
+                autoPlay 
+                loop 
+                muted 
+                playsInline
+                className="w-full h-full object-cover opacity-80"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-zinc-800 text-zinc-500 font-mono text-[0.65rem] uppercase tracking-[0.2em]">
+                {project.isOngoing ? "Work In Progress" : "Preview Unavailable"}
+              </div>
+            )}
+
           </div>
         ))}
 

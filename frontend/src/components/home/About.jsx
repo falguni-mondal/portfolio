@@ -3,8 +3,20 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { Icon } from '@iconify/react'; 
+import data from '../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Dynamically pull the arsenal array
+const arsenalData = data.arsenal;
+
+// Smart chunking to automatically divide the array into 3 balanced columns for the UI
+const chunkSize = Math.ceil(arsenalData.length / 3);
+const arsenalColumns = [
+  arsenalData.slice(0, chunkSize),
+  arsenalData.slice(chunkSize, chunkSize * 2),
+  arsenalData.slice(chunkSize * 2)
+];
 
 const About = () => {
   const sectionRef = useRef(null);
@@ -214,9 +226,7 @@ const About = () => {
               </h2>
             </div>
 
-            {/* Added relative positioning and the animated-line div. Removed native border classes. */}
             <div className="sub-heading-block relative mt-12 lg:mt-auto pt-8 lg:pt-0">
-              {/* Only shows on mobile to replicate the original lg:border-none behavior */}
               <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0 lg:hidden"></div>
               
               <h4 className="lg:text-xl text-zinc-200 font-medium leading-snug">
@@ -273,7 +283,6 @@ const About = () => {
 
             </div>
 
-            {/* Added relative positioning and the animated-line div. Removed native border classes. */}
             <div className="arsenal-block relative pt-10 lg:pt-12 mt-auto">
               <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0"></div>
               
@@ -281,22 +290,17 @@ const About = () => {
                 Core Arsenal
               </span>
               
+              {/* Dynamically Mapped Arsenal Columns */}
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-6 gap-x-4">
-                <ul className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> React & Vite</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> Tailwind CSS</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> JS (ES6+)</li>
-                </ul>
-                <ul className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> Node.js / Express</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> MongoDB</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> RESTful APIs</li>
-                </ul>
-                <ul className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> GSAP Animation</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> WebGL / Three.js</li>
-                  <li className="arsenal-item flex items-center gap-3"><span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> WordPress</li>
-                </ul>
+                {arsenalColumns.map((column, colIndex) => (
+                  <ul key={colIndex} className="flex flex-col gap-3 text-sm lg:text-base text-zinc-300 font-medium">
+                    {column.map((item, itemIndex) => (
+                      <li key={itemIndex} className="arsenal-item flex items-center gap-3">
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                ))}
               </div>
             </div>
 

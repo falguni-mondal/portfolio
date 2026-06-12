@@ -35,7 +35,7 @@ const ExperienceItem = ({ exp }) => {
       {/* Kept horizontal shift on lg:group-hover, removed from group-[.is-clicked] */}
       <div className="lg:col-span-3 flex items-center gap-4 transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:translate-x-6">
         
-        {exp.isActive ? (
+        {exp.isPresent ? (
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FF5733] opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#FF5733]"></span>
@@ -44,8 +44,8 @@ const ExperienceItem = ({ exp }) => {
           <span className="w-1.5 h-1.5 rounded-full bg-zinc-700 transition-colors duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:bg-[#FF5733] group-[.is-clicked]:bg-[#FF5733]"></span>
         )}
         
-        <span className="text-xs lg:text-sm tracking-[0.1em] font-medium text-zinc-500 transition-colors duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:text-[#f3f3f3] group-[.is-clicked]:text-[#f3f3f3]">
-          {exp.duration}
+        <span className="text-xs lg:text-sm tracking-[0.1em] font-medium text-zinc-500 capitalize transition-colors duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:text-[#f3f3f3] group-[.is-clicked]:text-[#f3f3f3]">
+          {exp.from} — {exp.isPresent ? "Present" : exp.to}
         </span>
       </div>
 
@@ -53,14 +53,14 @@ const ExperienceItem = ({ exp }) => {
       {/* Kept horizontal shift on lg:group-hover, removed from group-[.is-clicked] */}
       <div className="lg:col-span-3 flex flex-col items-start transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:translate-x-2">
         
-        {/* Vertical Text Flip Container (This stays on click since it doesn't shift the layout horizontally) */}
+        {/* Vertical Text Flip Container */}
         <div className="relative overflow-hidden h-[28px] lg:h-[32px]">
           <div className="flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:-translate-y-1/2 group-[.is-clicked]:-translate-y-1/2">
-            <h3 className="text-xl lg:text-2xl font-light text-zinc-300 h-[28px] lg:h-[32px] flex items-center">
-              {exp.company}
+            <h3 className="text-xl lg:text-2xl font-light text-zinc-300 h-[28px] lg:h-[32px] flex items-center capitalize">
+              {exp.name}
             </h3>
-            <h3 className="text-xl lg:text-2xl font-medium text-[#f3f3f3] h-[28px] lg:h-[32px] flex items-center">
-              {exp.company}
+            <h3 className="text-xl lg:text-2xl font-medium text-[#f3f3f3] h-[28px] lg:h-[32px] flex items-center capitalize">
+              {exp.name}
             </h3>
           </div>
         </div>
@@ -73,7 +73,7 @@ const ExperienceItem = ({ exp }) => {
       {/* 3. ROLE */}
       {/* Kept horizontal shift on lg:group-hover, removed from group-[.is-clicked] */}
       <div className="lg:col-span-3 flex items-center transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:-translate-x-2">
-        <p className="text-base lg:text-lg prime-txt font-medium text-zinc-400 transition-colors duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:text-[#f3f3f3] group-[.is-clicked]:text-[#f3f3f3]">
+        <p className="text-base lg:text-lg prime-txt font-medium text-zinc-400 capitalize transition-colors duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:text-[#f3f3f3] group-[.is-clicked]:text-[#f3f3f3]">
           {exp.role}
         </p>
       </div>

@@ -3,33 +3,12 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import LabItem from './LabItem';
+import data from '../../../data.json';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Updated with the new base and reveal image paths
-const LAB_PROJECTS = [
-  {
-    id: 1,
-    title: "Fluid Waving Textures",
-    baseImage: "/lab_img1.jpg",
-    revealImage: "/lab_img1a.jpg",
-    tech: ["WebGL", "GLSL Shaders", "GSAP"],
-  },
-  {
-    id: 2,
-    title: "Interactive 3D Owl",
-    baseImage: "/lab_img2.jpg",
-    revealImage: "/lab_img2a.jpg",
-    tech: ["Three.js", "React Three Fiber"],
-  },
-  {
-    id: 3,
-    title: "Nexus Image Engine",
-    baseImage: "/lab_img3.jpg",
-    revealImage: "/lab_img3a.jpg",
-    tech: ["JavaScript", "Canvas API"],
-  }
-];
+// Dynamically pulling the lab array from your JSON data
+const labData = data.lab;
 
 const Lab = () => {
   const sectionRef = useRef(null);
@@ -144,9 +123,9 @@ const Lab = () => {
 
           {/* THE MEDIA CANVAS: Pass active state props to children */}
           <div className="lg:col-span-7 flex flex-col gap-16 lg:gap-32 w-full mt-4 lg:mt-0 z-10">
-            {LAB_PROJECTS.map((project, index) => (
+            {labData.map((project, index) => (
               <LabItem 
-                key={project.id} 
+                key={index} 
                 project={project} 
                 index={index} 
                 activeIndex={activeIndex}
