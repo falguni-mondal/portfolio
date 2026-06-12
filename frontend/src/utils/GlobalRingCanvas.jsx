@@ -10,7 +10,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger);
 
 const Ring = ({ isMobile }) => {
-  const { scene } = useGLTF('/falguni_ring.glb');
+  const { scene } = useGLTF('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
   
   const scrollGroupRef = useRef(); 
   const mouseGroupRef = useRef();  
@@ -171,7 +171,7 @@ const Ring = ({ isMobile }) => {
   );
 };
 
-useGLTF.preload('/falguni_ring.glb');
+useGLTF.preload('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
 
 const GlobalRingCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
