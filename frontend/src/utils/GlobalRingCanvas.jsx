@@ -192,7 +192,7 @@ const GlobalRingCanvas = () => {
       <Canvas 
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
         // UPDATED: Strictly cap DPR to 1 on mobile devices
-        dpr={isMobile ? 1 : [1, 1.5]} 
+        dpr={[1, 1.5]} 
         // UPDATED: "default" power preference prevents aggressive mobile OS termination
         gl={{ powerPreference: "default", antialias: true, alpha: true }}
         // UPDATED: Intercept context loss to prevent the broken Chrome face icon
@@ -219,13 +219,22 @@ const GlobalRingCanvas = () => {
 
         <Ring isMobile={isMobile} />
 
-        {!isMobile && (
+        {!isMobile ? (
           <EffectComposer disableNormalPass>
             <Noise opacity={0.02} />
             <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.1} mipmapBlur />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
-        )}
+        )
+        :
+        (
+          <EffectComposer disableNormalPass>
+            <Noise opacity={0.01} />
+            <Bloom luminanceThreshold={1.0} luminanceSmoothing={1.0} intensity={0.1} mipmapBlur />
+            <Vignette eskil={false} offset={0.1} darkness={1.1} />
+          </EffectComposer>
+        )
+      }
       </Canvas>
     </div>
   );
