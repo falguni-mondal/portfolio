@@ -16,23 +16,22 @@ const About = () => {
     let mm = gsap.matchMedia();
 
     // ==========================================
-    // PARALLAX SCRUB (Applies across all screens)
-    // ==========================================
-    gsap.to(parallaxWrapperRef.current, {
-      y: -400, 
-      ease: "none",
-      scrollTrigger: {
-        trigger: sectionRef.current,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: 1,
-      }
-    });
-
-    // ==========================================
-    // DESKTOP: Master Timeline Sequence
+    // DESKTOP: Master Timeline Sequence & Parallax
     // ==========================================
     mm.add("(min-width: 1024px)", () => {
+      
+      // OPTIMIZED: Parallax scrub is now locked to Desktop only
+      gsap.to(parallaxWrapperRef.current, {
+        y: -400, 
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1,
+        }
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -63,7 +62,7 @@ const About = () => {
         "-=1.2"
       );
 
-      // CTA Button
+      // CTA Button Fade-In (Desktop)
       tl.fromTo(".cta-block",
         { y: 400 }, 
         { y: 0, duration: 1.2, ease: "power3.out" },
@@ -116,6 +115,7 @@ const About = () => {
         { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
       );
 
+      // CTA Button Fade-In (Mobile)
       gsap.fromTo(".cta-block",
         { y: 400 },
         { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
