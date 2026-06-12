@@ -154,9 +154,7 @@ const Scene = ({ img1, img2 }) => {
     if (materialRef.current) {
       materialRef.current.uAspect = viewport.width / viewport.height;
       materialRef.current.uResolution.set(size.width, size.height);
-      
-      // ADDED DEFENSIVE CHECK: Prevents fatal React crashes if context is lost and recovering
-      if (tex1 && tex1.image && tex1.image.width) {
+      if (tex1.image) {
         materialRef.current.uImageRes.set(tex1.image.width, tex1.image.height);
       }
     }
@@ -221,19 +219,7 @@ const Scene = ({ img1, img2 }) => {
 const WebGLBlobHover = ({ baseImage, revealImage, className = "" }) => {
   return (
     <div className={`relative w-full h-full overflow-hidden bg-[#0a0a0a] ${className}`}>
-      <Canvas 
-        orthographic 
-        camera={{ position: [0, 0, 1], zoom: 1 }}
-        // UPDATED: Allow OS to manage power
-        gl={{ powerPreference: "default" }}
-        // UPDATED: Intercept context loss to prevent Chrome from rendering the X_X icon
-        onCreated={({ gl }) => {
-          gl.domElement.addEventListener('webglcontextlost', (e) => {
-            e.preventDefault();
-            console.warn('WebGL Context Lost: GPU saved by halting render.');
-          });
-        }}
-      >
+      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 1 }}>
         <Suspense fallback={null}>
           <Scene img1={baseImage} img2={revealImage} />
         </Suspense>

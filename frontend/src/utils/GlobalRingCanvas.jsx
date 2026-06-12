@@ -10,8 +10,7 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger);
 
 const Ring = ({ isMobile }) => {
-  // UPDATED: Added DRACO decoder URL as the second argument
-  const { scene } = useGLTF('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
+  const { scene } = useGLTF('/falguni_ring.glb');
   
   const scrollGroupRef = useRef(); 
   const mouseGroupRef = useRef();  
@@ -172,8 +171,7 @@ const Ring = ({ isMobile }) => {
   );
 };
 
-// UPDATED: Added DRACO decoder URL to the preloader
-useGLTF.preload('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
+useGLTF.preload('/falguni_ring.glb');
 
 const GlobalRingCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -191,17 +189,8 @@ const GlobalRingCanvas = () => {
     <div className="fixed inset-0 w-full h-[100svh] z-[-1] pointer-events-none">
       <Canvas 
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
-        // UPDATED: Strictly cap DPR to 1 on mobile devices
         dpr={[1, 1.5]} 
-        // UPDATED: "default" power preference prevents aggressive mobile OS termination
-        gl={{ powerPreference: "default", antialias: true, alpha: true }}
-        // UPDATED: Intercept context loss to prevent the broken Chrome face icon
-        onCreated={({ gl }) => {
-          gl.domElement.addEventListener('webglcontextlost', (e) => {
-            e.preventDefault();
-            console.warn('WebGL Context Lost: GPU saved by halting render.');
-          });
-        }}
+        gl={{ powerPreference: "high-performance", antialias: true, alpha: true }}
       >
         <ambientLight intensity={0.4} />
         
@@ -219,22 +208,13 @@ const GlobalRingCanvas = () => {
 
         <Ring isMobile={isMobile} />
 
-        {!isMobile ? (
+        {!isMobile && (
           <EffectComposer disableNormalPass>
             <Noise opacity={0.02} />
             <Bloom luminanceThreshold={2.0} luminanceSmoothing={1.2} intensity={0.1} mipmapBlur />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
-        )
-        :
-        (
-          <EffectComposer disableNormalPass>
-            <Noise opacity={0.01} />
-            <Bloom luminanceThreshold={1.0} luminanceSmoothing={1.0} intensity={0.1} mipmapBlur />
-            <Vignette eskil={false} offset={0.1} darkness={1.1} />
-          </EffectComposer>
-        )
-      }
+        )}
       </Canvas>
     </div>
   );
