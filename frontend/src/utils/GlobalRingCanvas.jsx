@@ -10,7 +10,8 @@ import { useGSAP } from '@gsap/react';
 gsap.registerPlugin(ScrollTrigger);
 
 const Ring = ({ isMobile }) => {
-  const { scene } = useGLTF('/falguni_ring.glb');
+  // UPDATED: Added DRACO decoder URL as the second argument
+  const { scene } = useGLTF('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
   
   const scrollGroupRef = useRef(); 
   const mouseGroupRef = useRef();  
@@ -171,7 +172,8 @@ const Ring = ({ isMobile }) => {
   );
 };
 
-useGLTF.preload('/falguni_ring.glb');
+// UPDATED: Added DRACO decoder URL to the preloader
+useGLTF.preload('/falguni_ring.glb', 'https://www.gstatic.com/draco/versioned/decoders/1.5.5/');
 
 const GlobalRingCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -189,8 +191,17 @@ const GlobalRingCanvas = () => {
     <div className="fixed inset-0 w-full h-[100svh] z-[-1] pointer-events-none">
       <Canvas 
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
-        dpr={[1, 1.5]} 
-        gl={{ powerPreference: "high-performance", antialias: true, alpha: true }}
+        // UPDATED: Strictly cap DPR to 1 on mobile devices
+        dpr={isMobile ? 1 : [1, 1.5]} 
+        // UPDATED: "default" power preference prevents aggressive mobile OS termination
+        gl={{ powerPreference: "default", antialias: true, alpha: true }}
+        // UPDATED: Intercept context loss to prevent the broken Chrome face icon
+        onCreated={({ gl }) => {
+          gl.domElement.addEventListener('webglcontextlost', (e) => {
+            e.preventDefault();
+            console.warn('WebGL Context Lost: GPU saved by halting render.');
+          });
+        }}
       >
         <ambientLight intensity={0.4} />
         
