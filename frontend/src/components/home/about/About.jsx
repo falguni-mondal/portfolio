@@ -196,7 +196,7 @@ const About = () => {
                 </p>
               </div>
 
-              <div ref={parallaxWrapperRef} className="cta-parallax-wrapper w-fit relative left-2/3 top-16 lg:left-auto mt-10 lg:mt-0 lg:absolute lg:right-0 lg:top-[160%] lg:-translate-y-1/2 z-20">
+              <div ref={parallaxWrapperRef} className="cta-parallax-wrapper w-fit relative left-2/3 lg:left-auto mt-10 lg:mt-0 lg:absolute lg:right-0 lg:top-[160%] lg:-translate-y-1/2 z-20">
                 <MagneticButton />
               </div>
 
