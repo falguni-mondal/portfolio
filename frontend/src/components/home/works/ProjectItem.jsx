@@ -17,8 +17,8 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
     mm.add("(max-width: 1023px)", () => {
       ScrollTrigger.create({
         trigger: itemRef.current,
-        start: "top 60%", 
-        end: "bottom 60%", 
+        start: "top 40%", 
+        end: "bottom 40%", 
         onToggle: (self) => {
           if (self.isActive) {
             setActiveIndex(index);
