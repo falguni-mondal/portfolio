@@ -213,7 +213,7 @@ const Hero = () => {
       id="hero"
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
-        <h1 className="my-name uppercase text-[23.5vw] lg:text-[23.7rem] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
+        <h1 className="my-name uppercase text-[23.5vw] lg:text-[15.75rem] xl:text-[23.7rem] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
           <span className="first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]">
             falguni
           </span>

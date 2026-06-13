@@ -11,6 +11,7 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { Perf } from "r3f-perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,15 +27,61 @@ const Ring = ({ isMobile }) => {
 
   const mouse = useRef({ x: 0, y: -0.8 });
   const scrollData = useRef({ velocity: 0, currentSpin: 0 });
+  const lastScrollUpdate = useRef(0);
+
+  // ==========================================
+  // EXPLICIT MEMORY DISPOSAL (VRAM CLEANUP)
+  // ==========================================
+  useEffect(() => {
+    // This return function acts as our cleanup when the component unmounts
+    return () => {
+      if (!scene) return;
+
+      // Walk through the entire 3D model node tree
+      scene.traverse((child) => {
+        if (child.isMesh) {
+          // 1. Destroy the vertex and face data
+          if (child.geometry) {
+            child.geometry.dispose();
+          }
+
+          // Destroy the physical materials and all attached texture maps
+          if (child.material) {
+            // Handle cases where a mesh might have an array of materials
+            const materials = Array.isArray(child.material)
+              ? child.material
+              : [child.material];
+
+            materials.forEach((material) => {
+              // Iterate over material properties to find and destroy textures
+              for (const key in material) {
+                if (material[key] && material[key].isTexture) {
+                  material[key].dispose();
+                }
+              }
+              // Destroy the material itself
+              material.dispose();
+            });
+          }
+        }
+      });
+
+      // Purge the R3F cache.
+      // By default, useGLTF holds the parsed model in memory forever. 
+      // Clearing this ensures the RAM/VRAM is fully released back to the mobile device.
+      useGLTF.clear("/falguni_ring.glb");
+    };
+  }, [scene]);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
+      if (isMobile) return; 
       mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, []);
+  }, [isMobile]);
 
   useGSAP(() => {
     scene.traverse((child) => {
@@ -50,7 +97,20 @@ const Ring = ({ isMobile }) => {
       start: "top top",
       end: "bottom bottom",
       onUpdate: (self) => {
-        scrollData.current.velocity = self.getVelocity();
+        // ==========================================
+        // MAIN-THREAD THROTTLING FOR MOBILE
+        // ==========================================
+        const now = Date.now();
+        if (isMobile) {
+          // Only update velocity every 50ms on mobile to prevent CPU locking
+          if (now - lastScrollUpdate.current > 50) {
+            scrollData.current.velocity = self.getVelocity();
+            lastScrollUpdate.current = now;
+          }
+        } else {
+          // Desktop handles the raw micro-tick updates
+          scrollData.current.velocity = self.getVelocity();
+        }
       },
     });
 
@@ -63,7 +123,6 @@ const Ring = ({ isMobile }) => {
     const centerOffset = isMobile ? 0 : -0.5;
     const initialYOffset = isMobile ? 1.0 : 0;
 
-    // Hard-set the true initial state before any animations run
     gsap.set(scrollGroupRef.current.position, {
       x: -travelDistance + centerOffset,
       y: initialYOffset,
@@ -76,15 +135,11 @@ const Ring = ({ isMobile }) => {
     });
 
     // ==========================================
-    // THE TIMELINES (Flawless Master Arc Architecture)
+    // THE TIMELINES
     // ==========================================
-
     gsap.fromTo(
       scrollGroupRef.current.position,
-      {
-        x: -travelDistance + centerOffset,
-        y: initialYOffset,
-      },
+      { x: -travelDistance + centerOffset, y: initialYOffset },
       {
         x: travelDistance + centerOffset,
         y: 0,
@@ -99,19 +154,15 @@ const Ring = ({ isMobile }) => {
       },
     );
 
-    // Transition 2 & 3 Combined: The Signature Arc (Certificates -> Signature -> Contact)
-    // This single timeline spans the entire lifespan of the Signature section visibility
     const sigTl = gsap.timeline({
       scrollTrigger: {
         trigger: "#signature",
-        start: "top bottom", // Triggers when Signature enters the bottom of the screen
-        end: "bottom top", // Ends when Signature completely leaves the top of the screen
+        start: "top bottom",
+        end: "bottom top",
         scrub: 1,
       },
     });
 
-    // Phase 1: Enter & Expand (Right to Center)
-    // This naturally takes up the first 50% of the scroll timeline
     sigTl
       .fromTo(
         scrollGroupRef.current.position,
@@ -128,11 +179,8 @@ const Ring = ({ isMobile }) => {
           ease: "power1.inOut",
           immediateRender: false,
         },
-        "<", // The "<" symbol tells GSAP to play this at the exact same time as the position move
+        "<",
       )
-
-      // Phase 2: Exit & Shrink (Center to Left)
-      // This seamlessly takes over the remaining 50% of the scroll timeline
       .to(scrollGroupRef.current.position, {
         x: -travelDistance + centerOffset,
         ease: "power1.inOut",
@@ -153,7 +201,7 @@ const Ring = ({ isMobile }) => {
   const VELOCITY_DECAY = 0.9;
 
   useFrame(() => {
-    if (mouseGroupRef.current) {
+    if (mouseGroupRef.current && !isMobile) {
       const targetX = (mouse.current.y * Math.PI) / 16;
       const targetY = (mouse.current.x * Math.PI) / 16;
       mouseGroupRef.current.rotation.x = THREE.MathUtils.lerp(
@@ -217,12 +265,17 @@ const GlobalRingCanvas = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 w-full h-[100svh] z-[-1] pointer-events-none">
+    <div className="fixed w-full max-w-[1500px] h-[100svh] z-[-1] pointer-events-none">
       <Canvas
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
+        // Restored high-quality resolution for all devices
         dpr={[1, 1.5]}
         gl={{ powerPreference: "default", antialias: true, alpha: true }}
       >
+        {/* ################################################################################################################################### */}
+        {/* Performance Profiler */}
+        {/* <Perf position="top-left" /> */}
+
         <ambientLight intensity={0.4} />
 
         <directionalLight position={[0, 3, 5]} intensity={3} />
@@ -259,8 +312,9 @@ const GlobalRingCanvas = () => {
 
         <Ring isMobile={isMobile} />
 
+        {/* Restored exact EffectComposer logic for desktop vs mobile visual adjustments */}
         {!isMobile ? (
-          <EffectComposer disableNormalPass>
+          <EffectComposer disableNormalPass multisampling={4}>
             <Noise opacity={0.02} />
             <Bloom
               luminanceThreshold={2.0}
@@ -270,30 +324,18 @@ const GlobalRingCanvas = () => {
             />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
-        )
-        :
-        <EffectComposer disableNormalPass>
-            <Noise opacity={0.01} />
+        ) : (
+          <EffectComposer disableNormalPass multisampling={4}>
+            <Noise opacity={0.005} />
             <Bloom
-              luminanceThreshold={1.5}
-              luminanceSmoothing={0.6}
-              intensity={0.05}
+              luminanceThreshold={1}
+              luminanceSmoothing={0.3}
+              intensity={0.02}
               mipmapBlur
             />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
           </EffectComposer>
-        }
-
-        {/* <EffectComposer disableNormalPass>
-          <Noise opacity={0.02} />
-          <Bloom
-            luminanceThreshold={2.0}
-            luminanceSmoothing={1.2}
-            intensity={0.1}
-            mipmapBlur
-          />
-          <Vignette eskil={false} offset={0.1} darkness={1.1} />
-        </EffectComposer> */}
+        )}
       </Canvas>
     </div>
   );

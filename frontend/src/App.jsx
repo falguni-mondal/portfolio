@@ -7,11 +7,11 @@ import GlobalRingCanvas from "./utils/GlobalRingCanvas";
 export const LoadingContext = createContext(false);
 
 const App = () => {
-  const [hasLoaded, setHasLoaded] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
 
   return (
     <LoadingContext.Provider value={hasLoaded}>
-      {/* <Preloader setHasLoaded={setHasLoaded} /> */}
+      <Preloader setHasLoaded={setHasLoaded} />
       
       <div className="w-full max-w-[1500px] mx-auto overflow-x-clip relative">
         <header className="w-full fixed top-0 left-0 z-50 flex justify-center">
