@@ -75,14 +75,6 @@
       "projectUrl": "https://falguni-mondal.github.io/Obys-Agency/",
       "tools": ["html/css", "javascript", "gsap", "shery.js"],
       "isOngoing": false
-    },
-    {
-      "name": "Kickster",
-      "image1": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img1.jpg?updatedAt=1781238422006",
-      "image2": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img2.jpg?updatedAt=1781238355443",
-      "projectUrl": "https://kickstershoes.netlify.app/",
-      "tools": ["react", "tailwind", "firebase"],
-      "isOngoing": false
     }
   ],
   "certificates": [
@@ -120,5 +112,13 @@
     "linkedin": "https://www.linkedin.com/in/falguni-mondal/",
     "github": "https://github.com/falguni-mondal",
     "insta": "https://www.instagram.com/hey.falguni/"
-  }
+  },
+  "deleted":{
+      "name": "Kickster",
+      "image1": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img1.jpg?updatedAt=1781238422006",
+      "image2": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img2.jpg?updatedAt=1781238355443",
+      "projectUrl": "https://kickstershoes.netlify.app/",
+      "tools": ["react", "tailwind", "firebase"],
+      "isOngoing": false
+    }
 }
