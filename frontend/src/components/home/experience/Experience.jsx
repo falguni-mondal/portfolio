@@ -60,7 +60,7 @@ const Experience = () => {
   return (
     <section ref={sectionRef} id="experience" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 mt-20 lg:mt-24">
       
-      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
+      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
         
         <div className="w-full flex flex-col lg:flex-row items-start lg:items-end justify-between lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
           

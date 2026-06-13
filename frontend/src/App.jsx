@@ -13,7 +13,7 @@ const App = () => {
     <LoadingContext.Provider value={hasLoaded}>
       <Preloader setHasLoaded={setHasLoaded} />
       
-      <div className="w-full max-w-[1600px] mx-auto overflow-x-clip relative">
+      <div className="w-full max-w-[1500px] mx-auto overflow-x-clip relative">
         <header className="w-full">
           <Navbar />
         </header>

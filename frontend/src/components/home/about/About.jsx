@@ -143,7 +143,7 @@ const About = () => {
   return (
     <section ref={sectionRef} id="about" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
+      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
         
         {/* Top Horizontal Line */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">

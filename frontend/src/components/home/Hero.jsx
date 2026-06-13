@@ -209,7 +209,7 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="h-[calc(100svh-60px)] relative lg:overflow-hidden"
+      className="h-[calc(100svh-60px)] relative lg:overflow-hidden w-full"
       id="hero"
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">

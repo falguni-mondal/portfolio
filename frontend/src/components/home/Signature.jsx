@@ -74,7 +74,7 @@ const Signature = () => {
   return (
     <section ref={sectionRef} id="signature" className="relative w-full py-[15svh] lg:py-[25svh] px-5 lg:px-10 z-10 flex flex-col items-center justify-center overflow-hidden">
       
-      <div className="w-full max-w-[1600px] mx-auto flex flex-col items-center text-center">
+      <div className="w-full max-w-[1500px] mx-auto flex flex-col items-center text-center">
         
         {/* THE QUOTE TEXT */}
         <span className="quote-text opacity-0 font-light italic text-lg sm:text-xl lg:text-3xl mb-4 lg:mb-8 block">
