@@ -47,7 +47,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
       className={`group relative w-full block py-12 lg:py-16 border-b border-zinc-700 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-0 overflow-hidden px-4 sm:px-6 lg:px-10 transition-colors duration-500 ease-out px-5 lg:px-10 ${
         project.url ? 'cursor-pointer' : 'cursor-default lg:cursor-pointer'
       } ${
-        isActive ? 'bg-[#0e0d0d]/90 backdrop-blur-[2px]' : 'bg-transparent'
+        isActive ? 'bg-[#1a1a1a]/90 backdrop-blur-[2px]' : 'bg-transparent'
       }`}
     >
       {/* Animated Baseline (Black to pop against the new orange background) */}
