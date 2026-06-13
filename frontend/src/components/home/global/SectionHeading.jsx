@@ -2,7 +2,7 @@ import React from 'react';
 
 const SectionHeading = ({ line1, line2 }) => {
   return (
-    <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.85em] tracking-tighter flex flex-col">
+    <h2 className="text-[14vw] sm:text-[10vw] lg:text-[6.2rem] xl:text-[7rem] leading-[0.85em] tracking-tighter flex flex-col">
       
       {/* Line 1: Light, Italic, Zinc */}
       <span className="overflow-hidden block pb-2 lg:pb-4 pr-6">

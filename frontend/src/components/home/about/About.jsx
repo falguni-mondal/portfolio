@@ -143,7 +143,7 @@ const About = () => {
   return (
     <section ref={sectionRef} id="about" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      <div className="w-full mx-auto flex flex-col">
         
         {/* Top Horizontal Line */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
@@ -160,7 +160,7 @@ const About = () => {
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             
             <div className="overflow-hidden pb-4">
-              <h2 className="heading-block text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter origin-bottom-left">
+              <h2 className="heading-block text-[14vw] sm:text-[10vw] lg:text-[6.2rem] xl:text-[7rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter origin-bottom-left">
                 Hi, I am <br className="hidden lg:block"/>
                 <span className="text-[#FF5733] italic head-txt pr-2">Falguni.</span>
               </h2>

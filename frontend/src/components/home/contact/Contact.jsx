@@ -117,7 +117,7 @@ const Contact = () => {
   return (
     <section ref={sectionRef} id="contact" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[5svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      <div className="w-full mx-auto flex flex-col">
         
         {/* EDITORIAL TOP BORDER (Starts invisible to prevent FOUC) */}
         <div className="editorial-header opacity-0 w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-700 pb-4">
@@ -137,7 +137,7 @@ const Contact = () => {
           <div className="lg:col-span-5 flex flex-col">
             
             {/* INLINE MASKED HEADING: Using flex-wrap so the text flows naturally */}
-            <h2 className="text-[24vw] sm:text-[12vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] tracking-tighter flex lg:flex-wrap">
+            <h2 className="text-[24vw] sm:text-[12vw] lg:text-[6.2rem] xl:text-[7rem] leading-[0.95em] tracking-tighter flex lg:flex-wrap">
               
               <span className="overflow-hidden inline-block pb-2 lg:pb-4 pr-4">
                 <span className="heading-block opacity-0 inline-block font-medium italic text-[#f3f3f3] origin-bottom-left">

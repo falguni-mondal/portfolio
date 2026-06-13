@@ -98,7 +98,7 @@ const Certificates = () => {
   return (
     <section ref={sectionRef} id="certificates" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full max-w-[1500px] mx-auto flex flex-col">
+      <div className="w-full mx-auto flex flex-col">
         
         {/* COMBINED HEADER ROW */}
         <div className="editorial-header opacity-0 w-full flex flex-col lg:flex-row items-start lg:items-end justify-between mb-16 lg:mb-20 border-b border-zinc-700 pb-8 lg:pb-12">
