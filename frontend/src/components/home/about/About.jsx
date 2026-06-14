@@ -16,22 +16,23 @@ const About = () => {
     let mm = gsap.matchMedia();
 
     // ==========================================
-    // DESKTOP: Master Timeline Sequence & Parallax
+    // PARALLAX SCRUB (Applies across all screens)
+    // ==========================================
+    gsap.to(parallaxWrapperRef.current, {
+      y: -400, 
+      ease: "none",
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: "top bottom",
+        end: "bottom top",
+        scrub: 1,
+      }
+    });
+
+    // ==========================================
+    // DESKTOP: Master Timeline Sequence
     // ==========================================
     mm.add("(min-width: 1024px)", () => {
-      
-      // OPTIMIZED: Parallax scrub is now locked to Desktop only
-      gsap.to(parallaxWrapperRef.current, {
-        y: -400, 
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1,
-        }
-      });
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -62,7 +63,7 @@ const About = () => {
         "-=1.2"
       );
 
-      // CTA Button Fade-In (Desktop)
+      // CTA Button
       tl.fromTo(".cta-block",
         { y: 400 }, 
         { y: 0, duration: 1.2, ease: "power3.out" },
@@ -85,56 +86,52 @@ const About = () => {
     });
 
     // ==========================================
-    // MOBILE / TABLET: Individual ScrollTriggers (Waterfall Optimized)
+    // MOBILE / TABLET: Individual ScrollTriggers
     // ==========================================
     mm.add("(max-width: 1023px)", () => {
-      
       gsap.fromTo(".editorial-header", 
         { opacity: 0 }, 
-        { opacity: 1, duration: 1, scrollTrigger: { trigger: ".editorial-header", start: "top 85%" } }
+        { opacity: 1, duration: 1, scrollTrigger: { trigger: ".editorial-header", start: "top 75%" } }
       );
 
       gsap.fromTo(".heading-block",
         { y: 80, skewY: 4, filter: "blur(8px)", opacity: 0 },
-        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 85%" } }
+        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, ease: "expo.out", force3D: true, scrollTrigger: { trigger: ".heading-block", start: "top 75%" } }
       );
 
       // Sub-heading mobile animated line
       gsap.to(".sub-heading-block .animated-line", { 
-        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 80%" } 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } 
       });
 
       gsap.fromTo(".sub-heading-block",
         { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 80%" } }
+        { y: 0, opacity: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".sub-heading-block", start: "top 75%" } }
       );
 
-      // Animates the simplified mobile text block instead of individual words
-      gsap.fromTo(".p-mobile-text",
-        { y: 40, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1.2, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
+      gsap.fromTo(".p-word",
+        { yPercent: 120, opacity: 0, rotateZ: 2 },
+        { yPercent: 0, opacity: 1, rotateZ: 0, duration: 1, stagger: 0.015, ease: "power4.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
       );
 
-      // CTA Button Fade-In (Mobile)
       gsap.fromTo(".cta-block",
         { y: 400 },
-        { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 75%" } }
+        { y: 0, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".paragraphs-block", start: "top 65%" } }
       );
 
       // Arsenal block animated line
       gsap.to(".arsenal-block .animated-line", { 
-        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } 
+        scaleX: 1, duration: 1.2, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } 
       });
 
       gsap.fromTo(".arsenal-header", 
         { opacity: 0 }, 
-        { opacity: 1, duration: 0.8, scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } }
+        { opacity: 1, duration: 0.8, scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
       );
       
-      // OPTIMIZED: Animate the 3 columns instead of the 15+ individual items
-      gsap.fromTo(".arsenal-column",
+      gsap.fromTo(".arsenal-item",
         { y: 20, opacity: 0 },
-        { y: 0, opacity: 1, duration: 1, stagger: 0.15, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 65%" } }
+        { y: 0, opacity: 1, duration: 1, stagger: 0.08, ease: "power3.out", scrollTrigger: { trigger: ".arsenal-block", start: "top 75%" } }
       );
     });
 
@@ -143,7 +140,7 @@ const About = () => {
   return (
     <section ref={sectionRef} id="about" className="relative w-full pt-[10svh] lg:pt-[15svh] pb-[15svh] px-5 lg:px-10 z-10 lg:mt-14">
       
-      <div className="w-full mx-auto flex flex-col">
+      <div className="w-full max-w-[1600px] mx-auto flex flex-col">
         
         {/* Top Horizontal Line */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
@@ -160,7 +157,7 @@ const About = () => {
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             
             <div className="overflow-hidden pb-4">
-              <h2 className="heading-block text-[14vw] sm:text-[10vw] lg:text-[6.2rem] xl:text-[7rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter origin-bottom-left">
+              <h2 className="heading-block text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter origin-bottom-left">
                 Hi, I am <br className="hidden lg:block"/>
                 <span className="text-[#FF5733] italic head-txt pr-2">Falguni.</span>
               </h2>
@@ -196,7 +193,7 @@ const About = () => {
                 </p>
               </div>
 
-              <div ref={parallaxWrapperRef} className="cta-parallax-wrapper w-fit relative left-2/3 lg:left-auto mt-10 lg:mt-0 lg:absolute lg:right-0 lg:top-[160%] lg:-translate-y-1/2 z-20">
+              <div ref={parallaxWrapperRef} className="cta-parallax-wrapper w-fit relative left-2/3 top-48 lg:left-auto mt-10 lg:mt-0 lg:absolute lg:right-0 lg:top-[160%] lg:-translate-y-1/2 z-20">
                 <MagneticButton />
               </div>
 

@@ -329,8 +329,8 @@ const GlobalRingCanvas = () => {
             <Noise opacity={0.005} />
             <Bloom
               luminanceThreshold={1}
-              luminanceSmoothing={0.3}
-              intensity={0.02}
+              luminanceSmoothing={0.6}
+              intensity={0.05}
               mipmapBlur
             />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />

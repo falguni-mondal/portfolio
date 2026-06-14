@@ -54,7 +54,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
   return (
     <div 
       ref={containerRef}
-      className="fixed inset-0 z-40 bg-zinc-900/90 backdrop-blur-md flex flex-col justify-center px-8 md:px-16 pointer-events-none"
+      className="fixed inset-0 z-40 bg-zinc-900/95 backdrop-blur-md flex flex-col justify-center px-8 md:px-16 pointer-events-none"
       style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
     >
       <div className="flex flex-col gap-4 md:gap-6 max-w-7xl w-full mx-auto">

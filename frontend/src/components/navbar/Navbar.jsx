@@ -94,7 +94,7 @@ const Navbar = () => {
     <>
       <div 
         ref={navRef} 
-        className='w-full max-w-[1500px] h-[50px] lg:h-[60px] px-5 lg:px-10 flex items-center justify-between mix-blend-difference text-white'
+        className='w-full max-w-[1500px] h-[50px] lg:h-[60px] px-5 lg:px-10 flex items-center justify-between mix-blend-difference text-white relative z-50'
       >
           <div id="logo" className="cursor-pointer z-50 pointer-events-auto">
               <Link to="/">
