@@ -49,6 +49,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
     { title: 'About', path: '/#about' },
     { title: 'Lab', path: '/#lab' },
     { title: 'Certs', path: '/#certificates' },
+    { title: 'Contact', path: '/#contact' },
   ];
 
   return (
