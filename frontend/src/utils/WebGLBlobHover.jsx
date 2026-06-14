@@ -2,9 +2,10 @@ import React, { useRef, Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
+import { useLabStore } from "../store/store";
 
 // ==========================================
-// 1. GLOBAL MOUSE TRACKER (SINGLETON)
+// 1. GLOBAL MOUSE TRACKER
 // ==========================================
 const globalMouse = { x: -1000, y: -1000 };
 let isMouseInitialized = false;
@@ -31,7 +32,7 @@ const BlobMaterial = shaderMaterial(
     uImageRes: new THREE.Vector2(1, 1),   
     uRadius: 0.0, 
     uTime: 0.0, 
-    uAspect: 1.0, 
+    uClipUV: new THREE.Vector4(0, 0, 1, 1), 
   },
   `
     varying vec2 vUv;
@@ -48,10 +49,16 @@ const BlobMaterial = shaderMaterial(
     uniform vec2 uImageRes;
     uniform float uRadius;
     uniform float uTime;
-    uniform float uAspect;
+    uniform vec4 uClipUV;
     varying vec2 vUv;
 
     void main() {
+      // 1. STRICT LOCAL UV CLIPPING
+      if (vUv.x < uClipUV.x || vUv.x > uClipUV.z || vUv.y < uClipUV.y || vUv.y > uClipUV.w) {
+        discard;
+      }
+
+      // 2. ASPECT RATIO COVER MATH
       vec2 ratio = vec2(
         min((uResolution.x / uResolution.y) / (uImageRes.x / uImageRes.y), 1.0),
         min((uResolution.y / uResolution.x) / (uImageRes.y / uImageRes.x), 1.0)
@@ -61,17 +68,20 @@ const BlobMaterial = shaderMaterial(
         vUv.y * ratio.y + (1.0 - ratio.y) * 0.5
       );
 
+      float currentAspect = uResolution.x / uResolution.y;
       vec2 aspectUv = vUv;
-      aspectUv.x *= uAspect;
+      aspectUv.x *= currentAspect;
       vec2 aspectMouse = uMouse;
-      aspectMouse.x *= uAspect;
+      aspectMouse.x *= currentAspect;
 
       vec2 delta = aspectUv - aspectMouse;
       float dist = length(delta);
       float angle = atan(delta.y, delta.x);
 
-      float hoverFactor = clamp(uRadius / 0.25, 0.0, 1.0);
+      // 3. GLOBAL ACTIVATION FACTOR (Scales to 1.0 when hovered)
+      float hoverFactor = clamp(uRadius / 0.20, 0.0, 1.0);
 
+      // 4. ANIMATED WOBBLE MATH
       float w1 = sin(angle * 3.0 + uTime * 6.0) * 0.04;
       float w2 = cos(angle * 5.0 - uTime * 5.5) * 0.02;
       float w3 = sin(angle * 7.0 + uTime * 3.5) * 0.01;
@@ -80,23 +90,30 @@ const BlobMaterial = shaderMaterial(
       float wobble = (w1 + w2 + w3 + w4) * hoverFactor;
       float animatedRadius = max(0.0, uRadius + wobble);
 
+      // 5. THE BLOB MASK (Determines which image shows)
       float mask = smoothstep(animatedRadius + 0.001, animatedRadius - 0.001, dist);
 
+      // 6. GLOBAL DISTORTION
+      // Bulge centers around the mouse
       float bulgeFactor = smoothstep(0.9, 0.0, dist) * 0.35 * hoverFactor;
-      
       vec2 displacement = vUv - uMouse; 
       vec2 uv1 = uvCover - displacement * bulgeFactor;
 
+      // FIX: The wave effect is applied to the ENTIRE image space based on hoverFactor
       float waveX = sin(vUv.y * 10.0 + uTime * 2.0) * 0.015 * hoverFactor;
       float waveY = cos(vUv.x * 10.0 - uTime * 2.0) * 0.015 * hoverFactor;
       uv1 += vec2(waveX, waveY); 
 
+      // 7. TEXTURE MIXING
       vec4 tex1 = texture2D(uTexture1, uv1);
-
       vec2 uv2 = uvCover + displacement * mask * 0.04;
       vec4 tex2 = texture2D(uTexture2, uv2);
 
-      gl_FragColor = mix(tex1, tex2, mask);
+      vec4 finalColor = mix(tex1, tex2, mask);
+      
+      // Permanently opaque rendering
+      finalColor.a = 1.0; 
+      gl_FragColor = finalColor;
     }
   `
 );
@@ -104,127 +121,94 @@ const BlobMaterial = shaderMaterial(
 extend({ BlobMaterial });
 
 // ==========================================
-// 3. THE OPTIMIZED INNER WEBGL SCENE
+// 3. INDIVIDUAL TRACKED MESH
 // ==========================================
-const Scene = ({ img1, img2 }) => { 
+const TrackedMesh = ({ data }) => { 
   const materialRef = useRef();
-  const [tex1, tex2] = useTexture([img1, img2]);
-  const { viewport, size, gl } = useThree(); 
+  const meshRef = useRef();
+  
+  const [tex1, tex2] = useTexture([data.image1, data.image2]);
+  const { viewport, size } = useThree(); 
 
+  const activeProject = useLabStore((state) => state.activeProject);
+  const isActive = activeProject === data.index;
+  
   const targetMouse = useRef(new THREE.Vector2(0.5, 0.5));
   const targetRadius = useRef(0.0);
-  
-  // THE TWO-BOX ARCHITECTURE REFS
-  const canvasRectRef = useRef(null);
-  const hitboxRectRef = useRef(null);
 
   useEffect(() => {
     initGlobalMouse();
   }, []);
 
   useEffect(() => {
-    const updateRect = () => {
-      if (gl.domElement) {
-        // 1. Box A: The oversized WebGL Canvas (Used for UV Math)
-        canvasRectRef.current = gl.domElement.getBoundingClientRect();
-        
-        // 2. Box B: The visible square parent container (Used for strict Trigger Math)
-        const parentHitbox = gl.domElement.closest('.aspect-square');
-        if (parentHitbox) {
-          hitboxRectRef.current = parentHitbox.getBoundingClientRect();
-        } else {
-          // Fallback if the parent class is ever removed
-          hitboxRectRef.current = canvasRectRef.current;
-        }
-      }
-    };
-
-    updateRect(); 
-
-    window.addEventListener("scroll", updateRect, { passive: true });
-    window.addEventListener("resize", updateRect, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", updateRect);
-      window.removeEventListener("resize", updateRect);
-    };
-  }, [gl.domElement, size]);
-
-  useEffect(() => {
-    if (materialRef.current) {
-      materialRef.current.uAspect = viewport.width / viewport.height;
-      materialRef.current.uResolution.set(size.width, size.height);
-      if (tex1.image) {
-        materialRef.current.uImageRes.set(tex1.image.width, tex1.image.height);
-      }
+    if (materialRef.current && tex1.image) {
+      materialRef.current.uImageRes.set(tex1.image.width, tex1.image.height);
+      // FIX: Removed the SRGBColorSpace manipulation. 
+      // The images will now render with their raw, natural colors.
     }
-  }, [viewport, size, tex1]);
+  }, [tex1]);
 
   useFrame((state) => {
-    if (!materialRef.current || !canvasRectRef.current || !hitboxRectRef.current) return;
+    if (!materialRef.current || !meshRef.current || !data.imageRef.current || !data.containerRef.current) return;
 
-    materialRef.current.uTime = state.clock.elapsedTime;
-
-    const canvasRect = canvasRectRef.current;
-    const hitboxRect = hitboxRectRef.current;
+    const imgRect = data.imageRef.current.getBoundingClientRect();
+    const clipRect = data.containerRef.current.getBoundingClientRect();
     
-    // Check if we are on a mobile breakpoint
+    // POSITIONING
+    const x = imgRect.left + imgRect.width / 2 - size.width / 2;
+    const y = -(imgRect.top + imgRect.height / 2 - size.height / 2);
+
+    meshRef.current.position.set(x, y, 0);
+    meshRef.current.scale.set(imgRect.width, imgRect.height, 1);
+    materialRef.current.uResolution.set(imgRect.width, imgRect.height);
+
+    // LOCAL UV CLIPPING
+    const clipMinX = (clipRect.left - imgRect.left) / imgRect.width;
+    const clipMaxX = (clipRect.right - imgRect.left) / imgRect.width;
+    const clipMaxY = 1.0 - ((clipRect.top - imgRect.top) / imgRect.height);
+    const clipMinY = 1.0 - ((clipRect.bottom - imgRect.top) / imgRect.height);
+
+    materialRef.current.uClipUV.set(clipMinX, clipMinY, clipMaxX, clipMaxY);
+
+    // INTERACTION LOGIC
+    materialRef.current.uTime = state.clock.elapsedTime;
     const isMobile = window.innerWidth < 1024;
     
-    // VIRTUAL CURSOR LOGIC
-    // If mobile, anchor the "mouse" to the dead center of the screen.
-    // If desktop, use the actual physical mouse position.
-    const cursorX = isMobile ? window.innerWidth / 2 : globalMouse.x;
-    const cursorY = isMobile ? window.innerHeight / 2 : globalMouse.y;
+    const pixelMouseX = isMobile ? window.innerWidth / 2 : globalMouse.x;
+    const pixelMouseY = isMobile ? window.innerHeight / 2 : globalMouse.y;
 
-    // TRIGGER MATH: Check if the virtual cursor is inside the visible square
-    const isInside = (
-      cursorX >= hitboxRect.left &&
-      cursorX <= hitboxRect.right &&
-      cursorY >= hitboxRect.top &&
-      cursorY <= hitboxRect.bottom
-    );
-
-    if (isInside) {
-      targetRadius.current = 0.20;
-      
-      // UV MATH: Map the virtual cursor to the 120% oversized canvas
-      const uvX = (cursorX - canvasRect.left) / canvasRect.width;
-      const uvY = 1.0 - ((cursorY - canvasRect.top) / canvasRect.height);
+    if (isActive) {
+      targetRadius.current = 0.20; 
+      const uvX = (pixelMouseX - imgRect.left) / imgRect.width;
+      const uvY = 1.0 - ((pixelMouseY - imgRect.top) / imgRect.height);
       targetMouse.current.set(uvX, uvY);
     } else {
-      targetRadius.current = 0.0;
+      targetRadius.current = 0.0; 
     }
 
-    // Smoothly interpolate the actual shader uniforms toward our calculated targets
     materialRef.current.uMouse.lerp(targetMouse.current, 0.08);
-    materialRef.current.uRadius = THREE.MathUtils.lerp(
-      materialRef.current.uRadius,
-      targetRadius.current,
-      0.13
-    );
+    materialRef.current.uRadius = THREE.MathUtils.lerp(materialRef.current.uRadius, targetRadius.current, 0.13);
   });
 
   return (
-    <mesh>
-      <planeGeometry args={[viewport.width, viewport.height]} />
-      <blobMaterial ref={materialRef} uTexture1={tex1} uTexture2={tex2} />
+    <mesh ref={meshRef}>
+      <planeGeometry args={[1, 1]} />
+      {/* FIX: added toneMapped={false} to ensure Three.js doesn't apply gamma darkening */}
+      <blobMaterial ref={materialRef} uTexture1={tex1} uTexture2={tex2} transparent={true} toneMapped={false} />
     </mesh>
   );
 };
 
 // ==========================================
-// 4. THE OUTER REACT COMPONENT
+// 4. THE MASTER SCENE
 // ==========================================
-const WebGLBlobHover = ({ baseImage, revealImage, className = "" }) => {
+const WebGLBlobHover = ({ trackedItems }) => {
   return (
-    <div className={`relative w-full h-full overflow-hidden bg-[#0a0a0a] ${className}`}>
-      <Canvas orthographic camera={{ position: [0, 0, 1], zoom: 1 }}>
-        <Suspense fallback={null}>
-          <Scene img1={baseImage} img2={revealImage} />
-        </Suspense>
-      </Canvas>
-    </div>
+    <>
+      {trackedItems.map((item) => (
+        <TrackedMesh key={`blob-${item.index}`} data={item} />
+      ))}
+    </>
   );
 };
 
