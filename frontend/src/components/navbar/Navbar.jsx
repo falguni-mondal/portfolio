@@ -1,11 +1,12 @@
-import React, { useState, useRef } from 'react'
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { Link, useLocation } from 'react-router-dom'
-import Navmenu from './Navmenu'
+import React, { useState, useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Link, useLocation } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+import Navmenu from './Navmenu';
+import { useLabStore } from '../../store/store';
 
-// Register ScrollTrigger to handle scroll-linked animations
 gsap.registerPlugin(ScrollTrigger);
 
 const Navbar = () => {
@@ -14,6 +15,10 @@ const Navbar = () => {
   const navRef = useRef(null); 
   
   const location = useLocation();
+
+  // Pull global theme state from Zustand
+  const theme = useLabStore((state) => state.theme);
+  const toggleTheme = useLabStore((state) => state.toggleTheme);
 
   // 1. The Menu Text Toggle Animation 
   useGSAP(() => {
@@ -37,7 +42,7 @@ const Navbar = () => {
     
     // The exact physical pixel height of the Hero element
     const getOffset = () => {
-      const heroSection = document.getElementById('hero-section');
+      const heroSection = document.getElementById('hero');
       return heroSection ? heroSection.offsetHeight : window.innerHeight - navRef.current.offsetHeight;
     };
 
@@ -94,15 +99,15 @@ const Navbar = () => {
     <>
       <div 
         ref={navRef} 
-        className='w-full max-w-[1500px] h-[50px] lg:h-[60px] px-5 lg:px-10 flex items-center justify-between mix-blend-difference text-white relative z-50'
+        className={`w-full h-[50px] lg:h-[60px] px-5 lg:px-10 flex items-center justify-between ${isOpen ? "" : "mix-blend-difference"} ${theme === "dark" ? "text-[#ffffff]" : "#000000 font-medium"} relative z-50`}
       >
           <div id="logo" className="cursor-pointer z-50 pointer-events-auto">
               <Link to="/">
-                  <img className='w-[65px] lg:w-[70px]' src="/logo.svg" alt="logo" />
+                  <img className='w-[65px] lg:w-[70px] 2xl:w-[80px]' src="/logo.svg" alt="logo" />
               </Link>
           </div>
           <nav className="navigations">
-              <ul className='hidden lg:flex gap-10 text-xs'>
+              <ul className='hidden lg:flex gap-10 text-xs xl:text-[0.8rem] 2xl:text-base'>
                 {navLinks.map((link, index) => (
                   <li key={index} className='nav-link cursor-pointer relative uppercase'>
                     <a href={link.path}>{link.title}</a>
@@ -111,18 +116,29 @@ const Navbar = () => {
               </ul>
           </nav>
 
-          <nav className="contact-nav uppercase text-xs hidden lg:block">
-                <a href="/#contact">( connect )</a>
-          </nav>
-          
-          <div 
-            className="nav-icon lg:hidden text-[0.7rem] font-medium cursor-pointer h-[1rem] overflow-hidden z-50 pointer-events-auto"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-              <div ref={textRef} className="flex flex-col">
-                  <span className="h-[1rem] leading-[1rem] block">(MENU)</span>
-                  <span className="h-[1rem] leading-[1rem] block">(CLOSE)</span>
-              </div>
+          <div className="flex items-center gap-6 relative z-50 pointer-events-auto">
+            <nav className="contact-nav uppercase text-xs xl:text-[0.8rem] 2xl:text-base hidden lg:block">
+                  <a href="/#contact">( connect )</a>
+            </nav>
+
+            {/* THE THEME TOGGLE */}
+            <button 
+              onClick={toggleTheme}
+              className="flex items-center justify-center text-lg lg:text-xl 2xl:text-2xl transition-colors duration-300 hover:text-[#FF5733] cursor-pointer"
+              aria-label="Toggle Dark Mode"
+            >
+              <Icon icon={theme === 'dark' ? "material-symbols:light-mode-outline" : "material-symbols:dark-mode-outline"} />
+            </button>
+            
+            <div 
+              className="nav-icon lg:hidden text-[0.7rem] xl:text-[0.8rem] font-medium cursor-pointer h-[1rem] overflow-hidden"
+              onClick={() => setIsOpen(!isOpen)}
+            >
+                <div ref={textRef} className="flex flex-col">
+                    <span className="h-[1rem] leading-[1rem] block">(MENU)</span>
+                    <span className="h-[1rem] leading-[1rem] block">(CLOSE)</span>
+                </div>
+            </div>
           </div>
       </div>
 
@@ -131,4 +147,4 @@ const Navbar = () => {
   )
 }
 
-export default Navbar
+export default Navbar;

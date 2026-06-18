@@ -4,6 +4,7 @@ import gsap from "gsap";
 import { Icon } from "@iconify/react";
 
 import { LoadingContext } from "../../App";
+import { useLabStore } from "../../store/store";
 
 const Hero = () => {
   const heroRef = useRef(null);
@@ -13,6 +14,8 @@ const Hero = () => {
 
   // Grab the loading state from our Context
   const hasLoaded = useContext(LoadingContext);
+
+  const theme = useLabStore((state) => state.theme);
 
   // --- CLOCK STATE ---
   const [time, setTime] = useState(new Date());
@@ -162,7 +165,7 @@ const Hero = () => {
       { yPercent: 100, xPercent: -50 },
       { yPercent: -25, xPercent: -50, duration: 0.8, ease: "power3.out" },
     );
-    gsap.to(textRef.current, { color: "#18181b", duration: 0.3 });
+    gsap.to(textRef.current, { color: ()=> theme === "dark" ? "#0b0a09" : "#f3f3f3", duration: 0.3 });
   };
 
   const handleMouseMove = (e) => {
@@ -196,7 +199,7 @@ const Hero = () => {
       duration: 0.6,
       ease: "power3.inOut",
     });
-    gsap.to(textRef.current, { color: "#f3f3f3", duration: 0.5 });
+    gsap.to(textRef.current, { color: ()=> theme === "dark" ? "#f3f3f3" : "#0b0a09", duration: 0.5 });
 
     gsap.to([btnRef.current, textRef.current], {
       x: 0,
@@ -209,19 +212,19 @@ const Hero = () => {
   return (
     <section
       ref={heroRef}
-      className="h-[calc(100svh-60px)] relative lg:overflow-hidden w-full"
+      className="h-[calc(100svh-60px)] max-h-[880px] relative lg:overflow-hidden w-full"
       id="hero"
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
-        <h1 className="my-name uppercase text-[23.5vw] lg:text-[15.75rem] xl:text-[23.7rem] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
-          <span className="first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]">
+        <h1 className="my-name uppercase text-[23.5vw] lg:text-[25vw] xl:text-[25vw] 2xl:text-[25.3vw] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
+          <span className={`first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] ${theme == "dark" ? "bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]" : "bg-[radial-gradient(circle,_rgba(0,0,0,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(0,0,0,0.5)_1px,_transparent_1px)]"}`}>
             falguni
           </span>
         </h1>
       </div>
 
       <div className="bottom-hero w-full flex flex-col lg:flex-row mt-10 lg:mt-0">
-        <div className="bottom-hero-left w-full lg:w-1/2 head-txt text-[1.8rem] lg:text-[3rem] px-5 lg:px-10 leading-[1.2em]">
+        <div className="bottom-hero-left w-full lg:w-1/2 2xl:w-[53%] head-txt text-[1.8rem] lg:text-[3rem] 2xl:text-[4rem] px-5 lg:px-10 leading-[1.2em]">
           <div className="overflow-hidden py-2 -my-2">
             <h2 className="w-full hero-txt">
               Full stack <span className="italic prime-txt body-txt">MERN</span>{" "}
@@ -235,9 +238,9 @@ const Hero = () => {
             </h2>
           </div>
 
-          <div className="loc-time body-txt text-left mt-6 lg:mt-12 text-[0.65rem] lg:text-[0.75rem] font-medium uppercase tracking-[0.2em] dim-txt flex items-center gap-3 w-full">
-            <span className="flex items-center gap-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+          <div className="loc-time body-txt text-left mt-6 lg:mt-12 2xl:mt-20 text-[0.65rem] lg:text-[0.75rem] 2xl:text-[1rem] font-medium uppercase tracking-[0.2em] dim-txt flex items-center gap-3 w-full">
+            <span className="flex items-center gap-2 2xl:gap-3">
+              <span className="w-1.5 h-1.5 2xl:w-2 2xl:h-2 rounded-full bg-green-500 animate-pulse"></span>
               Based in Durgapur, India
             </span>
             <span className="w-[1px] h-[12px] bg-zinc-600"></span>
@@ -253,8 +256,8 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="bottom-hero-right w-full lg:w-1/2 flex justify-end px-5 lg:px-10 relative z-0 top-10 lg:-top-10">
-          <div className="hero-img img-container w-[280px] h-[380px]">
+        <div className="bottom-hero-right w-full lg:w-1/2 2xl:[47%] flex justify-end px-5 lg:px-10 relative z-0 top-10 lg:-top-10 2xl:-top-16">
+          <div className="hero-img img-container w-[280px] h-[380px] 2xl:w-[360px] 2xl:h-auto">
             <img
               className="w-full h-full object-cover"
               src="/me.webp"
@@ -263,7 +266,7 @@ const Hero = () => {
           </div>
 
           {/* THE WRAPPER: Handles the initial timeline scale animation */}
-          <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 z-20">
+          <div className="book-badge-wrap absolute bottom-5 left-5 lg:bottom-5 lg:left-48 xl:left-44 2xl:left-52 2xl:bottom-10 z-20">
             
             <a
               href="#contact"
@@ -271,23 +274,23 @@ const Hero = () => {
               onMouseEnter={handleMouseEnter}
               onMouseMove={handleMouseMove}
               onMouseLeave={handleMouseLeave}
-              className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none shadow-xl"
+              className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 2xl:w-40 2xl:h-40 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none shadow-xl"
             >
               {/* Liquid Fill */}
               <div
                 ref={fillRef}
-                className="absolute top-0 left-1/2 w-[150%] h-[150%] bg-[#f3f3f3] rounded-[50%] z-0 pointer-events-none"
+                className={`absolute top-0 left-1/2 w-[150%] h-[150%] ${theme === "dark" ? "bg-[#f3f3f3]" : "bg-[#0b0a09]"} rounded-[50%] z-0 pointer-events-none`}
               ></div>
 
               {/* Text + Arrow */}
               <span
                 ref={textRef}
-                className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
+                className={`relative z-10 flex items-center gap-1 ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"} text-sm 2xl:text-base pointer-events-none font-medium lg:font-normal`}
               >
                 Hey there
                 <Icon
                   icon="material-symbols:arrow-outward-rounded"
-                  className="text-sm lg:text-base"
+                  className="text-sm lg:text-base 2xl:text--lg"
                 />
               </span>
             </a>

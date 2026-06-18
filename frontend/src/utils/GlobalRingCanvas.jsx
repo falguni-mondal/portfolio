@@ -265,7 +265,7 @@ const GlobalRingCanvas = () => {
   }, []);
 
   return (
-    <div className="fixed w-full max-w-[1500px] h-[100svh] z-[-1] pointer-events-none">
+    <div className="fixed w-full h-[100svh] z-[-1] pointer-events-none">
       <Canvas
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
         // Restored high-quality resolution for all devices

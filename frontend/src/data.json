@@ -117,7 +117,7 @@
       "name": "Kickster",
       "image1": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img1.jpg?updatedAt=1781238422006",
       "image2": "https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/kickster_proj_img2.jpg?updatedAt=1781238355443",
-      "projectUrl": "https://kickstershoes.netlify.app/",
+      "projectUrl": "https://kickster.byfalguni.com/",
       "tools": ["react", "tailwind", "firebase"],
       "isOngoing": false
     }

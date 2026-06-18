@@ -2,13 +2,15 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Icon } from '@iconify/react';
+import { useLabStore } from '../../../store/store';
 
 const MagneticButton = () => {
   const btnRef = useRef(null);
   const textRef = useRef(null);
   const fillRef = useRef(null);
 
-  // RESTORED: Initial state to hide the white fill outside the bottom edge
+  const theme = useLabStore((state) => state.theme);
+
   useGSAP(() => {
     gsap.set(fillRef.current, { xPercent: -50, yPercent: 100 });
   });
@@ -21,12 +23,15 @@ const MagneticButton = () => {
       { yPercent: 100, xPercent: -50 }, 
       { yPercent: -25, xPercent: -50, duration: 0.8, ease: 'power3.out' }
     );
-    gsap.to(textRef.current, { color: '#18181b', duration: 0.3 });
+    
+    gsap.to(textRef.current, { 
+      color: theme === 'dark' ? '#18181b' : '#f3f3f3', 
+      duration: 0.3 
+    });
   };
 
   const handleMouseMove = (e) => {
     if (!btnRef.current || !textRef.current) return;
-    
     const { left, top, width, height } = btnRef.current.getBoundingClientRect();
     const x = e.clientX - (left + width / 2);
     const y = e.clientY - (top + height / 2);
@@ -61,7 +66,7 @@ const MagneticButton = () => {
       >
         <div 
           ref={fillRef}
-          className="absolute top-0 left-1/2 w-[150%] h-[150%] bg-[#f3f3f3] rounded-[50%] z-0 pointer-events-none"
+          className={`absolute top-0 left-1/2 w-[150%] h-[150%] rounded-[50%] z-0 pointer-events-none ${theme === 'dark' ? 'bg-[#f3f3f3]' : 'bg-[#0e0d0d]'}`}
         ></div>
         
         <span 
