@@ -14,9 +14,12 @@ const Navbar = () => {
   const textRef = useRef(null);
   const navRef = useRef(null); 
   
+  // POPUP STATE
+  const [showPopup, setShowPopup] = useState(false);
+  const popupTimer = useRef(null);
+  
   const location = useLocation();
 
-  // Pull global theme state from Zustand
   const theme = useLabStore((state) => state.theme);
   const toggleTheme = useLabStore((state) => state.toggleTheme);
 
@@ -33,22 +36,16 @@ const Navbar = () => {
   useGSAP(() => {
     if (location.pathname !== '/') {
       gsap.set(navRef.current, { y: 0, opacity: 1 });
-      // Ensures both logo and connect link are visible on other pages
       gsap.set(["#logo", ".contact-nav"], { opacity: 1 });
       return; 
     }
 
-    // --- ONLY RUNS ON THE HOME PAGE ('/') ---
-    
-    // The exact physical pixel height of the Hero element
     const getOffset = () => {
       const heroSection = document.getElementById('hero');
       return heroSection ? heroSection.offsetHeight : window.innerHeight - navRef.current.offsetHeight;
     };
 
-    // A. INITIAL STATE
     gsap.set(navRef.current, { y: getOffset() });
-    // Hides both the logo and connect link initially
     gsap.set(["#logo", ".contact-nav"], { opacity: 0 });
 
     gsap.from(navRef.current, {
@@ -58,7 +55,6 @@ const Navbar = () => {
       ease: "power3.out"
     });
 
-    // B. THE SCRUB
     gsap.to(navRef.current, {
       y: 0,
       ease: "none", 
@@ -71,8 +67,6 @@ const Navbar = () => {
       }
     });
 
-    // C. THE LOGO & CONNECT REVEAL
-    // Targets both elements to fade in simultaneously as it docks
     gsap.to(["#logo", ".contact-nav"], {
       opacity: 1,
       duration: 0.3,
@@ -94,6 +88,22 @@ const Navbar = () => {
     { title: 'Lab', path: '/#lab' },
     { title: 'Certificates', path: '/#certificates' }, 
   ];
+
+  // TEMPORARY TOGGLE HANDLER
+  const handleThemeClick = () => {
+    // toggleTheme(); <-- Uncomment this when light mode is finished
+
+    // Trigger the WIP popup
+    setShowPopup(true);
+    
+    // Clear any existing timer so spam-clicking doesn't break the animation
+    if (popupTimer.current) clearTimeout(popupTimer.current);
+    
+    // Hide popup after 3.5 seconds
+    popupTimer.current = setTimeout(() => {
+      setShowPopup(false);
+    }, 3500);
+  };
 
   return (
     <>
@@ -123,7 +133,7 @@ const Navbar = () => {
 
             {/* THE THEME TOGGLE */}
             <button 
-              onClick={toggleTheme}
+              onClick={handleThemeClick}
               className="flex items-center justify-center text-lg lg:text-xl 2xl:text-2xl transition-colors duration-300 hover:text-[#FF5733] cursor-pointer"
               aria-label="Toggle Dark Mode"
             >
@@ -143,6 +153,20 @@ const Navbar = () => {
       </div>
 
       <Navmenu isOpen={isOpen} setIsOpen={setIsOpen} />
+
+      {/* WORK IN PROGRESS POPUP TOAST */}
+      <div 
+        className={`fixed top-[80px] lg:top-[90px] left-1/2 -translate-x-1/2 z-[100] flex items-center justify-center px-6 py-3 rounded-md border border-zinc-800 bg-[#0a0a0a]/90 backdrop-blur-md shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.19,1,0.22,1)] ${
+          showPopup 
+            ? "opacity-100 translate-y-0 scale-100" 
+            : "opacity-0 -translate-y-4 scale-95 pointer-events-none"
+        }`}
+      >
+        <p className="text-xs sm:text-sm font-medium tracking-[0.05em] text-zinc-300 text-center whitespace-nowrap">
+          <span className="text-[#FF5733] mr-1">Work in progress!</span> 
+          Will be available soon. Thank You.
+        </p>
+      </div>
     </>
   )
 }
