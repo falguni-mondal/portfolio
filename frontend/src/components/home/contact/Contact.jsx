@@ -83,7 +83,7 @@ const Contact = () => {
 
       gsap.fromTo(".heading-block",
         { y: 80, skewY: 4, filter: "blur(8px)", opacity: 0 }, 
-        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, stagger: 0.15, ease: "expo.out", force3D: true, scrollTrigger: { trigger: "#contact-section", start: "top 80%" } }
+        { y: 0, skewY: 0, filter: "blur(0px)", opacity: 1, duration: 1.4, stagger: 0.15, ease: "expo.out", force3D: true, scrollTrigger: { trigger: "#contact", start: "top 80%" } }
       );
 
       gsap.to(".p-line", 

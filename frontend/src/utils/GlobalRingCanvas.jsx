@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useGLTF, Environment, ContactShadows, Float } from "@react-three/drei";
@@ -33,42 +33,32 @@ const Ring = ({ isMobile }) => {
   // EXPLICIT MEMORY DISPOSAL (VRAM CLEANUP)
   // ==========================================
   useEffect(() => {
-    // This return function acts as our cleanup when the component unmounts
     return () => {
       if (!scene) return;
 
-      // Walk through the entire 3D model node tree
       scene.traverse((child) => {
         if (child.isMesh) {
-          // 1. Destroy the vertex and face data
           if (child.geometry) {
             child.geometry.dispose();
           }
 
-          // Destroy the physical materials and all attached texture maps
           if (child.material) {
-            // Handle cases where a mesh might have an array of materials
             const materials = Array.isArray(child.material)
               ? child.material
               : [child.material];
 
             materials.forEach((material) => {
-              // Iterate over material properties to find and destroy textures
               for (const key in material) {
                 if (material[key] && material[key].isTexture) {
                   material[key].dispose();
                 }
               }
-              // Destroy the material itself
               material.dispose();
             });
           }
         }
       });
 
-      // Purge the R3F cache.
-      // By default, useGLTF holds the parsed model in memory forever. 
-      // Clearing this ensures the RAM/VRAM is fully released back to the mobile device.
       useGLTF.clear("/falguni_ring.glb");
     };
   }, [scene]);
@@ -97,26 +87,18 @@ const Ring = ({ isMobile }) => {
       start: "top top",
       end: "bottom bottom",
       onUpdate: (self) => {
-        // ==========================================
-        // MAIN-THREAD THROTTLING FOR MOBILE
-        // ==========================================
         const now = Date.now();
         if (isMobile) {
-          // Only update velocity every 50ms on mobile to prevent CPU locking
           if (now - lastScrollUpdate.current > 50) {
             scrollData.current.velocity = self.getVelocity();
             lastScrollUpdate.current = now;
           }
         } else {
-          // Desktop handles the raw micro-tick updates
           scrollData.current.velocity = self.getVelocity();
         }
       },
     });
 
-    // ==========================================
-    // RESPONSIVE SIZING & COORDINATES
-    // ==========================================
     const baseScale = isMobile ? 0.3 : 0.6;
     const sigScale = isMobile ? 0.45 : 0.6 * 1.8;
     const travelDistance = isMobile ? 0.55 : 2.5;
@@ -134,9 +116,6 @@ const Ring = ({ isMobile }) => {
       z: baseScale,
     });
 
-    // ==========================================
-    // THE TIMELINES
-    // ==========================================
     gsap.fromTo(
       scrollGroupRef.current.position,
       { x: -travelDistance + centerOffset, y: initialYOffset },
@@ -192,9 +171,6 @@ const Ring = ({ isMobile }) => {
       );
   }, [isMobile]);
 
-  // ==========================================
-  // --- RING PHYSICS CONTROLS ---
-  // ==========================================
   const IDLE_SPIN = 0.002;
   const SCROLL_MULTIPLIER = 0.00008;
   const BRAKING_SPEED = 0.05;
@@ -268,14 +244,9 @@ const GlobalRingCanvas = () => {
     <div className="fixed w-full h-[100svh] z-[-1] pointer-events-none">
       <Canvas
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
-        // Restored high-quality resolution for all devices
         dpr={[1, 1.5]}
         gl={{ powerPreference: "default", antialias: true, alpha: true }}
       >
-        {/* ################################################################################################################################### */}
-        {/* Performance Profiler */}
-        {/* <Perf position="top-left" /> */}
-
         <ambientLight intensity={0.4} />
 
         <directionalLight position={[0, 3, 5]} intensity={3} />
@@ -294,25 +265,27 @@ const GlobalRingCanvas = () => {
           color="#ffffff"
         />
 
-        <Environment
-          preset="studio"
-          environmentIntensity={0.8}
-          environmentRotation={[0, Math.PI / 1.2, 0]}
-        />
+        {/* Suspense Boundary added to prevent React crash during async GLTF/HDRI loading */}
+        <Suspense fallback={null}>
+          <Environment
+            preset="studio"
+            environmentIntensity={0.8}
+            environmentRotation={[0, Math.PI / 1.2, 0]}
+          />
 
-        <ContactShadows
-          frames={1}
-          position={[0, -1.5, 0]}
-          opacity={0.6}
-          scale={isMobile ? 7 : 10}
-          blur={2.5}
-          far={4}
-          color="#000000"
-        />
+          <ContactShadows
+            frames={1}
+            position={[0, -1.5, 0]}
+            opacity={0.6}
+            scale={isMobile ? 7 : 10}
+            blur={2.5}
+            far={4}
+            color="#000000"
+          />
 
-        <Ring isMobile={isMobile} />
+          <Ring isMobile={isMobile} />
+        </Suspense>
 
-        {/* Restored exact EffectComposer logic for desktop vs mobile visual adjustments */}
         {!isMobile ? (
           <EffectComposer disableNormalPass multisampling={4}>
             <Noise opacity={0.02} />
