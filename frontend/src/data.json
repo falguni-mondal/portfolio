@@ -12,6 +12,7 @@
   ],
   "experience": [
     {
+      "id": "exp-graphitage",
       "name": "Graphitage",
       "type": "digital ad agency",
       "role": "full stack web developer",

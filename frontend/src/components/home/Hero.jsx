@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 
 import { LoadingContext } from "../../App";
 import { useLabStore } from "../../store/store";
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 const Hero = () => {
   const heroRef = useRef(null);
