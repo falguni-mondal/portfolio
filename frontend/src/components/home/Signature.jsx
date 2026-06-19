@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useLabStore } from '../../store/store';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Signature = () => {
+  const theme = useLabStore((state) => state.theme);
   const sectionRef = useRef(null);
 
   useGSAP(() => {
@@ -83,7 +85,7 @@ const Signature = () => {
 
         {/* THE BRAND COLLAPSE ANIMATION */}
         <div className="brand-collapse-container cursor-default flex justify-center">
-          <h2 className="text-[16vw] sm:text-[14vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.8em] font-semibold tracking-tighter flex items-end justify-center text-[#f3f3f3] uppercase">
+          <h2 className={`text-[16vw] sm:text-[14vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.8em] font-semibold tracking-tighter flex items-end justify-center ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"} uppercase`}>
             
             <span className="inline-block">B</span>
             <span className="inline-block">Y</span>
@@ -107,7 +109,7 @@ const Signature = () => {
             </span>
             
             {/* Custom full stop */}
-            <span className="inline-block w-[0.14em] h-[0.14em] bg-[#f3f3f3] ml-[0.04em] mb-[0.04em]"></span>
+            <span className={`inline-block w-[0.14em] h-[0.14em] ${theme === "dark" ? "bg-[#f3f3f3]" : "bg-[#0b0a09]"} ml-[0.04em] mb-[0.04em]`}></span>
             
           </h2>
         </div>

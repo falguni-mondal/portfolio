@@ -25,7 +25,7 @@ const MagneticButton = () => {
     );
     
     gsap.to(textRef.current, { 
-      color: theme === 'dark' ? '#18181b' : '#f3f3f3', 
+      color: theme === 'dark' ? '#0b0a09' : '#f3f3f3', 
       duration: 0.3 
     });
   };
@@ -45,7 +45,7 @@ const MagneticButton = () => {
     gsap.killTweensOf(textRef.current);
 
     gsap.to(fillRef.current, { yPercent: -150, xPercent: -50, duration: 0.6, ease: 'power3.inOut' });
-    gsap.to(textRef.current, { color: '#f3f3f3', duration: 0.5 });
+    gsap.to(textRef.current, { color: () => theme === "dark" ? '#f3f3f3' : '#0b0a09', duration: 0.5 });
 
     gsap.to([btnRef.current, textRef.current], {
       x: 0,
@@ -71,7 +71,7 @@ const MagneticButton = () => {
         
         <span 
           ref={textRef} 
-          className="relative z-10 flex items-center gap-1 text-[#f3f3f3] text-sm pointer-events-none font-medium lg:font-normal"
+          className={`relative z-10 flex items-center gap-1 ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"} text-sm pointer-events-none font-medium lg:font-normal`}
         >
           My resume
           <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />

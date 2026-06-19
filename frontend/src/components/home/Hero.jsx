@@ -218,7 +218,7 @@ const Hero = () => {
     >
       <div className="top-name-hero w-full pt-4 px-5 lg:px-10 pointer-events-none">
         <h1 className="my-name uppercase text-[23.5vw] lg:text-[25vw] xl:text-[25vw] 2xl:text-[25.3vw] w-full font-bold tracking-tighter leading-[0.75em] relative z-10 -ml-[1vw] lg:-ml-[1.3vw]">
-          <span className={`first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] ${theme == "dark" ? "bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]" : "bg-[radial-gradient(circle,_rgba(0,0,0,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(0,0,0,0.5)_1px,_transparent_1px)]"}`}>
+          <span className={`first-name inline-block relative leading-[0.75em] bg-clip-text text-transparent bg-[length:4px_4px] ${theme == "dark" ? "bg-[radial-gradient(circle,_rgba(255,255,255,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(255,255,255,0.3)_1px,_transparent_1px)]" : "bg-[radial-gradient(circle,_rgba(0,0,0,0.5)_1px,_transparent_1px)] lg:bg-[radial-gradient(circle,_rgba(0,0,0,0.8)_1px,_transparent_1px)]"}`}>
             falguni
           </span>
         </h1>
@@ -227,14 +227,14 @@ const Hero = () => {
       <div className="bottom-hero w-full flex flex-col lg:flex-row mt-10 lg:mt-0">
         <div className="bottom-hero-left w-full lg:w-1/2 2xl:w-[53%] head-txt text-[1.8rem] lg:text-[3rem] 2xl:text-[4rem] px-5 lg:px-10 leading-[1.2em]">
           <div className="overflow-hidden py-2 -my-2">
-            <h2 className="w-full hero-txt">
+            <h2 className={`w-full hero-txt ${theme === "dark" ? "" : "mix-blend-difference"}`}>
               Full stack <span className="italic prime-txt body-txt">MERN</span>{" "}
               developer
             </h2>
           </div>
 
           <div className="overflow-hidden py-2 -my-2 mt-1 lg:mt-0">
-            <h2 className="w-full text-right hero-txt">
+            <h2 className={`w-full text-right hero-txt ${theme === "dark" ? "" : "mix-blend-difference"}`}>
               Building your brand's unfair advantage.
             </h2>
           </div>

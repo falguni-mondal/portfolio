@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useLabStore } from '../../../store/store';
 
 const LocalTime = () => {
+  const theme = useLabStore((state) => state.theme);
   const [time, setTime] = useState('');
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const LocalTime = () => {
         Local Time
       </span>
       {/* Monospace font gives it that live terminal/telemetry feel */}
-      <span className="text-xs sm:text-sm font-mono tracking-widest text-zinc-300">
+      <span className={`text-xs sm:text-sm font-mono tracking-widest ${theme === "dark" ? "text-zinc-300" : "text-zinc-700"}`}>
         {time || 'CALCULATING...'}
       </span>
     </div>

@@ -91,18 +91,19 @@ const Navbar = () => {
 
   // TEMPORARY TOGGLE HANDLER
   const handleThemeClick = () => {
-    // toggleTheme(); <-- Uncomment this when light mode is finished
+    // Uncomment this when light mode is finished
+    toggleTheme();
 
     // Trigger the WIP popup
-    setShowPopup(true);
+    // setShowPopup(true);
     
     // Clear any existing timer so spam-clicking doesn't break the animation
-    if (popupTimer.current) clearTimeout(popupTimer.current);
+    // if (popupTimer.current) clearTimeout(popupTimer.current);
     
     // Hide popup after 3.5 seconds
-    popupTimer.current = setTimeout(() => {
-      setShowPopup(false);
-    }, 3500);
+    // popupTimer.current = setTimeout(() => {
+    //   setShowPopup(false);
+    // }, 3500);
   };
 
   return (
@@ -113,7 +114,7 @@ const Navbar = () => {
       >
           <div id="logo" className="cursor-pointer z-50 pointer-events-auto">
               <Link to="/">
-                  <img className='w-[65px] lg:w-[70px] 2xl:w-[80px]' src="/logo.svg" alt="logo" />
+                  <img className='w-[65px] lg:w-[70px] 2xl:w-[80px]' src={`${theme === "dark" ? "/logo.svg" : "/logo_black.svg"}`} alt="logo" />
               </Link>
           </div>
           <nav className="navigations">

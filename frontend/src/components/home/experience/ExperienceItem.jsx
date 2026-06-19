@@ -58,7 +58,7 @@ const ExperienceItem = ({ exp }) => {
         {/* Vertical Text Flip Container */}
         <div className="relative overflow-hidden h-[28px] lg:h-[32px]">
           <div className="flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.19,1,0.22,1)] lg:group-hover:-translate-y-1/2 group-[.is-clicked]:-translate-y-1/2">
-            <h3 className={`text-xl lg:text-2xl font-light${theme === "dark" ? "font-light" : "font-base"} ${theme === "dark" ? "text-zinc-300" : "text-zinc-600"} h-[28px] lg:h-[32px] flex items-center capitalize`}>
+            <h3 className={`text-xl lg:text-2xl font-light${theme === "dark" ? "font-light" : "font-base"} ${theme === "dark" ? "text-zinc-300" : "text-zinc-700"} h-[28px] lg:h-[32px] flex items-center capitalize`}>
               {exp.name}
             </h3>
             <h3 className={`text-xl lg:text-2xl font-medium ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"} h-[28px] lg:h-[32px] flex items-center capitalize`}>

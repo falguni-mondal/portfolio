@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useGLTF, Environment, ContactShadows, Float } from "@react-three/drei";
+import { useGLTF, Environment, Float } from "@react-three/drei";
 import {
   EffectComposer,
   Bloom,
@@ -265,24 +265,12 @@ const GlobalRingCanvas = () => {
           color="#ffffff"
         />
 
-        {/* Suspense Boundary added to prevent React crash during async GLTF/HDRI loading */}
         <Suspense fallback={null}>
           <Environment
             preset="studio"
             environmentIntensity={0.8}
             environmentRotation={[0, Math.PI / 1.2, 0]}
           />
-
-          <ContactShadows
-            frames={1}
-            position={[0, -1.5, 0]}
-            opacity={0.6}
-            scale={isMobile ? 7 : 10}
-            blur={2.5}
-            far={4}
-            color="#000000"
-          />
-
           <Ring isMobile={isMobile} />
         </Suspense>
 

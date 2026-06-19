@@ -3,11 +3,14 @@ import { Icon } from '@iconify/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
+import { useLabStore } from '../../../store/store';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
   const itemRef = useRef(null);
+
+    const theme = useLabStore((state) => state.theme);
   
   // Strict active state management for flawless syncing with VideoPortal
   const isActive = activeIndex === index;
@@ -47,7 +50,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
       className={`group relative w-full block py-12 lg:py-16 border-b border-zinc-700 flex flex-col lg:flex-row items-start lg:items-center gap-6 lg:gap-0 overflow-hidden px-4 sm:px-6 lg:px-10 transition-colors duration-500 ease-out px-5 lg:px-10 ${
         project.url ? 'cursor-pointer' : 'cursor-default lg:cursor-pointer'
       } ${
-        isActive ? 'bg-[#1a1a1a]/90 backdrop-blur-[2px]' : 'bg-transparent'
+        isActive ? theme === "dark" ? 'bg-[#1a1a1a]/90 backdrop-blur-[2px]' : 'bg-[#bebebe]/90 backdrop-blur-[2px]' : 'bg-transparent'
       }`}
     >
       {/* Animated Baseline (Black to pop against the new orange background) */}
@@ -73,7 +76,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
 
       {/* 3. DESCRIPTION (Pushing left on hover) */}
       <div className="w-full lg:w-3/12 pr-0 lg:pr-10">
-        <p className={`text-sm lg:text-base leading-relaxed transition-all duration-500 ${isActive ? 'lg:-translate-x-2 text-zinc-300' : 'text-zinc-500'}`}>
+        <p className={`text-sm lg:text-base leading-relaxed transition-all duration-500 ${isActive ? theme === "dark"? 'lg:-translate-x-2 text-zinc-300' : 'lg:-translate-x-2 text-[0b0a09]' : 'text-zinc-500'}`}>
           {project.description}
         </p>
       </div>
@@ -87,7 +90,7 @@ const ProjectItem = ({ project, index, activeIndex, setActiveIndex }) => {
         ) : (
           /* Lined Circle with Center Diagonal Arrow */
           <div className={`flex items-center justify-center w-12 h-12 rounded-full border transition-colors duration-500 ${
-            isActive ? 'prime-bg border-[#ff5733] text-[#f3f3f3]' : 'bg-transparent border-zinc-600 text-zinc-600'
+            isActive ? theme === "dark" ? 'prime-bg border-[#ff5733] text-[#f3f3f3]' : "prime-bg border-[#ff5733] text-[#0b0a09]" : 'bg-transparent border-zinc-600 text-zinc-600'
           }`}>
             <Icon icon="material-symbols:arrow-outward-rounded" className="text-2xl" />
           </div>

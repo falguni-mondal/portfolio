@@ -84,10 +84,10 @@ const Works = () => {
           <SectionHeading line1="Professional" line2="Works." />
 
           <div className="flex flex-wrap items-center gap-6 lg:gap-12 mt-8 lg:mt-0 lg:pb-3 works-fade">
-            <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+            <span className={`text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium uppercase ${theme === "dark" ? "text-zinc-500" : "text-zinc-600"}`}>
               ( Client Projects )
             </span>
-            <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+            <span className={`text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium uppercase ${theme === "dark" ? "text-zinc-500" : "text-zinc-600"}`}>
               ( Upcoming & Completed )
             </span>
           </div>

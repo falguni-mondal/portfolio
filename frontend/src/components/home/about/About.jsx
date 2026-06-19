@@ -5,12 +5,14 @@ import { useGSAP } from '@gsap/react';
 import SplitText from './SplitText';
 import MagneticButton from './MagneticButton';
 import Arsenal from './Arsenal';
+import { useLabStore } from '../../../store/store';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const About = () => {
   const sectionRef = useRef(null);
   const parallaxWrapperRef = useRef(null); 
+  const theme = useLabStore((state) => state.theme);
 
   useGSAP(() => {
     let mm = gsap.matchMedia();
@@ -144,10 +146,10 @@ const About = () => {
         
         {/* Top Horizontal Line */}
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-20 border-b border-zinc-700 pb-4">
-          <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+          <span className={`text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium uppercase ${theme === "dark" ? "text-zinc-500" : "text-zinc-600"}`}>
             ( The Developer )
           </span>
-          <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
+          <span className={`text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium uppercase ${theme === "dark" ? "text-zinc-500" : "text-zinc-600"}`}>
             ( Based in India )
           </span>
         </div>
@@ -157,7 +159,7 @@ const About = () => {
           <div className="lg:col-span-5 flex flex-col justify-between h-full">
             
             <div className="overflow-hidden pb-4">
-              <h2 className="heading-block text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium text-[#f3f3f3] tracking-tighter origin-bottom-left">
+              <h2 className={`heading-block text-[14vw] sm:text-[10vw] lg:text-[6.5rem] xl:text-[7.5rem] leading-[0.95em] font-medium ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09] mix-blend-difference"} tracking-tighter origin-bottom-left`}>
                 Hi, I am <br className="hidden lg:block"/>
                 <span className="text-[#FF5733] italic head-txt pr-2">Falguni.</span>
               </h2>
@@ -166,13 +168,13 @@ const About = () => {
             <div className="sub-heading-block relative mt-12 lg:mt-auto pt-8 lg:pt-0">
               <div className="animated-line absolute top-0 left-0 w-full h-[1px] bg-zinc-700 origin-left scale-x-0 lg:hidden"></div>
               
-              <h4 className="lg:text-xl text-zinc-200 font-medium leading-snug">
+              <h4 className={`lg:text-xl ${theme === "dark" ? "text-zinc-200" : "text-zinc-900"} font-medium leading-snug`}>
                 Bachelors in <br className="hidden lg:block"/> Information Technology
               </h4>
               <div className="flex items-center gap-3 mt-4 lg:mt-6">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FF5733]"></span>
-                <span className="text-xs text-zinc-400 font-medium tracking-[0.15em] uppercase">
-                  Class of <span className="text-[#f3f3f3]">2025</span>
+                <span className={`text-xs ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"} font-medium tracking-[0.15em] uppercase`}>
+                  Class of <span className={`${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"}`}>2025</span>
                 </span>
               </div>
             </div>
@@ -184,11 +186,11 @@ const About = () => {
             <div className="relative w-full lg:pr-40">
               
               <div className="paragraphs-block">
-                <p className="text-xl lg:text-3xl text-zinc-200 font-medium leading-relaxed max-w-2xl flex flex-wrap">
+                <p className={`text-xl lg:text-3xl ${theme === "dark" ? "text-zinc-200" : "text-zinc-900"} font-medium leading-relaxed max-w-2xl flex flex-wrap`}>
                   <SplitText text="Helping brands to have their unfair advantage by developing digital adrenaline." />
                 </p>
                 
-                <p className="text-sm lg:text-base text-zinc-400 leading-relaxed max-w-xl mt-6 lg:mt-8 flex flex-wrap">
+                <p className={`text-sm lg:text-base ${theme === "dark" ? "text-zinc-400" : "text-zinc-500"} leading-relaxed max-w-xl mt-6 lg:mt-8 flex flex-wrap`}>
                   <SplitText text="Currently leading full-stack development within the agency space, I engineer the intersection of scalable data architecture and seamless UI. Whether building high-volume e-commerce platforms or immersive, Awwwards-level digital experiences, the baseline remains the same. Clean logic. Purpose-driven design. Digital products built for pure performance." />
                 </p>
               </div>

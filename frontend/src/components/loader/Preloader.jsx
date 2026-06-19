@@ -1,8 +1,11 @@
 // import React, { useRef } from "react";
 // import gsap from "gsap";
 // import { useGSAP } from "@gsap/react";
+// import { useLabStore } from "../../store/store";
+
 
 // const Preloader = ({ setHasLoaded }) => {
+//   const theme = useLabStore((state) => state.theme);
 //   const containerRef = useRef(null);
 //   const counterRef = useRef(null);
 //   const barRef = useRef(null);
@@ -177,9 +180,11 @@
 import React, { useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
-import { useProgress } from "@react-three/drei"; // 1. Import the R3F tracker
+import { useProgress } from "@react-three/drei";
+import { useLabStore } from "../../store/store";
 
 const Preloader = ({ setHasLoaded }) => {
+  const theme = useLabStore((state) => state.theme);
   const containerRef = useRef(null);
   const counterRef = useRef(null);
   const barRef = useRef(null);
@@ -315,13 +320,13 @@ const Preloader = ({ setHasLoaded }) => {
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className="curtain-strip w-[20.5%] h-full bg-[#0a0a0a]"
+            className={`curtain-strip w-[20.5%] h-full ${theme === "dark" ? "bg-[#0b0a09]" : "bg-[#f3f3f3]"}`}
           />
         ))}
       </div>
 
       {/* THE FOREGROUND UI LAYER */}
-      <div className="absolute inset-0 z-10 flex flex-col justify-end px-5 lg:px-10 pb-8 lg:pb-12 text-[#f3f3f3] pointer-events-none">
+      <div className={`absolute inset-0 z-10 flex flex-col justify-end px-5 lg:px-10 pb-8 lg:pb-12 ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09]"} pointer-events-none`}>
         
         {/* THE TOP METADATA */}
         <div className="absolute top-8 lg:top-12 left-5 lg:left-10 w-full flex justify-between pr-10 lg:pr-20 overflow-hidden">
@@ -342,7 +347,7 @@ const Preloader = ({ setHasLoaded }) => {
               Loading Experience
             </span>
             <h1 className="reveal-text text-[12vw] sm:text-[8vw] lg:text-[6rem] leading-[0.8em] font-bold tracking-tight uppercase whitespace-nowrap">
-              BY <span className="text-[#FF5733]">F</span>ALGUNI<span className="inline-block w-[0.14em] h-[0.14em] bg-[#f3f3f3] ml-[0.05em] mb-[0.04em]"></span>
+              BY <span className="text-[#FF5733]">F</span>ALGUNI<span className={`inline-block w-[0.14em] h-[0.14em] ${theme === "dark" ? "bg-[#f3f3f3]" : "bg-[#0b0a09]"} ml-[0.08em]`}></span>
             </h1>
           </div>
 
@@ -364,10 +369,10 @@ const Preloader = ({ setHasLoaded }) => {
         </div>
 
         {/* THE PROGRESS BAR */}
-        <div className="progress-container w-full h-[2px] bg-zinc-800 relative overflow-hidden">
+        <div className={`progress-container w-full h-[2px] ${theme === "dark" ? "bg-zinc-800" : "bg-zinc-300"} relative overflow-hidden`}>
           <div
             ref={barRef}
-            className="absolute top-0 left-0 h-full w-full bg-[#f3f3f3] origin-left scale-x-0"
+            className={`absolute top-0 left-0 h-full w-full ${theme === "dark" ? "bg-[#f3f3f3]" : "bg-[#0b0a09]"} origin-left scale-x-0`}
           ></div>
         </div>
 
