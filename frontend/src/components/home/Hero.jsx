@@ -261,7 +261,7 @@ const Hero = () => {
           <div className="hero-img img-container w-[280px] h-[380px] 2xl:w-[360px] 2xl:h-auto">
             <img
               className="w-full h-full object-cover"
-              src="/me.webp"
+              src={`${theme === "dark" ? "/me.webp" : "/me_light.webp"}`}
               alt="falguni_mondal_image"
             />
           </div>
