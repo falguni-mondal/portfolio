@@ -57,12 +57,14 @@ const MagneticButton = () => {
 
   return (
     <div className="cta-block">
-      <button
+      <a
+        href="/falguni_mondal_resume.pdf"
+        download="Falguni_Mondal_Resume.pdf"
         ref={btnRef}
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none"
+        className="relative flex items-center justify-center w-28 h-28 lg:w-32 lg:h-32 rounded-full bg-[#FF5733] overflow-hidden cursor-pointer border-none outline-none block"
       >
         <div 
           ref={fillRef}
@@ -76,7 +78,7 @@ const MagneticButton = () => {
           My resume
           <Icon icon="material-symbols:arrow-outward-rounded" className="text-sm lg:text-base" />
         </span>
-      </button>
+      </a>
     </div>
   );
 };
