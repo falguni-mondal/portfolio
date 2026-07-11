@@ -14,21 +14,28 @@ const SmoothScroll = ({ children }) => {
   useEffect(() => {
     // Create the Lenis instance
     const lenis = new Lenis({
-      duration: 1.2, 
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
+      // ==========================================
+      // THE PHYSICS UPGRADE
+      // ==========================================
+      // Deleted `duration` and `easing`.
+      // Lerp (0 to 1) creates natural real-world friction. 
+      // 0.08 is the sweet spot for a weighty, premium momentum feel.
+      lerp: 0.08, 
+      
       direction: "vertical",
       gestureDirection: "vertical",
       smooth: true,
       
-      // ==========================================
-      // THE FIX: MOBILE MAIN-THREAD HIJACK
-      // ==========================================
-      // This forces mobile touch events to be processed by JavaScript instead of hardware.
-      // This locks the DOM and the React Three Fiber Canvas to the exact same tick, eliminating WebGL desync.
+      // Keeps the DOM and WebGL perfectly synced
       syncTouch: true, 
       smoothTouch: true, 
       
-      touchMultiplier: 2,
+      // ==========================================
+      // THE SPEED FIX
+      // ==========================================
+      // Reduced from 2 to 1. This gives you exact 1:1 finger tracking.
+      touchMultiplier: 1, 
+      wheelMultiplier: 1, 
     });
 
     lenisRef.current = lenis;
@@ -37,13 +44,11 @@ const SmoothScroll = ({ children }) => {
     lenis.on("scroll", ScrollTrigger.update);
 
     // B. Slave Lenis's RAF loop to GSAP's global ticker
-    // This guarantees both libraries execute on the exact same frame
     gsap.ticker.add((time) => {
       lenis.raf(time * 1000);
     });
 
     // C. Disable GSAP's lag smoothing
-    // If the browser stutters, GSAP attempts to correct it, which desyncs it from Lenis. This locks them together.
     gsap.ticker.lagSmoothing(0);
 
     return () => {
