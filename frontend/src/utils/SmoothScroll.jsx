@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import Lenis from "lenis"; // Note: Use '@studio-freight/lenis' if on the older package version
+import Lenis from "lenis"; 
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useLocation } from "react-router-dom";
@@ -14,12 +14,20 @@ const SmoothScroll = ({ children }) => {
   useEffect(() => {
     // Create the Lenis instance
     const lenis = new Lenis({
-      duration: 1.2, // The standard high-end feeling duration
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Standard ease-out
+      duration: 1.2, 
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), 
       direction: "vertical",
       gestureDirection: "vertical",
       smooth: true,
-      smoothTouch: false, // Keep native scrolling on touch devices
+      
+      // ==========================================
+      // THE FIX: MOBILE MAIN-THREAD HIJACK
+      // ==========================================
+      // This forces mobile touch events to be processed by JavaScript instead of hardware.
+      // This locks the DOM and the React Three Fiber Canvas to the exact same tick, eliminating WebGL desync.
+      syncTouch: true, 
+      smoothTouch: true, 
+      
       touchMultiplier: 2,
     });
 
@@ -50,19 +58,15 @@ const SmoothScroll = ({ children }) => {
   // 2. Handle React SPA Route Changes
   useEffect(() => {
     if (lenisRef.current) {
-      // A. Instantly reset the scrollbar to the very top before the new page renders
       lenisRef.current.scrollTo(0, { immediate: true });
 
-      // B. Force GSAP to recalculate all ScrollTrigger start/end points.
-      // We wrap this in a short timeout because React needs a few milliseconds 
-      // to paint the new DOM nodes of the next page before GSAP can measure their heights.
       const refreshTimeout = setTimeout(() => {
         ScrollTrigger.refresh();
       }, 100);
 
       return () => clearTimeout(refreshTimeout);
     }
-  }, [pathname]); // This triggers every time the route URL changes
+  }, [pathname]); 
 
   return <>{children}</>;
 };
