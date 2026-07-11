@@ -1,31 +1,40 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useLabStore } from "../../../store/store";
-import { View } from "@react-three/drei";
-import WebGLBlobHover from "../../../utils/WebGLBlobHover";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const LabItem = ({ project, index }) => {
+const LabItem = ({ project, index, registerItem }) => {
   const theme = useLabStore((state) => state.theme);
-  
   const triggerRef = useRef(null);
-  // FIX: We define the 100% window (clipRef) and the 120% moving content (containerRef)
-  const clipRef = useRef(null);
   const containerRef = useRef(null);
+  const imageRef = useRef(null);
 
   const activeProject = useLabStore((state) => state.activeProject);
   const setActiveProject = useLabStore((state) => state.setActiveProject);
   const isActive = activeProject === index;
 
+  useEffect(() => {
+    if (containerRef.current && imageRef.current) {
+      registerItem({
+        index,
+        containerRef,
+        imageRef,
+        image1: project.image1,
+        image2: project.image2,
+      });
+    }
+  }, [index, project, registerItem]);
+
   useGSAP(
     () => {
       let mm = gsap.matchMedia();
 
-      gsap.to(containerRef.current, {
+      // GSAP continues to parallax the invisible imageRef div!
+      gsap.to(imageRef.current, {
         yPercent: 15,
         ease: "none",
         scrollTrigger: {
@@ -67,26 +76,19 @@ const LabItem = ({ project, index }) => {
         className={`w-full flex flex-col group cursor-pointer ${isActive ? "is-active" : ""}`}
       >
         <div className="relative w-full aspect-square mb-4 lg:mb-6">
-          
-          {/* THE 100% WINDOW CLIPPING MASK */}
-          <div ref={clipRef} className="absolute inset-0 bg-[#0a0a0a] overflow-hidden rounded-sm z-0">
+          {/* THE HITBOX CONTAINER */}
+          <div
+            ref={containerRef}
+            className="absolute inset-0 bg-[#0a0a0a] overflow-hidden rounded-sm z-0"
+          >
             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:30px_30px] lg:bg-[size:40px_40px] opacity-50 z-0"></div>
 
-            {/* THE 120% PARALLAX TRACKER */}
+            {/* THE INVISIBLE PARALLAX TRACKER */}
             <div
-              ref={containerRef}
+              ref={imageRef}
               className="absolute inset-[-10%] w-[120%] h-[120%] flex items-center justify-center z-10 scale-100 lg:group-hover:scale-105 group-[.is-active]:scale-105 transition-transform duration-1000 ease-[cubic-bezier(0.25,1,0.5,1)]"
             >
-              <View className="w-full h-full">
-                <WebGLBlobHover 
-                  image1={project.image1} 
-                  image2={project.image2} 
-                  index={index} 
-                  containerRef={containerRef}
-                  clipRef={clipRef}
-                />
-              </View>
-
+              {/* PURE WEBGL FIX: The image is hidden visually, but kept for Google Search Indexing */}
               <img
                 src={project.image1}
                 alt={project.name}
