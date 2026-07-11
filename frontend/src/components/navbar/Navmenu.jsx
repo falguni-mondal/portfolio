@@ -92,7 +92,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
               href={linkedin}
               target="_blank"
               rel="noreferrer"
-              className="group hover:text-white transition-colors duration-300"
+              className={`group transition-colors duration-300 ${theme === "dark" ? "hover:text-white" : "hover:text-[#0b0a09]"}`}
             >
               <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">
                 [
@@ -108,7 +108,7 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
               href={github}
               target="_blank"
               rel="noreferrer"
-              className="group hover:text-white transition-colors duration-300"
+              className={`group transition-colors duration-300 ${theme === "dark" ? "hover:text-white" : "hover:text-[#0b0a09]"}`}
             >
               <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">
                 [
@@ -119,12 +119,12 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
               </span>
             </a>
 
-            {/* Standard Public Folder Resume Link */}
             <a
-              href="/resume.pdf"
+              href="/falguni_mondal_resume.pdf"
+              download="Falguni_Mondal_Resume.pdf"
               target="_blank"
               rel="noreferrer"
-              className="group hover:text-white transition-colors duration-300"
+              className={`group transition-colors duration-300 ${theme === "dark" ? "hover:text-white" : "hover:text-[#0b0a09]"}`}
             >
               <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">
                 [

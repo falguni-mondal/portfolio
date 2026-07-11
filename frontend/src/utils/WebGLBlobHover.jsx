@@ -1,6 +1,6 @@
-import React, { useRef, Suspense, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
+import { useFrame, extend, useThree } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
 import { useLabStore } from "../store/store";
 
@@ -53,7 +53,7 @@ const BlobMaterial = shaderMaterial(
     varying vec2 vUv;
 
     void main() {
-      // 1. STRICT LOCAL UV CLIPPING
+      // 1. STRICT LOCAL UV CLIPPING (Reinstated to mimic CSS overflow:hidden in WebGL)
       if (vUv.x < uClipUV.x || vUv.x > uClipUV.z || vUv.y < uClipUV.y || vUv.y > uClipUV.w) {
         discard;
       }
@@ -78,7 +78,7 @@ const BlobMaterial = shaderMaterial(
       float dist = length(delta);
       float angle = atan(delta.y, delta.x);
 
-      // 3. GLOBAL ACTIVATION FACTOR (Scales to 1.0 when hovered)
+      // 3. GLOBAL ACTIVATION FACTOR
       float hoverFactor = clamp(uRadius / 0.20, 0.0, 1.0);
 
       // 4. ANIMATED WOBBLE MATH
@@ -90,16 +90,14 @@ const BlobMaterial = shaderMaterial(
       float wobble = (w1 + w2 + w3 + w4) * hoverFactor;
       float animatedRadius = max(0.0, uRadius + wobble);
 
-      // 5. THE BLOB MASK (Determines which image shows)
+      // 5. THE BLOB MASK
       float mask = smoothstep(animatedRadius + 0.001, animatedRadius - 0.001, dist);
 
       // 6. GLOBAL DISTORTION
-      // Bulge centers around the mouse
       float bulgeFactor = smoothstep(0.9, 0.0, dist) * 0.35 * hoverFactor;
       vec2 displacement = vUv - uMouse; 
       vec2 uv1 = uvCover - displacement * bulgeFactor;
 
-      // FIX: The wave effect is applied to the ENTIRE image space based on hoverFactor
       float waveX = sin(vUv.y * 10.0 + uTime * 2.0) * 0.015 * hoverFactor;
       float waveY = cos(vUv.x * 10.0 - uTime * 2.0) * 0.015 * hoverFactor;
       uv1 += vec2(waveX, waveY); 
@@ -111,7 +109,6 @@ const BlobMaterial = shaderMaterial(
 
       vec4 finalColor = mix(tex1, tex2, mask);
       
-      // Permanently opaque rendering
       finalColor.a = 1.0; 
       gl_FragColor = finalColor;
     }
@@ -121,17 +118,18 @@ const BlobMaterial = shaderMaterial(
 extend({ BlobMaterial });
 
 // ==========================================
-// 3. INDIVIDUAL TRACKED MESH
+// 3. THE MESH COMPONENT
 // ==========================================
-const TrackedMesh = ({ data }) => { 
+const WebGLBlobHover = ({ image1, image2, index, containerRef, clipRef }) => { 
   const materialRef = useRef();
-  const meshRef = useRef();
   
-  const [tex1, tex2] = useTexture([data.image1, data.image2]);
-  const { viewport, size } = useThree(); 
+  const [tex1, tex2] = useTexture([image1, image2]);
+  
+  // FIX: Access the viewport constraints from the <View> component
+  const { viewport, size } = useThree();
 
   const activeProject = useLabStore((state) => state.activeProject);
-  const isActive = activeProject === data.index;
+  const isActive = activeProject === index;
   
   const targetMouse = useRef(new THREE.Vector2(0.5, 0.5));
   const targetRadius = useRef(0.0);
@@ -143,42 +141,33 @@ const TrackedMesh = ({ data }) => {
   useEffect(() => {
     if (materialRef.current && tex1.image) {
       materialRef.current.uImageRes.set(tex1.image.width, tex1.image.height);
-      // FIX: Removed the SRGBColorSpace manipulation. 
-      // The images will now render with their raw, natural colors.
     }
   }, [tex1]);
 
   useFrame((state) => {
-    if (!materialRef.current || !meshRef.current || !data.imageRef.current || !data.containerRef.current) return;
+    if (!materialRef.current || !containerRef.current || !clipRef.current) return;
 
-    const imgRect = data.imageRef.current.getBoundingClientRect();
-    const clipRect = data.containerRef.current.getBoundingClientRect();
-    
-    // POSITIONING
-    const x = imgRect.left + imgRect.width / 2 - size.width / 2;
-    const y = -(imgRect.top + imgRect.height / 2 - size.height / 2);
+    materialRef.current.uResolution.set(size.width, size.height);
+    materialRef.current.uTime = state.clock.elapsedTime;
 
-    meshRef.current.position.set(x, y, 0);
-    meshRef.current.scale.set(imgRect.width, imgRect.height, 1);
-    materialRef.current.uResolution.set(imgRect.width, imgRect.height);
+    // FIX: Mathematically clip the WebGL output relative to the 100% window size
+    const imgRect = containerRef.current.getBoundingClientRect();
+    const clipRect = clipRef.current.getBoundingClientRect();
 
-    // LOCAL UV CLIPPING
     const clipMinX = (clipRect.left - imgRect.left) / imgRect.width;
     const clipMaxX = (clipRect.right - imgRect.left) / imgRect.width;
     const clipMaxY = 1.0 - ((clipRect.top - imgRect.top) / imgRect.height);
     const clipMinY = 1.0 - ((clipRect.bottom - imgRect.top) / imgRect.height);
 
     materialRef.current.uClipUV.set(clipMinX, clipMinY, clipMaxX, clipMaxY);
-
-    // INTERACTION LOGIC
-    materialRef.current.uTime = state.clock.elapsedTime;
-    const isMobile = window.innerWidth < 1024;
     
+    const isMobile = window.innerWidth < 1024;
     const pixelMouseX = isMobile ? window.innerWidth / 2 : globalMouse.x;
     const pixelMouseY = isMobile ? window.innerHeight / 2 : globalMouse.y;
 
     if (isActive) {
       targetRadius.current = 0.20; 
+      // Safely map the global mouse into the local UV coordinates of the current image
       const uvX = (pixelMouseX - imgRect.left) / imgRect.width;
       const uvY = 1.0 - ((pixelMouseY - imgRect.top) / imgRect.height);
       targetMouse.current.set(uvX, uvY);
@@ -191,24 +180,11 @@ const TrackedMesh = ({ data }) => {
   });
 
   return (
-    <mesh ref={meshRef}>
-      <planeGeometry args={[1, 1]} />
-      {/* FIX: added toneMapped={false} to ensure Three.js doesn't apply gamma darkening */}
+    // FIX: The viewport scale forces the tiny dot to expand and perfectly cover the entire View
+    <mesh scale={[viewport.width, viewport.height, 1]}>
+      <planeGeometry args={[1, 1]} /> 
       <blobMaterial ref={materialRef} uTexture1={tex1} uTexture2={tex2} transparent={true} toneMapped={false} />
     </mesh>
-  );
-};
-
-// ==========================================
-// 4. THE MASTER SCENE
-// ==========================================
-const WebGLBlobHover = ({ trackedItems }) => {
-  return (
-    <>
-      {trackedItems.map((item) => (
-        <TrackedMesh key={`blob-${item.index}`} data={item} />
-      ))}
-    </>
   );
 };
 

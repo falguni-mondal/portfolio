@@ -1,12 +1,12 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Canvas } from "@react-three/fiber";
+import { View } from "@react-three/drei";
 import LabItem from "./LabItem";
 import data from "../../../data.json";
 import SectionHeading from "../global/SectionHeading";
-import WebGLBlobHover from "../../../utils/WebGLBlobHover";
 import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -15,15 +15,6 @@ const labData = data.lab;
 const Lab = () => {
   const sectionRef = useRef(null);
   const theme = useLabStore((state) => state.theme);
-  
-  const [trackedItems, setTrackedItems] = useState([]);
-
-  const registerItem = useCallback((item) => {
-    setTrackedItems((prev) => {
-      if (prev.some((i) => i.index === item.index)) return prev;
-      return [...prev, item];
-    });
-  }, []);
 
   useGSAP(
     () => {
@@ -92,12 +83,13 @@ const Lab = () => {
           dpr={[1, 1.5]}
           style={{ pointerEvents: "none" }}
           gl={{ alpha: true, antialias: false, powerPreference: "default" }}
+          eventSource={typeof document !== 'undefined' ? document.body : undefined} 
         >
-          <WebGLBlobHover trackedItems={trackedItems} />
+          <View.Port />
         </Canvas>
       </div>
 
-      <div className="w-full mx-auto flex flex-col relative">
+      <div className="w-full max-w-[1920px] mx-auto flex flex-col relative">
         <div className="editorial-header w-full flex items-center justify-between mb-12 lg:mb-24 border-b border-zinc-700 pb-4 relative z-20">
           <span className="text-[0.55rem] sm:text-[0.65rem] tracking-[0.2em] font-medium text-zinc-500 uppercase">
             ( R & D )
@@ -125,7 +117,6 @@ const Lab = () => {
                 key={index}
                 project={project}
                 index={index}
-                registerItem={registerItem}
               />
             ))}
           </div>

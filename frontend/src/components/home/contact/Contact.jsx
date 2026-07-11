@@ -287,7 +287,7 @@ const Contact = () => {
                       </span>
                       <Icon
                         icon="material-symbols:arrow-outward-rounded"
-                        className={`text-xl lg:text-2xl ${theme === "dark" ? "text-[#f3f3f3]" : "text-[#0b0a09] lg:text-zinc-600"}`}
+                        className={`text-xl lg:text-2xl ${theme === "dark" ? "text-zinc-600" : "text-[#0b0a09] lg:text-zinc-600"}`}
                       />
                     </div>
                     <div className="flex items-center gap-2 h-[32px] lg:h-[40px]">
