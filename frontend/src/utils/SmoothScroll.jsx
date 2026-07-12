@@ -14,12 +14,6 @@ const SmoothScroll = ({ children }) => {
   useEffect(() => {
     // Create the Lenis instance
     const lenis = new Lenis({
-      // ==========================================
-      // THE PHYSICS UPGRADE
-      // ==========================================
-      // Deleted `duration` and `easing`.
-      // Lerp (0 to 1) creates natural real-world friction. 
-      // 0.08 is the sweet spot for a weighty, premium momentum feel.
       lerp: 0.08, 
       
       direction: "vertical",
