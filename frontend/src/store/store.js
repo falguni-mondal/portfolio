@@ -1,30 +1,33 @@
+// src/store/store.js
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import initialData from '../data.json';
 
 export const useLabStore = create(
   persist(
     (set) => ({
-      // Tracks which LabItem index is currently hovered
       activeProject: null,
       setActiveProject: (index) => set({ activeProject: index }),
 
-      // Tracks global mouse coordinates
       mouse: { x: 0, y: 0 },
       setMouse: (x, y) => set({ mouse: { x, y } }),
 
-      // GLOBAL THEME STATE
       theme: 'dark',
-      toggleTheme: () => set((state) => ({ 
-        theme: state.theme === 'dark' ? 'light' : 'dark' 
-      })),
+      toggleTheme: () =>
+        set((state) => ({
+          theme: state.theme === 'dark' ? 'light' : 'dark',
+        })),
+
+      // Live Portfolio Data (Seeded with local data.json, updated from admin.byfalguni.com)
+      portfolioData: initialData,
+      setPortfolioData: (newData) =>
+        set((state) => ({
+          portfolioData: { ...state.portfolioData, ...newData },
+        })),
     }),
     {
-      // The key name in localStorage
-      name: 'portfolio-theme-storage', 
-      
-      // ONLY save the theme to localStorage. 
-      // We don't want to save mouse coordinates or active projects.
-      partialize: (state) => ({ theme: state.theme }), 
+      name: 'portfolio-theme-storage',
+      partialize: (state) => ({ theme: state.theme }),
     }
   )
 );

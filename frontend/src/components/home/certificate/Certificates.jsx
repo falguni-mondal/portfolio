@@ -3,16 +3,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import CertificateItem from "./CertificateItem";
-import data from "../../../data.json";
 import SectionHeading from "../global/SectionHeading";
 import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Dynamically pulling the certificates array from your JSON data
-const certificatesData = data.certificates;
 
 const Certificates = () => {
+  const certificatesData = useLabStore((state) => state.portfolioData.certificates) || [];
   const theme = useLabStore((state) => state.theme);
   const sectionRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(null);

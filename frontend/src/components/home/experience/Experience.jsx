@@ -3,15 +3,14 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import ExperienceItem from "./ExperienceItem";
-import data from "../../../data.json";
 import SectionHeading from "../global/SectionHeading";
 import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const experiences = data.experience;
 
 const Experience = () => {
+  const experiences = useLabStore((state) => state.portfolioData.experience);
   const sectionRef = useRef(null);
   const theme = useLabStore((state) => state.theme);
 

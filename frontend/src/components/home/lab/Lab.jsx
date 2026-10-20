@@ -10,9 +10,9 @@ import WebGLBlobHover from "../../../utils/WebGLBlobHover";
 import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
-const labData = data.lab;
 
 const Lab = () => {
+  const labData = useLabStore((state) => state.portfolioData.lab) || [];
   const sectionRef = useRef(null);
   const theme = useLabStore((state) => state.theme);
   

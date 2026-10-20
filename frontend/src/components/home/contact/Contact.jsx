@@ -9,10 +9,9 @@ import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Extract contact data directly from JSON (Phone removed)
-const { mail, linkedin, github, insta } = data.contact;
 
 const Contact = () => {
+  const { mail, linkedin, github, insta } = useLabStore((state) => state.portfolioData.contact);
   const theme = useLabStore((state) => state.theme);
   const sectionRef = useRef(null);
   const [copiedData, setCopiedData] = useState(null);

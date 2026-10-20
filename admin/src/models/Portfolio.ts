@@ -1,0 +1,215 @@
+// admin/src/models/Portfolio.ts
+import mongoose, { Schema } from 'mongoose';
+
+const PortfolioSchema = new Schema(
+  {
+    singletonKey: { type: String, default: 'MASTER_PORTFOLIO', unique: true },
+    arsenal: [{ type: String }],
+    experience: [
+      {
+        id: { type: String, required: true },
+        name: { type: String, required: true },
+        type: { type: String, default: '' },
+        role: { type: String, default: '' },
+        from: { type: String, default: '' },
+        to: { type: String, default: '' },
+        isPresent: { type: Boolean, default: false },
+        projects: [{ type: String }],
+      },
+    ],
+    works: [
+      {
+        name: { type: String, required: true },
+        description: { type: String, default: '' },
+        companyId: { type: String, default: 'exp-graphitage' },
+        companyName: { type: String, default: 'Graphitage' },
+        videoUrl: { type: String, default: '/coming_soon.mp4' },
+        videoFileId: { type: String, default: '' },
+        isOngoing: { type: Boolean, default: false },
+        url: { type: String, default: '' },
+      },
+    ],
+    lab: [
+      {
+        name: { type: String, required: true },
+        image1: { type: String, default: '/coming_soon.mp4' },
+        image1FileId: { type: String, default: '' },
+        image2: { type: String, default: '/coming_soon.mp4' },
+        image2FileId: { type: String, default: '' },
+        projectUrl: { type: String, default: '' },
+        tools: [{ type: String }],
+        isOngoing: { type: Boolean, default: false },
+      },
+    ],
+    certificates: [
+      {
+        name: { type: String, required: true },
+        organization: { type: String, default: '' },
+        year: { type: String, default: '' },
+        certId: { type: String, default: '' },
+        url: { type: String, default: '/coming_soon.mp4' },
+        fileId: { type: String, default: '' },
+      },
+    ],
+    contact: {
+      mail: { type: String, default: 'heyafalguni@gmail.com' },
+      linkedin: { type: String, default: 'https://www.linkedin.com/in/falguni-mondal/' },
+      github: { type: String, default: 'https://github.com/falguni-mondal' },
+      insta: { type: String, default: 'https://www.instagram.com/hey.falguni/' },
+    },
+  },
+  { timestamps: true }
+);
+
+export const PortfolioModel =
+  mongoose.models.Portfolio || mongoose.model('Portfolio', PortfolioSchema);
+
+export const INITIAL_PORTFOLIO_SEED = {
+  singletonKey: 'MASTER_PORTFOLIO',
+  arsenal: [
+    'React & Vite',
+    'Tailwind CSS',
+    'JS (ES6+)',
+    'Node.js / Express',
+    'MongoDB / Mongoose',
+    'RESTful APIs',
+    'GSAP Animation',
+    'WebGL / Three.js',
+  ],
+  experience: [
+    {
+      id: 'exp-graphitage',
+      name: 'Graphitage',
+      type: 'digital ad agency',
+      role: 'full stack web developer',
+      from: 'nov 2025',
+      to: '',
+      isPresent: true,
+      projects: ['Mritsna', 'Ankuran', 'Noctowls', 'Stem Quest'],
+    },
+  ],
+  works: [
+    {
+      name: 'Mritsna',
+      description:
+        'A creative, highly interactive premium e-commerce web application developed for a startup originating from IIT Dhanbad.',
+      companyId: 'exp-graphitage',
+      companyName: 'Graphitage',
+      videoUrl: '/coming_soon.mp4',
+      videoFileId: '',
+      isOngoing: true,
+      url: '',
+    },
+    {
+      name: 'Ankuran',
+      description:
+        'Official website of Ankuran Science Center, designed to drive fundraising and support for their experiential learning programs and educational events.',
+      companyId: 'exp-graphitage',
+      companyName: 'Graphitage',
+      videoUrl: '/coming_soon.mp4',
+      videoFileId: '',
+      isOngoing: true,
+      url: '',
+    },
+    {
+      name: 'Noctowls',
+      description:
+        'Custom coded Shopify-migrated e-commerce app featuring guest checkout, cart/wishlist, secure payments, and full admin management.',
+      companyId: 'exp-graphitage',
+      companyName: 'Graphitage',
+      videoUrl: 'https://ik.imagekit.io/byfalguni/Portfolio/Works/noctowls.mp4?updatedAt=1781244804572',
+      videoFileId: '',
+      isOngoing: false,
+      url: 'https://noctowls.com/',
+    },
+    {
+      name: 'Stem Quest',
+      description:
+        "Dedicated wordpress website for Ankuran Science Center's after school experiential learning tuition program and educational events.",
+      companyId: 'exp-graphitage',
+      companyName: 'Graphitage',
+      videoUrl: 'https://ik.imagekit.io/byfalguni/Portfolio/Works/stemquest.mp4?updatedAt=1781242186643',
+      videoFileId: '',
+      isOngoing: false,
+      url: 'https://stemquest.in/',
+    },
+  ],
+  lab: [
+    {
+      name: 'Divara',
+      image1:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/divara_proj_img1.png?updatedAt=1781238278149',
+      image1FileId: '',
+      image2:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/divara_proj_img2.jpg?updatedAt=1781238407232',
+      image2FileId: '',
+      projectUrl: '',
+      tools: ['react', 'tailwind', 'node.js/express', 'mongodb', 'gsap'],
+      isOngoing: true,
+    },
+    {
+      name: 'StegX',
+      image1:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/stegx_proj_img1.png?updatedAt=1781238337628',
+      image1FileId: '',
+      image2:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/stegx_proj_img2.png?updatedAt=1781238378547',
+      image2FileId: '',
+      projectUrl: 'https://stegx.netlify.app/',
+      tools: ['react', 'tailwind', 'node.js/express'],
+      isOngoing: false,
+    },
+    {
+      name: 'OBYS Agency (Clone)',
+      image1:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/Obys_proj_img1.jpg?updatedAt=1781238298559',
+      image1FileId: '',
+      image2:
+        'https://ik.imagekit.io/byfalguni/Portfolio/Personal%20Projects/Obys_proj_img2.jpg?updatedAt=1781238319231',
+      image2FileId: '',
+      projectUrl: 'https://falguni-mondal.github.io/Obys-Agency/',
+      tools: ['html/css', 'javascript', 'gsap', 'shery.js'],
+      isOngoing: false,
+    },
+  ],
+  certificates: [
+    {
+      name: 'Job Ready Cohort',
+      organization: 'Sheryians coding school',
+      year: '2025',
+      certId: '5433f043',
+      url: 'https://drive.google.com/file/d/1yWYrdf9VUpTAQk-hgY2aMMfSesrVUn0e/view?usp=sharing',
+      fileId: '',
+    },
+    {
+      name: 'Data Structures and Algorithms using Java',
+      organization: 'IIT Kharagpur (NPTEL)',
+      year: '2023',
+      certId: '',
+      url: 'https://drive.google.com/file/d/1EI-b1HbDAIUZKva6Z_OLLLzRwoXWIgNp/view?usp=drive_link',
+      fileId: '',
+    },
+    {
+      name: 'Front End Domination',
+      organization: 'Sheryians coding school',
+      year: '2023',
+      certId: '1476c6f3',
+      url: 'https://drive.google.com/file/d/14tdMeTIvr-2bK_WX7mcgSIzomFIBbZu2/view?usp=drive_link',
+      fileId: '',
+    },
+    {
+      name: 'JavaScript for beginners',
+      organization: 'Simplilearn',
+      year: '2023',
+      certId: '4735424',
+      url: 'https://drive.google.com/file/d/1fPoS_BYVhIHIAmAZrvQUtI9dbZddfluT/view?usp=drive_link',
+      fileId: '',
+    },
+  ],
+  contact: {
+    mail: 'heyafalguni@gmail.com',
+    linkedin: 'https://www.linkedin.com/in/falguni-mondal/',
+    github: 'https://github.com/falguni-mondal',
+    insta: 'https://www.instagram.com/hey.falguni/',
+  },
+};

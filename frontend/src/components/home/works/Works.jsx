@@ -4,15 +4,14 @@ import VideoPortal from "./VideoPortal";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import data from '../../../data.json';
 import SectionHeading from "../global/SectionHeading";
 import { useLabStore } from "../../../store/store";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const worksData = data.works;
 
 const Works = () => {
+  const worksData = useLabStore((state) => state.portfolioData.works);
   const [activeIndex, setActiveIndex] = useState(null);
   const worksRef = useRef(null);
     const theme = useLabStore((state) => state.theme);

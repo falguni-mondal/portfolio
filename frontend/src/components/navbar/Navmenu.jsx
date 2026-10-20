@@ -2,13 +2,12 @@ import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Link } from "react-router-dom";
-import data from "../../data.json";
 import { useLabStore } from "../../store/store";
 
 // Extract contact data directly from JSON
-const { linkedin, github } = data.contact;
 
 const Navmenu = ({ isOpen, setIsOpen }) => {
+  const { linkedin, github } = useLabStore((state) => state.portfolioData.contact);
   const containerRef = useRef(null);
   const linksRef = useRef([]);
   const tl = useRef(null);
