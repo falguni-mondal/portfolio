@@ -1,9 +1,11 @@
+"use client";
+
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Icon } from "@iconify/react";
 
-import { LoadingContext } from "../../App";
+import { LoadingContext } from "@/context/LoadingContext";
 import { useLabStore } from "../../store/store";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -262,7 +264,7 @@ const Hero = () => {
             <img
               className="w-full h-full object-cover"
               src={`${theme === "dark" ? "/me.webp" : "/me_light.webp"}`}
-              alt="falguni_mondal_image"
+              alt="Falguni Mondal — Creative Full-Stack MERN Developer" width="360" height="480" fetchPriority="high"
             />
           </div>
 

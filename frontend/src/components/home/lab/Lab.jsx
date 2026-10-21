@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -15,7 +17,7 @@ const Lab = () => {
   const labData = useLabStore((state) => state.portfolioData.lab) || [];
   const sectionRef = useRef(null);
   const theme = useLabStore((state) => state.theme);
-  
+
   const [trackedItems, setTrackedItems] = useState([]);
 
   const registerItem = useCallback((item) => {
@@ -92,6 +94,9 @@ const Lab = () => {
           dpr={[1, 1.5]}
           style={{ pointerEvents: "none" }}
           gl={{ alpha: true, antialias: false, powerPreference: "default" }}
+          onCreated={({ gl }) => {
+            gl.debug.checkShaderErrors = false;
+          }}
         >
           <WebGLBlobHover trackedItems={trackedItems} />
         </Canvas>

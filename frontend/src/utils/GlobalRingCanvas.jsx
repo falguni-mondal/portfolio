@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect, useState, Suspense } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame } from "@react-three/fiber";
@@ -11,7 +13,6 @@ import {
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { Perf } from "r3f-perf";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -65,7 +66,7 @@ const Ring = ({ isMobile }) => {
 
   useEffect(() => {
     const handleMouseMove = (event) => {
-      if (isMobile) return; 
+      if (isMobile) return;
       mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
     };
@@ -246,6 +247,9 @@ const GlobalRingCanvas = () => {
         camera={{ position: [-0.5, 0, 5], fov: 45 }}
         dpr={[1, 1.5]}
         gl={{ powerPreference: "default", antialias: true, alpha: true }}
+        onCreated={({ gl }) => {
+          gl.debug.checkShaderErrors = false;
+        }}
       >
         <ambientLight intensity={0.4} />
 
