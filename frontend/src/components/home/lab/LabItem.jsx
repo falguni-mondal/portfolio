@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import gsap from "gsap";

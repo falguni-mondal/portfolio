@@ -1,7 +1,8 @@
+"use client";
+
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import { Link } from "react-router-dom";
 import { useLabStore } from "../../store/store";
 
 // Extract contact data directly from JSON
