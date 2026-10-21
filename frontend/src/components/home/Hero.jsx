@@ -1,11 +1,9 @@
-"use client";
-
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Icon } from "@iconify/react";
 
-import { LoadingContext } from "@/context/LoadingContext";
+import { LoadingContext } from "../../App";
 import { useLabStore } from "../../store/store";
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -20,14 +18,11 @@ const Hero = () => {
 
   const theme = useLabStore((state) => state.theme);
 
-  // --- CLOCK STATE (SSR Hydration-Safe) ---
-  const [mounted, setMounted] = useState(false);
-  const [time, setTime] = useState(null);
+  // --- CLOCK STATE ---
+  const [time, setTime] = useState(new Date());
   const [showColon, setShowColon] = useState(true);
 
   useEffect(() => {
-    setMounted(true);
-    setTime(new Date());
     const interval = setInterval(() => {
       setTime(new Date());
       setShowColon((prev) => !prev);
@@ -35,17 +30,14 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const timeString =
-    mounted && time
-      ? time.toLocaleTimeString("en-US", {
-          timeZone: "Asia/Kolkata",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      : "12:00 PM";
+  const timeString = time.toLocaleTimeString("en-US", {
+    timeZone: "Asia/Kolkata",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
-  const [timeParts = "12:00", ampm = "IST"] = timeString.split(" ");
-  const [hours = "12", minutes = "00"] = timeParts.split(":");
+  const [timeParts, ampm] = timeString.split(" ");
+  const [hours, minutes] = timeParts.split(":");
 
   useGSAP(
     () => {
@@ -270,7 +262,7 @@ const Hero = () => {
             <img
               className="w-full h-full object-cover"
               src={`${theme === "dark" ? "/me.webp" : "/me_light.webp"}`}
-              alt="Falguni Mondal — Creative Full-Stack MERN Developer" width="360" height="480" fetchPriority="high"
+              alt="falguni_mondal_image"
             />
           </div>
 

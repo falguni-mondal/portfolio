@@ -3,7 +3,7 @@
 :root {
   /* Immutable Brand Colors */
   --accent: #ff5733;
-
+  
   /* Light Mode Defaults */
   --bg-base: #d5d5d5;
   --text-base: #0b0a09;
@@ -28,7 +28,7 @@ html {
   transition: background-color 0.5s ease;
   /* Forces 1rem to strictly equal 16px, overriding OS accessibility scaling */
   font-size: 16px !important;
-
+  
   /* Prevents mobile OS from auto-inflating text to fill space */
   -webkit-text-size-adjust: 100% !important;
   -moz-text-size-adjust: 100% !important;
@@ -40,27 +40,17 @@ body {
   height: 100%;
   box-sizing: border-box;
   color: var(--text-base);
-  font-family: var(--font-inter), "Inter", sans-serif;
+  font-family: "Inter", sans-serif;
   user-select: none;
   scroll-behavior: smooth;
   transition: color 0.5s ease, background-color 0.5s ease;
 }
 
-.head-txt {
-  font-family: var(--font-playfair), "Playfair Display", serif;
-}
+.head-txt { font-family: "Playfair Display", serif; }
+.body-txt { font-family: "Inter", sans-serif; }
 
-.body-txt {
-  font-family: var(--font-inter), "Inter", sans-serif;
-}
-
-.prime-bg {
-  background-color: var(--accent);
-}
-
-.prime-txt {
-  color: var(--accent);
-}
+.prime-bg { background-color: var(--accent); }
+.prime-txt { color: var(--accent); }
 
 @media (max-width: 768px) {
   html {

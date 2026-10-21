@@ -1,8 +1,7 @@
-"use client";
-
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import initialData from "../data.json";
+// src/store/store.js
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import initialData from '../data.json';
 
 export const useLabStore = create(
   persist(
@@ -13,13 +12,13 @@ export const useLabStore = create(
       mouse: { x: 0, y: 0 },
       setMouse: (x, y) => set({ mouse: { x, y } }),
 
-      theme: "dark",
+      theme: 'dark',
       toggleTheme: () =>
         set((state) => ({
-          theme: state.theme === "dark" ? "light" : "dark",
+          theme: state.theme === 'dark' ? 'light' : 'dark',
         })),
 
-      // Live Portfolio Data (Seeded with local data.json or SSR data, updated from admin.byfalguni.com)
+      // Live Portfolio Data (Seeded with local data.json, updated from admin.byfalguni.com)
       portfolioData: initialData,
       setPortfolioData: (newData) =>
         set((state) => ({
@@ -27,7 +26,7 @@ export const useLabStore = create(
         })),
     }),
     {
-      name: "portfolio-theme-storage",
+      name: 'portfolio-theme-storage',
       partialize: (state) => ({ theme: state.theme }),
     }
   )

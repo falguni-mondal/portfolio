@@ -1,20 +1,16 @@
-# Falguni Mondal Portfolio — Next.js App Router (SEO Optimized)
+# React + Vite
 
-This is the migrated Next.js (App Router) version of **byfalguni.com**, engineered for maximum Search Engine Optimization (SSR/ISR HTML pre-rendering, Next.js Metadata API, Rich JSON-LD Schema Graph, Dynamic Sitemap & Robots Route Handlers, and Self-Hosted Google Fonts via `next/font/google`) while preserving 100% of the original GSAP animations, Lenis smooth scrolling, and Three.js / React Three Fiber WebGL shaders.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Quick Start
+Currently, two official plugins are available:
 
-```bash
-# 1. Install dependencies
-npm install
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-# 2. Configure environment variables (optional CMS endpoint)
-cp .env.example .env.local
+## React Compiler
 
-# 3. Run development server (Turbopack)
-npm run dev
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-# 4. Build and start production server
-npm run build
-npm run start
-```
+## Expanding the ESLint configuration
+
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.

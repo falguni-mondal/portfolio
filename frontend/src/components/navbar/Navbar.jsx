@@ -1,11 +1,8 @@
-"use client";
-
 import React, { useState, useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, useLocation } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Navmenu from './Navmenu';
 import { useLabStore } from '../../store/store';
@@ -21,7 +18,7 @@ const Navbar = () => {
   const [showPopup, setShowPopup] = useState(false);
   const popupTimer = useRef(null);
   
-  const pathname = usePathname();
+  const location = useLocation();
 
   const theme = useLabStore((state) => state.theme);
   const toggleTheme = useLabStore((state) => state.toggleTheme);
@@ -37,7 +34,7 @@ const Navbar = () => {
 
   // 2. The Furo-Style Scroll Pinning Logic
   useGSAP(() => {
-    if (pathname !== '/') {
+    if (location.pathname !== '/') {
       gsap.set(navRef.current, { y: 0, opacity: 1 });
       gsap.set(["#logo", ".contact-nav"], { opacity: 1 });
       return; 
@@ -82,7 +79,7 @@ const Navbar = () => {
       }
     });
 
-  }, [pathname]); 
+  }, [location.pathname]); 
 
   const navLinks = [
     { title: 'Experience', path: '/#experience' },
@@ -116,8 +113,8 @@ const Navbar = () => {
         className={`w-full h-[50px] lg:h-[60px] px-5 lg:px-10 flex items-center justify-between ${isOpen ? "" : "mix-blend-difference"} ${theme === "dark" ? "text-[#ffffff]" : "#000000 font-medium"} relative z-50`}
       >
           <div id="logo" className="cursor-pointer z-50 pointer-events-auto">
-              <Link href="/" aria-label="Falguni Mondal Home">
-                  <img className='w-[65px] lg:w-[70px] 2xl:w-[80px]' src={`${theme === "dark" ? "/logo.svg" : "/logo_black.svg"}`} alt="Falguni Mondal Logo" width="80" height="32" />
+              <Link to="/">
+                  <img className='w-[65px] lg:w-[70px] 2xl:w-[80px]' src={`${theme === "dark" ? "/logo.svg" : "/logo_black.svg"}`} alt="logo" />
               </Link>
           </div>
           <nav className="navigations">

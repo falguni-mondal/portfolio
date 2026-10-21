@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState, useRef } from "react";
 import ProjectItem from "./ProjectItem";
 import VideoPortal from "./VideoPortal";

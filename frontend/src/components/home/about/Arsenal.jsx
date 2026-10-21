@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import data from "../../../data.json";
 import { useLabStore } from "../../../store/store";
