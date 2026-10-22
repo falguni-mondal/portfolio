@@ -88,8 +88,8 @@ const Ring = ({ isMobile }) => {
   useGSAP(() => {
     scene.traverse((child) => {
       if (child.isMesh && child.material) {
-        child.material.envMapIntensity = 1.2;
-        child.material.roughness = 0.15;
+        child.material.envMapIntensity = 0.85;
+        child.material.roughness = 0.18;
         child.material.metalness = 1;
       }
     });
@@ -272,28 +272,28 @@ const GlobalRingCanvas = () => {
           gl.debug.checkShaderErrors = false;
         }}
       >
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={0.25} />
 
-        <directionalLight position={[0, 3, 5]} intensity={3} />
+        <directionalLight position={[0, 3, 5]} intensity={1.8} />
         <spotLight
           position={[5, 5, -5]}
           angle={0.5}
           penumbra={1}
-          intensity={5}
+          intensity={3}
           color="#ffffff"
         />
         <spotLight
           position={[-5, -5, -5]}
           angle={0.5}
           penumbra={1}
-          intensity={4}
+          intensity={2.4}
           color="#ffffff"
         />
 
         <Suspense fallback={null}>
           <Environment
             preset="studio"
-            environmentIntensity={0.8}
+            environmentIntensity={0.55}
             environmentRotation={[0, Math.PI / 1.2, 0]}
           />
           <Ring isMobile={isMobile} />
@@ -303,9 +303,9 @@ const GlobalRingCanvas = () => {
           <EffectComposer disableNormalPass multisampling={4}>
             <Noise opacity={0.02} />
             <Bloom
-              luminanceThreshold={2.0}
+              luminanceThreshold={2.4}
               luminanceSmoothing={1.2}
-              intensity={0.1}
+              intensity={0.045}
               mipmapBlur
             />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
@@ -314,9 +314,9 @@ const GlobalRingCanvas = () => {
           <EffectComposer disableNormalPass multisampling={4}>
             <Noise opacity={0.005} />
             <Bloom
-              luminanceThreshold={1}
+              luminanceThreshold={1.6}
               luminanceSmoothing={0.6}
-              intensity={0.05}
+              intensity={0.025}
               mipmapBlur
             />
             <Vignette eskil={false} offset={0.1} darkness={1.1} />
