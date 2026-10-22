@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Canvas } from "@react-three/fiber";
 import LabItem from "./LabItem";
-import data from "../../../data.json";
 import SectionHeading from "../global/SectionHeading";
 import WebGLBlobHover from "../../../utils/WebGLBlobHover";
 import { useLabStore } from "../../../store/store";
@@ -20,21 +19,39 @@ const Lab = () => {
 
   const [trackedItems, setTrackedItems] = useState([]);
 
+  // Trim tracked items if labData shrinks
+  useEffect(() => {
+    setTrackedItems((prev) => prev.filter((item) => item.index < labData.length));
+  }, [labData.length]);
+
+  // Update tracked items when Lab projects are added at the beginning or reordered
   const registerItem = useCallback((item) => {
     setTrackedItems((prev) => {
-      if (prev.some((i) => i.index === item.index)) return prev;
+      const existingIdx = prev.findIndex((i) => i.index === item.index);
+      if (existingIdx !== -1) {
+        const existing = prev[existingIdx];
+        if (
+          existing.image1 === item.image1 &&
+          existing.image2 === item.image2 &&
+          existing.containerRef === item.containerRef &&
+          existing.imageRef === item.imageRef
+        ) {
+          return prev;
+        }
+        const next = [...prev];
+        next[existingIdx] = item;
+        return next;
+      }
       return [...prev, item];
     });
   }, []);
 
   useGSAP(
     () => {
-      // 1. UNIVERSAL TEXT ANIMATION
-      // Uses the parent section as the trigger so the math never breaks on mobile.
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%", // Triggers safely as soon as the section enters the viewport
+          start: "top 75%",
         },
       });
 
@@ -67,8 +84,6 @@ const Lab = () => {
         "-=1.2",
       );
 
-      // 2. MOBILE CLEANUP
-      // Ensures the gooey WebGL blob vanishes if the user scrolls completely past the Lab section
       ScrollTrigger.create({
         trigger: sectionRef.current,
         start: "top bottom",
@@ -127,7 +142,7 @@ const Lab = () => {
           <div className="lg:col-span-7 flex flex-col gap-16 lg:gap-32 w-full mt-4 lg:mt-0 relative">
             {labData.map((project, index) => (
               <LabItem
-                key={index}
+                key={project._id || `${project.name}-${index}`}
                 project={project}
                 index={index}
                 registerItem={registerItem}

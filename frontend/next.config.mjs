@@ -18,11 +18,23 @@ const nextConfig = {
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/((?!.*\\.pdf$).*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+        ],
+      },
+      {
+        source: "/:path*.pdf",
+        headers: [
+          { key: "Content-Type", value: "application/pdf" },
+          { key: "Content-Disposition", value: "inline" },
+          {
+            key: "Content-Security-Policy",
+            value:
+              "frame-ancestors 'self' http://localhost:* https://byfalguni.com https://*.byfalguni.com",
+          },
         ],
       },
       {

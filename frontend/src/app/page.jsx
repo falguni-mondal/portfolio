@@ -10,7 +10,7 @@ async function getPortfolioData() {
   }
   try {
     const res = await fetch(`${ADMIN_API_URL}/api/portfolio`, {
-      next: { revalidate: 3600 },
+      next: { revalidate: 60 },
     });
     if (!res.ok) return initialData;
     const liveData = await res.json();
@@ -30,6 +30,11 @@ function buildJsonLd(data) {
     data.contact?.insta,
   ].filter(Boolean);
 
+  const rawHeroImg = data.heroImageDark || "/me.webp";
+  const resolvedHeroImg = rawHeroImg.startsWith("http")
+    ? rawHeroImg
+    : `${SITE_URL}${rawHeroImg.startsWith("/") ? "" : "/"}${rawHeroImg}`;
+
   return {
     "@context": "https://schema.org",
     "@graph": [
@@ -40,7 +45,7 @@ function buildJsonLd(data) {
         givenName: "Falguni",
         familyName: "Mondal",
         url: SITE_URL,
-        image: `${SITE_URL}/me.webp`,
+        image: resolvedHeroImg,
         jobTitle: "Creative Full-Stack MERN Developer",
         description:
           "Creative Full-Stack MERN Developer based in Durgapur, West Bengal, India. Helping brands gain an unfair advantage by developing digital adrenaline.",

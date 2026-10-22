@@ -4,6 +4,12 @@ import mongoose, { Schema } from 'mongoose';
 const PortfolioSchema = new Schema(
   {
     singletonKey: { type: String, default: 'MASTER_PORTFOLIO', unique: true },
+    heroImageDark: { type: String, default: '/me.webp' },
+    heroImageDarkFileId: { type: String, default: '' },
+    heroImageLight: { type: String, default: '/me_light.webp' },
+    heroImageLightFileId: { type: String, default: '' },
+    resumeUrl: { type: String, default: '/falguni_mondal_resume.pdf' },
+    resumeFileId: { type: String, default: '' },
     arsenal: [{ type: String }],
     experience: [
       {
@@ -61,11 +67,26 @@ const PortfolioSchema = new Schema(
   { timestamps: true }
 );
 
+// Refresh cached Mongoose model in dev HMR if new fields are not yet registered
+if (
+  mongoose.models.Portfolio &&
+  (!mongoose.models.Portfolio.schema.path('heroImageDark') ||
+    !mongoose.models.Portfolio.schema.path('resumeUrl'))
+) {
+  delete mongoose.models.Portfolio;
+}
+
 export const PortfolioModel =
   mongoose.models.Portfolio || mongoose.model('Portfolio', PortfolioSchema);
 
 export const INITIAL_PORTFOLIO_SEED = {
   singletonKey: 'MASTER_PORTFOLIO',
+  heroImageDark: '/me.webp',
+  heroImageDarkFileId: '',
+  heroImageLight: '/me_light.webp',
+  heroImageLightFileId: '',
+  resumeUrl: '/falguni_mondal_resume.pdf',
+  resumeFileId: '',
   arsenal: [
     'React & Vite',
     'Tailwind CSS',

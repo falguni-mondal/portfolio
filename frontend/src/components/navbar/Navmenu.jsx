@@ -5,10 +5,11 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useLabStore } from "../../store/store";
 
-// Extract contact data directly from JSON
-
 const Navmenu = ({ isOpen, setIsOpen }) => {
   const { linkedin, github } = useLabStore((state) => state.portfolioData.contact);
+  const resumeUrl = useLabStore(
+    (state) => state.portfolioData?.resumeUrl || "/falguni_mondal_resume.pdf"
+  );
   const containerRef = useRef(null);
   const linksRef = useRef([]);
   const tl = useRef(null);
@@ -67,7 +68,6 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
       style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)" }}
     >
       <div className="flex flex-col gap-4 md:gap-6 max-w-7xl w-full mx-auto">
-        {/* SPA Internal Navigation Links via React Router */}
         {navLinks.map((link, index) => (
           <div key={index} className="overflow-hidden">
             <a
@@ -81,13 +81,12 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
           </div>
         ))}
 
-        {/* External Social Links (Using standard <a> tags with span brackets) */}
+        {/* External Social & Resume Links */}
         <div className="overflow-hidden mt-12 md:mt-16">
           <div
             ref={(el) => (linksRef.current[navLinks.length] = el)}
             className={`flex flex-wrap gap-6 md:gap-10 font-mono text-[0.75rem] md:text-sm tracking-[0.2em] ${theme === "dark" ? "text-zinc-300" : "text-zinc-700"} font-semibold uppercase`}
           >
-            {/* Dynamically mapped LinkedIn from data.json */}
             <a
               href={linkedin}
               target="_blank"
@@ -103,7 +102,6 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
               </span>
             </a>
 
-            {/* Dynamically mapped GitHub from data.json */}
             <a
               href={github}
               target="_blank"
@@ -120,10 +118,9 @@ const Navmenu = ({ isOpen, setIsOpen }) => {
             </a>
 
             <a
-              href="/falguni_mondal_resume.pdf"
-              download="Falguni_Mondal_Resume.pdf"
+              href={resumeUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noopener noreferrer"
               className={`group transition-colors duration-300 ${theme === "dark" ? "hover:text-white" : "hover:text-[#0b0a09]"}`}
             >
               <span className="text-gray-500 mr-2 group-hover:text-[#FF5733] transition-colors">

@@ -12,6 +12,9 @@ const MagneticButton = () => {
   const fillRef = useRef(null);
 
   const theme = useLabStore((state) => state.theme);
+  const resumeUrl = useLabStore(
+    (state) => state.portfolioData?.resumeUrl || '/falguni_mondal_resume.pdf'
+  );
 
   useGSAP(() => {
     gsap.set(fillRef.current, { xPercent: -50, yPercent: 100 });
@@ -60,8 +63,9 @@ const MagneticButton = () => {
   return (
     <div className="cta-block">
       <a
-        href="/falguni_mondal_resume.pdf"
-        download="Falguni_Mondal_Resume.pdf"
+        href={resumeUrl}
+        target="_blank"
+        rel="noopener noreferrer"
         ref={btnRef}
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}

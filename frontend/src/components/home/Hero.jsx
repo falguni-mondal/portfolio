@@ -19,6 +19,12 @@ const Hero = () => {
   const hasLoaded = useContext(LoadingContext);
 
   const theme = useLabStore((state) => state.theme);
+  const heroImageDark = useLabStore(
+    (state) => state.portfolioData?.heroImageDark || "/me.webp"
+  );
+  const heroImageLight = useLabStore(
+    (state) => state.portfolioData?.heroImageLight || "/me_light.webp"
+  );
 
   // --- CLOCK STATE ---
   const [time, setTime] = useState(new Date());
@@ -212,6 +218,8 @@ const Hero = () => {
     });
   };
 
+  const activeHeroSrc = theme === "dark" ? heroImageDark : (heroImageLight || heroImageDark);
+
   return (
     <section
       ref={heroRef}
@@ -263,7 +271,7 @@ const Hero = () => {
           <div className="hero-img img-container w-[280px] h-[380px] 2xl:w-[360px] 2xl:h-auto">
             <img
               className="w-full h-full object-cover"
-              src={`${theme === "dark" ? "/me.webp" : "/me_light.webp"}`}
+              src={activeHeroSrc}
               alt="Falguni Mondal — Creative Full-Stack MERN Developer" width="360" height="480" fetchPriority="high"
             />
           </div>

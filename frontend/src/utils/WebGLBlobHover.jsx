@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useRef, Suspense, useEffect } from "react";
+import React, { useRef, useEffect } from "react";
 import * as THREE from "three";
-import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
+import { useFrame, useThree, extend } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
 import { useLabStore } from "../store/store";
 
@@ -96,12 +96,10 @@ const BlobMaterial = shaderMaterial(
       float mask = smoothstep(animatedRadius + 0.001, animatedRadius - 0.001, dist);
 
       // 6. GLOBAL DISTORTION
-      // Bulge centers around the mouse
       float bulgeFactor = smoothstep(0.9, 0.0, dist) * 0.35 * hoverFactor;
       vec2 displacement = vUv - uMouse; 
       vec2 uv1 = uvCover - displacement * bulgeFactor;
 
-      // FIX: The wave effect is applied to the ENTIRE image space based on hoverFactor
       float waveX = sin(vUv.y * 10.0 + uTime * 2.0) * 0.015 * hoverFactor;
       float waveY = cos(vUv.x * 10.0 - uTime * 2.0) * 0.015 * hoverFactor;
       uv1 += vec2(waveX, waveY); 
@@ -113,7 +111,6 @@ const BlobMaterial = shaderMaterial(
 
       vec4 finalColor = mix(tex1, tex2, mask);
       
-      // Permanently opaque rendering
       finalColor.a = 1.0; 
       gl_FragColor = finalColor;
     }
@@ -129,8 +126,11 @@ const TrackedMesh = ({ data }) => {
   const materialRef = useRef();
   const meshRef = useRef();
   
-  const [tex1, tex2] = useTexture([data.image1, data.image2]);
-  const { viewport, size } = useThree(); 
+  const safeImg1 = data.image1 && !data.image1.endsWith(".mp4") ? data.image1 : "/me.webp";
+  const safeImg2 = data.image2 && !data.image2.endsWith(".mp4") ? data.image2 : safeImg1;
+
+  const [tex1, tex2] = useTexture([safeImg1, safeImg2]);
+  const { size } = useThree(); 
 
   const activeProject = useLabStore((state) => state.activeProject);
   const isActive = activeProject === data.index;
@@ -145,8 +145,6 @@ const TrackedMesh = ({ data }) => {
   useEffect(() => {
     if (materialRef.current && tex1.image) {
       materialRef.current.uImageRes.set(tex1.image.width, tex1.image.height);
-      // FIX: Removed the SRGBColorSpace manipulation. 
-      // The images will now render with their raw, natural colors.
     }
   }, [tex1]);
 
@@ -195,7 +193,6 @@ const TrackedMesh = ({ data }) => {
   return (
     <mesh ref={meshRef}>
       <planeGeometry args={[1, 1]} />
-      {/* FIX: added toneMapped={false} to ensure Three.js doesn't apply gamma darkening */}
       <blobMaterial ref={materialRef} uTexture1={tex1} uTexture2={tex2} transparent={true} toneMapped={false} />
     </mesh>
   );
@@ -208,7 +205,10 @@ const WebGLBlobHover = ({ trackedItems }) => {
   return (
     <>
       {trackedItems.map((item) => (
-        <TrackedMesh key={`blob-${item.index}`} data={item} />
+        <TrackedMesh
+          key={`blob-${item.index}-${item.image1}-${item.image2}`}
+          data={item}
+        />
       ))}
     </>
   );
