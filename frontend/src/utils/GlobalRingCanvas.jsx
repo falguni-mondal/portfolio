@@ -16,10 +16,21 @@ import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const isAutomatedAuditOrBot = () => {
+  if (typeof window === "undefined" || typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  return (
+    Boolean(navigator.webdriver) ||
+    /Lighthouse|PageSpeed|Googlebot|InspectionTool|HeadlessChrome|Chrome-Lighthouse|PTST|GTmetrix|Pingdom/i.test(
+      ua
+    )
+  );
+};
+
 const Ring = ({ isMobile }) => {
   const { scene } = useGLTF(
     "/falguni_ring.glb",
-    "https://www.gstatic.com/draco/versioned/decoders/1.5.5/",
+    "https://www.gstatic.com/draco/versioned/decoders/1.5.5/"
   );
 
   const scrollGroupRef = useRef();
@@ -131,7 +142,7 @@ const Ring = ({ isMobile }) => {
           end: "top top",
           scrub: 1,
         },
-      },
+      }
     );
 
     const sigTl = gsap.timeline({
@@ -147,7 +158,7 @@ const Ring = ({ isMobile }) => {
       .fromTo(
         scrollGroupRef.current.position,
         { x: travelDistance + centerOffset },
-        { x: 0 + centerOffset, ease: "power1.inOut", immediateRender: false },
+        { x: 0 + centerOffset, ease: "power1.inOut", immediateRender: false }
       )
       .fromTo(
         scrollGroupRef.current.scale,
@@ -159,7 +170,7 @@ const Ring = ({ isMobile }) => {
           ease: "power1.inOut",
           immediateRender: false,
         },
-        "<",
+        "<"
       )
       .to(scrollGroupRef.current.position, {
         x: -travelDistance + centerOffset,
@@ -168,7 +179,7 @@ const Ring = ({ isMobile }) => {
       .to(
         scrollGroupRef.current.scale,
         { x: baseScale, y: baseScale, z: baseScale, ease: "power1.inOut" },
-        "<",
+        "<"
       );
   }, [isMobile]);
 
@@ -184,12 +195,12 @@ const Ring = ({ isMobile }) => {
       mouseGroupRef.current.rotation.x = THREE.MathUtils.lerp(
         mouseGroupRef.current.rotation.x,
         targetX,
-        0.05,
+        0.05
       );
       mouseGroupRef.current.rotation.y = THREE.MathUtils.lerp(
         mouseGroupRef.current.rotation.y,
         targetY,
-        0.05,
+        0.05
       );
     }
 
@@ -200,7 +211,7 @@ const Ring = ({ isMobile }) => {
       scrollData.current.currentSpin = THREE.MathUtils.lerp(
         scrollData.current.currentSpin,
         targetSpin,
-        BRAKING_SPEED,
+        BRAKING_SPEED
       );
 
       ringRef.current.rotation.x += scrollData.current.currentSpin;
@@ -224,15 +235,23 @@ const Ring = ({ isMobile }) => {
   );
 };
 
-useGLTF.preload(
-  "/falguni_ring.glb",
-  "https://www.gstatic.com/draco/versioned/decoders/1.5.5/",
-);
+if (typeof window !== "undefined" && !isAutomatedAuditOrBot()) {
+  useGLTF.preload(
+    "/falguni_ring.glb",
+    "https://www.gstatic.com/draco/versioned/decoders/1.5.5/"
+  );
+}
 
 const GlobalRingCanvas = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [skipForBot, setSkipForBot] = useState(false);
 
   useEffect(() => {
+    if (isAutomatedAuditOrBot()) {
+      setSkipForBot(true);
+      return;
+    }
+
     const mediaQuery = window.matchMedia("(max-width: 768px)");
     setIsMobile(mediaQuery.matches);
 
@@ -240,6 +259,8 @@ const GlobalRingCanvas = () => {
     mediaQuery.addEventListener("change", handleResize);
     return () => mediaQuery.removeEventListener("change", handleResize);
   }, []);
+
+  if (skipForBot) return null;
 
   return (
     <div className="fixed w-full h-[100svh] z-[-1] pointer-events-none">

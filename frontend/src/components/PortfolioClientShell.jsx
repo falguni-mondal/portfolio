@@ -15,8 +15,6 @@ import Contact from "./home/contact/Contact";
 import { LoadingContext } from "@/context/LoadingContext";
 import { useLabStore } from "@/store/store";
 
-// Dynamically load the Three.js / WebGL ring canvas on the client only
-// so Server-Side Rendering immediately ships all semantic HTML for SEO crawlers.
 const GlobalRingCanvas = dynamic(() => import("@/utils/GlobalRingCanvas"), {
   ssr: false,
 });
@@ -45,17 +43,25 @@ const PortfolioClientShell = ({ initialData }) => {
     }
   }, [theme]);
 
-  // Optional live CMS client refresh from admin.byfalguni.com
+  // Deferred background CMS sync so initial hydration & LCP are never delayed
   useEffect(() => {
     if (!ADMIN_API_URL) return;
-    fetch(`${ADMIN_API_URL}/api/portfolio`)
-      .then((res) => res.json())
-      .then((liveData) => {
-        if (liveData && Array.isArray(liveData.works)) {
-          setPortfolioData(liveData);
-        }
-      })
-      .catch(() => {});
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      fetch(`${ADMIN_API_URL}/api/portfolio`, { signal: controller.signal })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((liveData) => {
+          if (liveData && Array.isArray(liveData.works)) {
+            setPortfolioData(liveData);
+          }
+        })
+        .catch(() => {});
+    }, 2000);
+
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
   }, [setPortfolioData]);
 
   return (

@@ -9,9 +9,17 @@ async function getPortfolioData() {
     return initialData;
   }
   try {
+    // 2.5s timeout ensures a cold-starting backend/database never stalls SSR TTFB
+    // for Googlebot, PageSpeed Insights, or human visitors.
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2500);
+
     const res = await fetch(`${ADMIN_API_URL}/api/portfolio`, {
       next: { revalidate: 60 },
+      signal: controller.signal,
     });
+    clearTimeout(timeoutId);
+
     if (!res.ok) return initialData;
     const liveData = await res.json();
     if (liveData && Array.isArray(liveData.works)) {

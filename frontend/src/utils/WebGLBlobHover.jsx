@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef, Suspense, useEffect } from "react";
 import * as THREE from "three";
 import { useFrame, useThree, extend } from "@react-three/fiber";
 import { useTexture, shaderMaterial } from "@react-three/drei";
@@ -205,10 +205,12 @@ const WebGLBlobHover = ({ trackedItems }) => {
   return (
     <>
       {trackedItems.map((item) => (
-        <TrackedMesh
+        <Suspense
           key={`blob-${item.index}-${item.image1}-${item.image2}`}
-          data={item}
-        />
+          fallback={null}
+        >
+          <TrackedMesh data={item} />
+        </Suspense>
       ))}
     </>
   );
