@@ -1,12 +1,14 @@
 // admin/src/components/AdminNavbar.tsx
+'use client';
+
 import { useState, type FC, type ReactNode } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { ThemeIcon } from './LiquidGlassDefs';
 
 export type AdminTab = 'RESPONSES' | 'PORTFOLIO' | 'PRICING_SETTINGS';
 
 interface Props {
-  mainTab: AdminTab;
-  setMainTab: (tab: AdminTab) => void;
   quotesCount: number;
   darkMode: boolean;
   toggleDarkMode: () => void;
@@ -14,18 +16,25 @@ interface Props {
 }
 
 export const AdminNavbar: FC<Props> = ({
-  mainTab,
-  setMainTab,
   quotesCount,
   darkMode,
   toggleDarkMode,
   onLogout,
 }) => {
+  const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems: { id: AdminTab; label: string; icon: ReactNode }[] = [
+  const navItems: {
+    id: AdminTab;
+    href: string;
+    matchPrefix: string;
+    label: string;
+    icon: ReactNode;
+  }[] = [
     {
       id: 'RESPONSES',
+      href: '/responses/simple',
+      matchPrefix: '/responses',
       label: `Client Responses (${quotesCount})`,
       icon: (
         <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -35,6 +44,8 @@ export const AdminNavbar: FC<Props> = ({
     },
     {
       id: 'PORTFOLIO',
+      href: '/portfolio/hero-resume',
+      matchPrefix: '/portfolio',
       label: 'Portfolio CMS',
       icon: (
         <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -45,6 +56,8 @@ export const AdminNavbar: FC<Props> = ({
     },
     {
       id: 'PRICING_SETTINGS',
+      href: '/pricing/pages-content',
+      matchPrefix: '/pricing',
       label: 'Master Price Controls',
       icon: (
         <svg className="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -61,30 +74,33 @@ export const AdminNavbar: FC<Props> = ({
       <header className="sticky top-0 z-40 hidden border-b border-neutral-200/80 bg-white/95 px-6 py-4 backdrop-blur-md dark:border-neutral-800 dark:bg-[#111113]/95 lg:block">
         <div className="mx-auto flex max-w-[1750px] items-center justify-between">
           <div className="flex items-center gap-3">
-            <span className="text-xl font-black tracking-tighter">
+            <Link href="/responses/simple" className="text-xl font-black tracking-tighter">
               BY<span className="text-[#ff5733]">F</span>.
-            </span>
+            </Link>
             <span className="text-xs font-bold uppercase tracking-widest opacity-50">
               Admin Command Center
             </span>
           </div>
 
-          <div className="flex items-center gap-2">
-            {navItems.map((t) => (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setMainTab(t.id)}
-                className={`cursor-pointer rounded-full px-5 py-2 text-xs font-bold transition ${
-                  mainTab === t.id
-                    ? 'bg-neutral-950 text-white dark:bg-white dark:text-neutral-950'
-                    : 'text-neutral-600 hover:bg-neutral-200/60 dark:text-neutral-300 dark:hover:bg-neutral-800'
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
+          <nav className="flex items-center gap-2">
+            {navItems.map((t) => {
+              const isActive = pathname.startsWith(t.matchPrefix);
+              return (
+                <Link
+                  key={t.id}
+                  href={t.href}
+                  prefetch={true}
+                  className={`cursor-pointer rounded-full px-5 py-2 text-xs font-bold transition ${
+                    isActive
+                      ? 'bg-neutral-950 text-white dark:bg-white dark:text-neutral-950'
+                      : 'text-neutral-600 hover:bg-neutral-200/60 dark:text-neutral-300 dark:hover:bg-neutral-800'
+                  }`}
+                >
+                  {t.label}
+                </Link>
+              );
+            })}
+          </nav>
 
           <div className="flex items-center gap-3">
             <button
@@ -106,40 +122,40 @@ export const AdminNavbar: FC<Props> = ({
         </div>
       </header>
 
-      {/* MOBILE 3 POPUP TABS (Each wrapped in its own fixed positioning container like Pricing HUD) */}
+      {/* MOBILE 3 POPUP TABS */}
       {mobileMenuOpen &&
         navItems.map((item, idx) => {
           const bottomOffsets = ['bottom-[180px]', 'bottom-[130px]', 'bottom-[80px]'];
-          const isActive = mainTab === item.id;
+          const isActive = pathname.startsWith(item.matchPrefix);
           return (
             <div
               key={item.id}
               className={`fixed left-1/2 z-50 w-[240px] -translate-x-1/2 lg:hidden ${bottomOffsets[idx]}`}
             >
-              <button
-                type="button"
-                onClick={() => {
-                  setMainTab(item.id);
-                  setMobileMenuOpen(false);
-                }}
+              <Link
+                href={item.href}
+                prefetch={true}
+                onClick={() => setMobileMenuOpen(false)}
                 className={`flex w-full cursor-pointer items-center justify-center gap-2.5 rounded-full px-6 py-3 text-xs font-bold transition-all ${
                   isActive ? 'liquid-glass-active' : 'liquid-glass-pill'
                 }`}
               >
                 {item.icon}
                 <span>{item.label}</span>
-              </button>
+              </Link>
             </div>
           );
         })}
 
-      {/* MOBILE BOTTOM CAPSULE NAVBAR (Exact same fixed outer + inner .liquid-glass-pill as Pricing HUD) */}
+      {/* MOBILE BOTTOM CAPSULE NAVBAR */}
       <div className="fixed bottom-4 left-1/2 z-50 w-fit -translate-x-1/2 lg:hidden">
         <div className="liquid-glass-pill flex items-center gap-4 rounded-full p-1.5">
-          {/* Light BG Circle for BYF. Logo */}
-          <div className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-[#f4f4f4] text-xs font-black tracking-tighter text-neutral-950 shadow-sm">
+          <Link
+            href="/responses/simple"
+            className="flex h-11 w-11 items-center justify-center rounded-full border border-white bg-[#f4f4f4] text-xs font-black tracking-tighter text-neutral-950 shadow-sm"
+          >
             BY<span className="text-[#ff5733]">F</span>.
-          </div>
+          </Link>
 
           <button
             type="button"
