@@ -67,10 +67,10 @@ export const PricingRateGrid: FC<{ items: RateItemMeta[] }> = ({ items }) => {
                   onChange={(e) => {
                     const newInr = Number(e.target.value);
                     const usdRate = Number(pricingConfig.usdPerInrRate || 0.01051);
-                    const autoUsd = Math.max(
-                      1,
-                      Math.round(newInr * usdRate * (1.3 / 0.97))
-                    );
+                    const autoUsd =
+                      newInr === 0
+                        ? 0
+                        : Math.max(1, Math.round(newInr * usdRate * (1.3 / 0.97)));
                     setPricingConfig({
                       ...pricingConfig,
                       rates: {

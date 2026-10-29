@@ -6,6 +6,7 @@ import {
   useContext,
   useState,
   useEffect,
+  useMemo,
   type FC,
   type ReactNode,
   type Dispatch,
@@ -15,7 +16,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAdmin } from '@/context/AdminContext';
 import { AddClientModal } from '@/components/AddClientModal';
-import { downloadClientSignedAgreementFromAdmin } from '@/lib/agreementPdfAdmin';
+import {
+  downloadClientSignedAgreementFromAdmin,
+  downloadOfficialClientQuotePdfFromAdmin,
+} from '@/lib/agreementPdfAdmin';
+import { evaluateProjectQuote } from '@/lib/pricingEngine';
 
 interface ResponsesContextValue {
   selectedQuote: any | null;
@@ -24,6 +29,7 @@ interface ResponsesContextValue {
   liveEval: any;
   savingQuote: boolean;
   saveUpdatedClientQuote: () => Promise<void>;
+  openEditClientModal: () => void;
   sym: string;
 }
 
@@ -37,28 +43,36 @@ export const useResponses = () => {
 
 export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const pathname = usePathname();
-  const { authenticated, quotes, setQuotes, quotesLoading, ensureQuotesLoaded } = useAdmin();
+  const {
+    authenticated,
+    quotes,
+    setQuotes,
+    quotesLoading,
+    ensureQuotesLoaded,
+    pricingConfig,
+    ensurePricingLoaded,
+  } = useAdmin();
 
   const [selectedQuote, setSelectedQuote] = useState<any | null>(quotes[0] || null);
   const [complexDraft, setComplexDraft] = useState<any>(
     quotes[0] ? { ...quotes[0].complexConfig, isAdminComplexOverride: true } : null
   );
-  const [liveEval, setLiveEval] = useState<any>(quotes[0]?.evaluatedQuote || null);
   const [savingQuote, setSavingQuote] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showAddClientModal, setShowAddClientModal] = useState(false);
+  const [editingClient, setEditingClient] = useState<any | null>(null);
   const [updatingCompletion, setUpdatingCompletion] = useState(false);
 
   useEffect(() => {
     if (authenticated) {
       ensureQuotesLoaded();
+      ensurePricingLoaded();
     }
-  }, [authenticated, ensureQuotesLoaded]);
+  }, [authenticated, ensureQuotesLoaded, ensurePricingLoaded]);
 
   const selectClientQuote = (q: any) => {
     setSelectedQuote(q);
     setComplexDraft({ ...q.complexConfig, isAdminComplexOverride: true });
-    setLiveEval(q.evaluatedQuote);
   };
 
   useEffect(() => {
@@ -67,20 +81,14 @@ export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => 
     }
   }, [quotes, selectedQuote]);
 
-  useEffect(() => {
-    if (!authenticated || !complexDraft) return;
-    const timer = setTimeout(() => {
-      fetch('/api/quote/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...complexDraft, isAdminComplexOverride: true }),
-      })
-        .then((r) => r.json())
-        .then((d) => setLiveEval(d))
-        .catch(() => {});
-    }, 150);
-    return () => clearTimeout(timer);
-  }, [authenticated, complexDraft]);
+  // Instantaneous 0ms calculation in memory whenever complexDraft or pricingConfig changes
+  const liveEval = useMemo(() => {
+    if (!complexDraft) return selectedQuote?.evaluatedQuote || null;
+    return evaluateProjectQuote(
+      { ...complexDraft, isAdminComplexOverride: true },
+      pricingConfig
+    );
+  }, [complexDraft, pricingConfig, selectedQuote]);
 
   const handleDeleteQuote = async (id: string, clientName: string) => {
     if (!window.confirm(`Permanently delete client record "${clientName}"?`)) return;
@@ -161,6 +169,9 @@ export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => 
         liveEval,
         savingQuote,
         saveUpdatedClientQuote,
+        openEditClientModal: () => {
+          if (selectedQuote) setEditingClient(selectedQuote);
+        },
         sym,
       }}
     >
@@ -209,6 +220,19 @@ export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => 
           />
         )}
 
+        {editingClient && (
+          <AddClientModal
+            initialClient={editingClient}
+            onClose={() => setEditingClient(null)}
+            onClientAdded={(updatedClient) => {
+              setQuotes((prev) =>
+                prev.map((item) => (item._id === updatedClient._id ? updatedClient : item))
+              );
+              selectClientQuote(updatedClient);
+            }}
+          />
+        )}
+
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* LEFT SIDEBAR: CLIENT DIRECTORY */}
           <aside className="space-y-3 lg:col-span-4 xl:col-span-3">
@@ -222,7 +246,7 @@ export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => 
               </div>
             ) : quotes.length === 0 ? (
               <div className="admin-surface-card rounded-3xl p-6 text-xs opacity-65">
-                No clients recorded yet. Click &quot;+ Add Client Manually&quot; or submit a quote
+                No clients recorded yet. Click &quot;+ Add Client Manually&quot; or submit a brief
                 on prices.byfalguni.com.
               </div>
             ) : null}
@@ -361,12 +385,28 @@ export const ResponsesProvider: FC<{ children: ReactNode }> = ({ children }) => 
                     </Link>
                     <button
                       type="button"
+                      onClick={() => setEditingClient(selectedQuote)}
+                      className="glass-subcard cursor-pointer rounded-full px-4 py-2 text-xs font-bold hover:opacity-100"
+                    >
+                      ✎ Edit Client Details
+                    </button>
+                    <button
+                      type="button"
                       onClick={() =>
-                        downloadClientSignedAgreementFromAdmin(selectedQuote, liveEval)
+                        downloadOfficialClientQuotePdfFromAdmin(selectedQuote, liveEval)
                       }
                       className="liquid-glass-active cursor-pointer rounded-full px-4 py-2 text-xs font-bold"
                     >
-                      ↓ Download Signed Agreement PDF
+                      ↓ Download Official Quote PDF
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        downloadClientSignedAgreementFromAdmin(selectedQuote, liveEval)
+                      }
+                      className="glass-subcard cursor-pointer rounded-full px-4 py-2 text-xs font-bold"
+                    >
+                      ↓ Agreement PDF
                     </button>
                     <button
                       type="button"

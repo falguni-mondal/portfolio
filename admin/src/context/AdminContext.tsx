@@ -45,7 +45,14 @@ export const useAdmin = () => {
 
 export const AdminProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return true;
+    try {
+      return localStorage.getItem('byf-admin-theme') !== 'light';
+    } catch {
+      return true;
+    }
+  });
 
   const [quotes, setQuotes] = useState<any[]>([]);
   const [quotesLoading, setQuotesLoading] = useState(false);
@@ -60,9 +67,16 @@ export const AdminProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const pricingLoadedRef = useRef(false);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem('byf-admin-theme');
-    if (savedTheme === 'dark') {
-      setDarkMode(true);
+    try {
+      const savedTheme = localStorage.getItem('byf-admin-theme');
+      const isDark = savedTheme !== 'light';
+      setDarkMode(isDark);
+      if (isDark) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    } catch {
       document.documentElement.classList.add('dark');
     }
   }, []);
@@ -143,10 +157,11 @@ export const AdminProvider: FC<{ children: ReactNode }> = ({ children }) => {
         setAuthenticated(isAuth);
         if (isAuth) {
           ensureQuotesLoaded();
+          ensurePricingLoaded();
         }
       })
       .catch(() => setAuthenticated(false));
-  }, [ensureQuotesLoaded]);
+  }, [ensureQuotesLoaded, ensurePricingLoaded]);
 
   const handleLogout = async () => {
     await fetch('/api/auth/login', { method: 'DELETE' });
@@ -192,6 +207,7 @@ export const AdminProvider: FC<{ children: ReactNode }> = ({ children }) => {
           onSuccess={() => {
             setAuthenticated(true);
             ensureQuotesLoaded();
+            ensurePricingLoaded();
           }}
         />
       )}

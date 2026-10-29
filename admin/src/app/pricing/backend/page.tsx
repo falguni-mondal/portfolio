@@ -22,6 +22,11 @@ const BACKEND_ITEMS: RateItemMeta[] = [
   { key: 'paymentGateway', label: 'Payment Gateway Integration', desc: 'Razorpay, Stripe, or PayPal checkout' },
   { key: 'securityHardening', label: 'Backend Security Hardening', desc: 'Rate limiting, bot & injection shields' },
   { key: 'apiDocumentation', label: 'Written API Documentation', desc: 'Technical endpoint reference guide' },
+  { key: 'liveChatChatbot', label: 'Live Chat / AI Chatbot Assistant', desc: 'Real-time visitor support chat or AI assistant' },
+  { key: 'couponDiscountSystem', label: 'Coupon Codes & Promo Discounts', desc: 'Promotional codes, percentage/flat discounts & rules' },
+  { key: 'pdfGeneratorSystem', label: 'PDF Invoice / Certificate Generator', desc: 'Automated dynamic PDF receipt/certificate generation' },
+  { key: 'orderStatusTracking', label: 'Order / Application Status Lookup', desc: 'Live status tracker by order or reference ID' },
+  { key: 'eventTicketingQr', label: 'Event Countdown & QR Ticket System', desc: 'Event registration & QR pass verification' },
 ];
 
 export default function BackendPricingPage() {

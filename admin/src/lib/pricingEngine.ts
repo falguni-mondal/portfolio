@@ -17,7 +17,7 @@ export interface ComplexQuoteConfig {
   extraLanguages: number;
   rtlSurcharge: boolean;
   basicFunctionalityPages: number;
-  animationTier: 'NONE' | 'BASIC' | 'ADVANCED';
+  animationTier: 'NONE' | 'BASIC' | 'ADVANCED' | 'WEBGL_3D';
   animationPages: number;
   darkLightSwitch: boolean;
   pageTransitions: boolean;
@@ -51,6 +51,21 @@ export interface ComplexQuoteConfig {
   speedOptimization: boolean;
   analyticsSetup: boolean;
   cookieBanner: boolean;
+  // Expanded Common & Uncommon Functionalities
+  whatsappChatWidget: boolean;
+  googleMapsEmbed: boolean;
+  mediaLightboxGallery: boolean;
+  reviewsTestimonials: boolean;
+  pdfDownloadables: boolean;
+  socialMediaIntegration: boolean;
+  liveChatChatbot: boolean;
+  customCalculatorTool: boolean;
+  multiStepQuizFunnel: boolean;
+  couponDiscountSystem: boolean;
+  pdfGeneratorSystem: boolean;
+  orderStatusTracking: boolean;
+  eventTicketingQr: boolean;
+  customMediaPlayer: boolean;
   rushDelivery: boolean;
   extraHourlyWorkHours: number;
   hostingSetup: 'NONE' | 'FRONTEND' | 'FULLSTACK';
@@ -114,10 +129,24 @@ export function inferComplexConfigFromSimple(input: any): ComplexQuoteConfig {
     speedOptimization: Boolean(input.speedOptimization),
     analyticsSetup: Boolean(input.analyticsSetup),
     cookieBanner: Boolean(input.cookieBanner),
+    whatsappChatWidget: Boolean(input.whatsappChatWidget),
+    googleMapsEmbed: Boolean(input.googleMapsEmbed),
+    mediaLightboxGallery: Boolean(input.mediaLightboxGallery),
+    reviewsTestimonials: Boolean(input.reviewsTestimonials),
+    pdfDownloadables: Boolean(input.pdfDownloadables),
+    socialMediaIntegration: Boolean(input.socialMediaIntegration),
+    liveChatChatbot: Boolean(input.liveChatChatbot),
+    customCalculatorTool: Boolean(input.customCalculatorTool),
+    multiStepQuizFunnel: Boolean(input.multiStepQuizFunnel),
+    couponDiscountSystem: Boolean(input.couponDiscountSystem),
+    pdfGeneratorSystem: Boolean(input.pdfGeneratorSystem),
+    orderStatusTracking: Boolean(input.orderStatusTracking),
+    eventTicketingQr: Boolean(input.eventTicketingQr),
+    customMediaPlayer: Boolean(input.customMediaPlayer),
     rushDelivery: Boolean(input.rushDelivery),
     extraHourlyWorkHours: Number(input.extraHourlyWorkHours) || 0,
-    hostingSetup: input.hostingSetup || (rawPages > 0 ? 'FRONTEND' : 'NONE'),
-    domainDnsSsl: input.domainDnsSsl !== undefined ? Boolean(input.domainDnsSsl) : rawPages > 0,
+    hostingSetup: 'NONE',
+    domainDnsSsl: false,
     paymentMethod: input.paymentMethod || 'STANDARD',
     isAdminComplexOverride: Boolean(input.isAdminComplexOverride),
   };
@@ -141,30 +170,47 @@ export function inferComplexConfigFromSimple(input: any): ComplexQuoteConfig {
     base.bookingSystem = tags.includes('Appointment & Slot Booking System');
     base.serverSearchPagination = tags.includes('Fast Database Search & Category Filters');
     base.multiLanguageSetup = tags.includes('Multi-Language Website Switcher');
+    base.rtlSurcharge = tags.includes('Right-to-Left (RTL) Language Support');
     base.emailTemplates = tags.includes('Automated Confirmation Emails');
     base.thirdPartyApiCount = tags.includes('WhatsApp / CRM / Google Maps Integration') ? 1 : 0;
     base.nextjsSeo = tags.includes('Advanced Google SEO & Sitemaps');
+    base.speedOptimization = tags.includes('Core Web Vitals & Speed Optimization');
     base.analyticsSetup = tags.includes('Visitor Traffic Analytics');
+    base.cookieBanner = tags.includes('Cookie Consent & Privacy Banner');
+    base.darkLightSwitch = tags.includes('Dark / Light Theme Mode Switcher');
+    base.pageTransitions = tags.includes('Smooth Page-to-Page Transitions');
+    base.customCursor = tags.includes('Custom Magnetic / Interactive Cursor');
+    base.preloader = tags.includes('Animated Brand Intro Preloader');
+    base.imageKitIntegration = tags.includes('Cloud Media & Image Auto-Optimization');
+    base.securityHardening = tags.includes('Advanced Backend Security & Rate-Limiting');
+    base.apiDocumentation = tags.includes('Written Backend API Documentation');
+    if (tags.includes('Dynamic Product / Project Catalog Pages')) {
+      base.dynamicTemplates = Math.max(1, base.dynamicTemplates);
+    }
+    base.whatsappChatWidget = tags.includes('WhatsApp Direct Chat / Quick Inquiry Button');
+    base.googleMapsEmbed = tags.includes('Google Maps Location & Store Embed');
+    base.mediaLightboxGallery = tags.includes('Image / Video Lightbox Gallery & Sliders');
+    base.reviewsTestimonials = tags.includes('Customer Reviews, Star Ratings & Testimonials');
+    base.pdfDownloadables = tags.includes('Downloadable PDF Brochures / Menus / Catalogs');
+    base.socialMediaIntegration = tags.includes('Social Media Feed & Share Integration');
+    base.liveChatChatbot = tags.includes('Live Chat / AI Chatbot Assistant');
+    base.customCalculatorTool = tags.includes('Custom Price, EMI or ROI Calculator');
+    base.multiStepQuizFunnel = tags.includes('Multi-Step Quiz, Assessment or Lead Funnel');
+    base.couponDiscountSystem = tags.includes('Coupon Codes, Promo Discounts & Offers');
+    base.pdfGeneratorSystem = tags.includes('PDF Invoice / Receipt / Certificate Generator');
+    base.orderStatusTracking = tags.includes('Order Tracking / Application Status Lookup');
+    base.eventTicketingQr = tags.includes('Event Countdown & QR Ticket / Pass System');
+    base.customMediaPlayer = tags.includes('Audio / Video Streaming & Custom Media Player');
+
     base.basicFunctionalityPages = tags.includes('Interactive Tabs, Accordions & Pop-up Modals')
       ? effectivePagesForFeatures
       : 0;
   }
 
-  const text = (base.clientDescription || '').toLowerCase();
-  if (text) {
-    if (/\b(login|sign up|signup|account|member)\b/.test(text)) base.userLogin = true;
-    if (/\b(admin|dashboard|control panel)\b/.test(text)) base.adminDashboardBundle = true;
-    if (/\b(blog|article|news)\b/.test(text)) base.blogCmsBundle = true;
-    if (/\b(pay|razorpay|stripe|paypal|checkout)\b/.test(text)) base.paymentGateway = true;
-    if (/\b(cart|wishlist)\b/.test(text)) base.globalStateManagement = true;
-    if (/\b(search|filter|sort)\b/.test(text)) base.serverSearchPagination = true;
-    if (/\b(book|booking|appointment|calendar|slot)\b/.test(text)) base.bookingSystem = true;
-  }
-
   return base;
 }
 
-export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, masterConfig?: any) {
+export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig> & Record<string, any>, masterConfig?: any) {
   const req = inferComplexConfigFromSimple(rawInput);
   const region: Region = req.region;
   const currencySymbol = region === 'INDIA' ? '₹' : '$';
@@ -183,7 +229,7 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
 
   const pages = Math.max(0, req.pages);
 
-  // 1. Base Static Pages (Only added once client selects at least 1 page)[cite: 1, 20]
+  // 1. Base Static Pages (Only added once client selects at least 1 page)
   if (pages > 0) {
     let baseCost = getRate('page1', 3300, 46);
     let baseDaysMin = 1;
@@ -213,7 +259,7 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
     });
   }
 
-  // 2. Content & Languages[cite: 2, 5, 6, 22, 23]
+  // 2. Content & Languages
   if (req.extraSectionsStatic > 0) {
     items.push({
       id: 'extraSectionsStatic',
@@ -279,20 +325,20 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
         revisions: '3 (shared frontend)',
       });
     }
-    if (req.rtlSurcharge) {
-      items.push({
-        id: 'rtlSurcharge',
-        label: 'Right-to-Left (RTL) Layout Surcharge',
-        category: 'CONTENT',
-        cost: getRate('rtlSurcharge', 1650, 23),
-        daysMin: 1,
-        daysMax: 1,
-        revisions: '3 (shared frontend)',
-      });
-    }
+  }
+  if (req.rtlSurcharge) {
+    items.push({
+      id: 'rtlSurcharge',
+      label: 'Right-to-Left (RTL) Layout Surcharge',
+      category: 'CONTENT',
+      cost: getRate('rtlSurcharge', 1650, 23),
+      daysMin: 1,
+      daysMax: 1,
+      revisions: '3 (shared frontend)',
+    });
   }
 
-  // 3. Features & Animations[cite: 2, 3, 23, 24]
+  // 3. Features & Animations
   const effectivePageCount = Math.max(1, pages);
   const funcPages = Math.min(effectivePageCount, Math.max(0, req.basicFunctionalityPages));
   if (funcPages > 0) {
@@ -309,7 +355,7 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
     });
   }
 
-  const animPages = Math.min(effectivePageCount, Math.max(1, req.animationPages || effectivePageCount));
+  const animPages = pages > 0 ? Math.min(pages, Math.max(1, req.animationPages || pages)) : 1;
   if (req.animationTier === 'BASIC') {
     items.push({
       id: 'animationTier',
@@ -322,7 +368,7 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
       daysMax: 1 + (animPages - 1) * 0.5,
       revisions: '3 (shared frontend)',
     });
-  } else if (req.animationTier === 'ADVANCED') {
+  } else if (req.animationTier === 'ADVANCED' || req.animationTier === 'WEBGL_3D') {
     items.push({
       id: 'animationTier',
       label: `Advanced Award-Style Animations (${animPages} ${animPages === 1 ? 'page' : 'pages'})`,
@@ -347,12 +393,13 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
       revisions: '3 (shared frontend)',
     });
   }
-  if (req.pageTransitions && effectivePageCount >= 2) {
+  if (req.pageTransitions) {
+    const transPages = Math.max(2, effectivePageCount);
     items.push({
       id: 'pageTransitions',
-      label: `Smooth Page Transitions (${effectivePageCount} pages)`,
+      label: `Smooth Page Transitions (${transPages} pages)`,
       category: 'FEATURES',
-      cost: effectivePageCount * getRate('pageTransitionsPerPage', 1650, 23),
+      cost: transPages * getRate('pageTransitionsPerPage', 1650, 23),
       daysMin: 1,
       daysMax: 1,
       revisions: '3 (shared frontend)',
@@ -381,7 +428,108 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
     });
   }
 
-  // 4. WebGL & 3D[cite: 3, 25, 26]
+  // Expanded Common & Uncommon UI/Frontend Features
+  if (req.whatsappChatWidget) {
+    items.push({
+      id: 'whatsappChatWidget',
+      label: 'WhatsApp Direct Chat / Quick Inquiry Button',
+      category: 'FEATURES',
+      cost: getRate('whatsappChatWidget', 880, 12),
+      daysMin: 0.25,
+      daysMax: 0.5,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.googleMapsEmbed) {
+    items.push({
+      id: 'googleMapsEmbed',
+      label: 'Google Maps Location & Store Embed',
+      category: 'FEATURES',
+      cost: getRate('googleMapsEmbed', 880, 12),
+      daysMin: 0.25,
+      daysMax: 0.5,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.mediaLightboxGallery) {
+    items.push({
+      id: 'mediaLightboxGallery',
+      label: 'Image / Video Lightbox Gallery & Sliders',
+      category: 'FEATURES',
+      cost: getRate('mediaLightboxGallery', 1375, 19),
+      daysMin: 0.5,
+      daysMax: 1,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.reviewsTestimonials) {
+    items.push({
+      id: 'reviewsTestimonials',
+      label: 'Customer Reviews, Star Ratings & Testimonials',
+      category: 'FEATURES',
+      cost: getRate('reviewsTestimonials', 1650, 23),
+      daysMin: 0.5,
+      daysMax: 1,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.pdfDownloadables) {
+    items.push({
+      id: 'pdfDownloadables',
+      label: 'Downloadable PDF Brochures / Menus / Catalogs',
+      category: 'FEATURES',
+      cost: getRate('pdfDownloadables', 880, 12),
+      daysMin: 0.25,
+      daysMax: 0.5,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.socialMediaIntegration) {
+    items.push({
+      id: 'socialMediaIntegration',
+      label: 'Social Media Feed & Share Integration',
+      category: 'FEATURES',
+      cost: getRate('socialMediaIntegration', 1100, 15),
+      daysMin: 0.5,
+      daysMax: 0.5,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.customCalculatorTool) {
+    items.push({
+      id: 'customCalculatorTool',
+      label: 'Custom Price, EMI or ROI Calculator',
+      category: 'FEATURES',
+      cost: getRate('customCalculatorTool', 3850, 54),
+      daysMin: 1.5,
+      daysMax: 2,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.multiStepQuizFunnel) {
+    items.push({
+      id: 'multiStepQuizFunnel',
+      label: 'Multi-Step Quiz, Assessment or Lead Funnel',
+      category: 'FEATURES',
+      cost: getRate('multiStepQuizFunnel', 3300, 46),
+      daysMin: 1,
+      daysMax: 2,
+      revisions: '3 (shared frontend)',
+    });
+  }
+  if (req.customMediaPlayer) {
+    items.push({
+      id: 'customMediaPlayer',
+      label: 'Audio / Video Streaming & Custom Media Player',
+      category: 'FEATURES',
+      cost: getRate('customMediaPlayer', 2750, 39),
+      daysMin: 1,
+      daysMax: 1.5,
+      revisions: '3 (shared frontend)',
+    });
+  }
+
+  // 4. WebGL & 3D
   if (req.webglScenes > 0) {
     items.push({
       id: 'webglScenes',
@@ -465,7 +613,7 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
     });
   }
 
-  // 5. Backend & Dependencies[cite: 4, 5, 26, 27, 28, 29, 30]
+  // 5. Backend & Dependencies
   let needsAuth = req.userLogin;
   let crudCount = req.crudApiCount;
   let adminCount = req.adminScreenCount;
@@ -690,7 +838,64 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
     });
   }
 
-  // 6. Extras & Deployment[cite: 6, 31, 37]
+  // Expanded Backend/Specialized Features
+  if (req.liveChatChatbot) {
+    items.push({
+      id: 'liveChatChatbot',
+      label: 'Live Chat / AI Chatbot Assistant',
+      category: 'BACKEND',
+      cost: getRate('liveChatChatbot', 3300, 46),
+      daysMin: 1,
+      daysMax: 2,
+      revisions: '2 (shared backend)',
+    });
+  }
+  if (req.couponDiscountSystem) {
+    items.push({
+      id: 'couponDiscountSystem',
+      label: 'Coupon Codes, Promo Discounts & Offers',
+      category: 'BACKEND',
+      cost: getRate('couponDiscountSystem', 2750, 39),
+      daysMin: 1,
+      daysMax: 1.5,
+      revisions: '2 (shared backend)',
+    });
+  }
+  if (req.pdfGeneratorSystem) {
+    items.push({
+      id: 'pdfGeneratorSystem',
+      label: 'PDF Invoice / Receipt / Certificate Generator',
+      category: 'BACKEND',
+      cost: getRate('pdfGeneratorSystem', 3850, 54),
+      daysMin: 1.5,
+      daysMax: 2,
+      revisions: '2 (shared backend)',
+    });
+  }
+  if (req.orderStatusTracking) {
+    items.push({
+      id: 'orderStatusTracking',
+      label: 'Order Tracking / Application Status Lookup',
+      category: 'BACKEND',
+      cost: getRate('orderStatusTracking', 3300, 46),
+      daysMin: 1,
+      daysMax: 1.5,
+      revisions: '2 (shared backend)',
+    });
+  }
+  if (req.eventTicketingQr) {
+    items.push({
+      id: 'eventTicketingQr',
+      label: 'Event Countdown & QR Ticket / Pass System',
+      category: 'BACKEND',
+      cost: getRate('eventTicketingQr', 4400, 62),
+      daysMin: 1.5,
+      daysMax: 2.5,
+      revisions: '2 (shared backend)',
+    });
+  }
+
+  // 6. Extras & Deployment (Hosting & Domain setup are NOT charged)
   if (req.nextjsSeo) {
     items.push({
       id: 'nextjsSeo',
@@ -749,50 +954,6 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
   }
 
   const hasBackend = items.some((i) => i.category === 'BACKEND');
-  const hasAnySelection = items.length > 0;
-  const effHosting =
-    hasBackend && req.hostingSetup === 'FRONTEND'
-      ? 'FULLSTACK'
-      : hasAnySelection && req.hostingSetup === 'NONE' && !req.isAdminComplexOverride
-      ? hasBackend
-        ? 'FULLSTACK'
-        : 'FRONTEND'
-      : req.hostingSetup;
-
-  if (effHosting === 'FRONTEND' && hasAnySelection) {
-    items.push({
-      id: 'hostingSetup',
-      label: 'One-Time Hosting Setup (Frontend Only)',
-      category: 'DEPLOYMENT',
-      cost: getRate('hostingFrontend', 1100, 15),
-      daysMin: 0.5,
-      daysMax: 0.5,
-      revisions: 'n/a',
-    });
-  } else if (effHosting === 'FULLSTACK' && hasAnySelection) {
-    items.push({
-      id: 'hostingSetup',
-      label: 'One-Time Hosting Setup (Frontend + Backend + Database)',
-      category: 'DEPLOYMENT',
-      cost: getRate('hostingFullstack', 2200, 31),
-      daysMin: 1,
-      daysMax: 1,
-      revisions: 'n/a',
-    });
-  }
-
-  if (req.domainDnsSsl && hasAnySelection) {
-    items.push({
-      id: 'domainDnsSsl',
-      label: 'One-Time Domain Connection, DNS & SSL Setup',
-      category: 'DEPLOYMENT',
-      cost: getRate('domainDnsSsl', 550, 8),
-      daysMin: 0.5,
-      daysMax: 0.5,
-      revisions: 'n/a',
-    });
-  }
-
   let subtotal = items.reduce((s, i) => s + i.cost, 0);
   let daysMin = items.reduce((s, i) => s + i.daysMin, 0);
   let daysMax = items.reduce((s, i) => s + i.daysMax, 0);
@@ -846,19 +1007,19 @@ export function evaluateProjectQuote(rawInput: Partial<ComplexQuoteConfig>, mast
   let popupMessage = '';
 
   if (grandTotal === 0 && budget === 0) {
-    popupMessage = 'Enter your budget & select your options to see live pricing.';
+    popupMessage = 'Select options to evaluate project quote.';
   } else if (budget > 0) {
     if (isOverBudget) {
       popupStatus = 'OVER_BUDGET';
-      popupMessage = `Budget Alert: Total (${currencySymbol}${grandTotal.toLocaleString()}) crosses your ${currencySymbol}${budget.toLocaleString()} budget by ${currencySymbol}${Math.abs(budgetRemaining).toLocaleString()}.`;
+      popupMessage = `Budget Alert: Total (${currencySymbol}${grandTotal.toLocaleString()}) crosses client's ${currencySymbol}${budget.toLocaleString()} budget by ${currencySymbol}${Math.abs(budgetRemaining).toLocaleString()}.`;
     } else if (budgetRemaining <= budget * 0.15) {
       popupStatus = 'NEAR_LIMIT';
-      popupMessage = `Close to Budget: ${currencySymbol}${budgetRemaining.toLocaleString()} left from your ${currencySymbol}${budget.toLocaleString()} budget.`;
+      popupMessage = `Close to Budget: ${currencySymbol}${budgetRemaining.toLocaleString()} left from ${currencySymbol}${budget.toLocaleString()} budget.`;
     } else {
-      popupMessage = `Within Budget: ${currencySymbol}${budgetRemaining.toLocaleString()} left from your ${currencySymbol}${budget.toLocaleString()} budget.`;
+      popupMessage = `Within Budget: ${currencySymbol}${budgetRemaining.toLocaleString()} left from ${currencySymbol}${budget.toLocaleString()} budget.`;
     }
   } else {
-    popupMessage = `Live Estimate: ${currencySymbol}${grandTotal.toLocaleString()} (Enter a budget in Tab 01 to track remaining budget).`;
+    popupMessage = `Calculated Estimate: ${currencySymbol}${grandTotal.toLocaleString()}`;
   }
 
   const exRate = masterConfig?.exchangeRateInrPerUsd || 95.5;

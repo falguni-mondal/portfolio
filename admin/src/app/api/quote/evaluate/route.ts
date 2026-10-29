@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
     masterConfig = await PricingConfigModel.findOne({ singletonKey: 'MASTER_PRICING' }).lean();
   } catch {
-    // Falls back to built-in Playbook v3.1 defaults if DB is offline during local test
+    // Falls back to built-in Playbook defaults if DB is offline during local test
   }
   const evaluated = evaluateProjectQuote(body, masterConfig);
   return NextResponse.json(evaluated, { headers: corsHeaders() });

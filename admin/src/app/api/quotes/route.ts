@@ -24,26 +24,28 @@ function sanitizeFolderPart(str: string): string {
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-
-
 export async function POST(req: NextRequest) {
   await connectDB();
   const body = await req.json();
+  const isManual = body.source === 'MANUAL';
 
-  const fullName = String(body.fullName || '').trim();
+  const rawFullName = String(body.fullName || '').trim();
+  const fullName = rawFullName || (isManual ? 'Unnamed Client' : '');
   const email = String(body.email || '').trim();
   const phone = String(body.phone || '').trim();
   const emailPhone =
-    String(body.emailPhone || '').trim() || [email, phone].filter(Boolean).join(' | ');
+    String(body.emailPhone || '').trim() ||
+    [email, phone].filter(Boolean).join(' | ') ||
+    (isManual ? 'N/A' : '');
 
-  if (!fullName || fullName.length < 2) {
+  if (!isManual && (!fullName || fullName.length < 2)) {
     return NextResponse.json(
       { error: 'Valid Full Name is required.' },
       { status: 400, headers: corsHeaders() }
     );
   }
 
-  if (body.source !== 'MANUAL' && email && !EMAIL_REGEX.test(email)) {
+  if (!isManual && email && !EMAIL_REGEX.test(email)) {
     return NextResponse.json(
       { error: 'Invalid email address format.' },
       { status: 400, headers: corsHeaders() }
@@ -53,7 +55,7 @@ export async function POST(req: NextRequest) {
   const businessName = String(body.businessName || '').trim();
   const businessDescription = String(body.businessDescription || '').trim();
 
-  if (body.source !== 'MANUAL' && (!businessDescription || businessDescription.length < 5)) {
+  if (!isManual && (!businessDescription || businessDescription.length < 5)) {
     return NextResponse.json(
       { error: 'Description of the Business is required.' },
       { status: 400, headers: corsHeaders() }
@@ -61,7 +63,13 @@ export async function POST(req: NextRequest) {
   }
 
   const masterConfig = await PricingConfigModel.findOne({ singletonKey: 'MASTER_PRICING' }).lean();
-  const evaluated = evaluateProjectQuote(body.simpleChoices || body, masterConfig);
+  const evaluated = evaluateProjectQuote(
+    {
+      ...(body.simpleChoices || body),
+      clientDescription: body.clientDescription || '',
+    },
+    masterConfig
+  );
 
   const clientFolder = `/Clients/Files/${sanitizeFolderPart(fullName)}_${sanitizeFolderPart(
     phone || email || emailPhone
@@ -78,7 +86,7 @@ export async function POST(req: NextRequest) {
     emailPhone,
     countryName: body.countryName || 'India',
     countryCode: body.countryCode || 'IN',
-    countryFlag: body.countryFlag || 'IN',
+    countryFlag: body.countryFlag || body.countryCode || 'IN',
     region: evaluated.region,
     businessName,
     businessDescription,
@@ -91,7 +99,7 @@ export async function POST(req: NextRequest) {
     budget: Number(body.budget) || 0,
     clientDescription: body.clientDescription || '',
     clientFolder,
-    source: body.source === 'MANUAL' ? 'MANUAL' : 'WEBAPP',
+    source: isManual ? 'MANUAL' : 'WEBAPP',
     signedAgreementPdfUrl: body.signedAgreementPdfUrl || '',
     signedAgreementFileId: body.signedAgreementFileId || '',
     signedAgreementText: body.signedAgreementText || '',
@@ -100,10 +108,10 @@ export async function POST(req: NextRequest) {
     simpleChoices: body.simpleChoices || {},
     complexConfig: { ...evaluated.inferredComplexConfig, isAdminComplexOverride: true },
     evaluatedQuote: evaluated,
-    status: isCompleted ? 'COMPLETED' : 'NEW',
+    status: body.status || (isCompleted ? 'COMPLETED' : 'NEW'),
   });
 
-  if (body.source !== 'MANUAL') {
+  if (!isManual) {
     sendClientQuoteNotification(created).catch((err: unknown) => {
       console.error('Resend mail error:', err);
     });
@@ -115,8 +123,6 @@ export async function POST(req: NextRequest) {
   );
 }
 
-
-
 export async function GET(req: NextRequest) {
   const token = req.cookies.get('admin_token')?.value;
   if (!verifyAdminToken(token)) {
@@ -127,8 +133,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(quotes);
 }
 
-
-
 export async function PUT(req: NextRequest) {
   const token = req.cookies.get('admin_token')?.value;
   if (!verifyAdminToken(token)) {
@@ -136,14 +140,88 @@ export async function PUT(req: NextRequest) {
   }
   await connectDB();
   const body = await req.json();
-  const { id, complexConfig, status, isCompleted, deliveryDate, uploadedAssets } = body;
+  const {
+    id,
+    complexConfig,
+    simpleChoices,
+    status,
+    isCompleted,
+    deliveryDate,
+    uploadedAssets,
+    fullName,
+    email,
+    phone,
+    emailPhone,
+    countryName,
+    countryCode,
+    countryFlag,
+    region,
+    businessName,
+    businessDescription,
+    mainGoal,
+    launchDateReason,
+    rushDelivery,
+    designReferences,
+    budget,
+    clientDescription,
+    signedAgreementText,
+    signedAgreementPdfUrl,
+  } = body;
 
   const updateFields: Record<string, any> = {};
 
-  if (complexConfig) {
-    const masterConfig = await PricingConfigModel.findOne({
-      singletonKey: 'MASTER_PRICING',
-    }).lean();
+  if (typeof fullName === 'string') updateFields.fullName = fullName.trim() || 'Unnamed Client';
+  if (typeof email === 'string') updateFields.email = email.trim();
+  if (typeof phone === 'string') updateFields.phone = phone.trim();
+  if (typeof emailPhone === 'string') {
+    updateFields.emailPhone = emailPhone.trim();
+  } else if (typeof email === 'string' || typeof phone === 'string') {
+    updateFields.emailPhone =
+      [String(email || '').trim(), String(phone || '').trim()].filter(Boolean).join(' | ') || 'N/A';
+  }
+  if (typeof countryName === 'string') updateFields.countryName = countryName;
+  if (typeof countryCode === 'string') updateFields.countryCode = countryCode;
+  if (typeof countryFlag === 'string') updateFields.countryFlag = countryFlag;
+  if (region === 'INDIA' || region === 'INTL') updateFields.region = region;
+  if (typeof businessName === 'string') updateFields.businessName = businessName.trim();
+  if (typeof businessDescription === 'string')
+    updateFields.businessDescription = businessDescription.trim();
+  if (typeof mainGoal === 'string') updateFields.mainGoal = mainGoal.trim();
+  if (typeof launchDateReason === 'string') updateFields.launchDateReason = launchDateReason.trim();
+  if (typeof rushDelivery === 'boolean') updateFields.rushDelivery = rushDelivery;
+  if (typeof designReferences === 'string') updateFields.designReferences = designReferences.trim();
+  if (typeof budget === 'number') updateFields.budget = budget;
+  if (typeof clientDescription === 'string') updateFields.clientDescription = clientDescription;
+  if (typeof signedAgreementText === 'string')
+    updateFields.signedAgreementText = signedAgreementText;
+  if (typeof signedAgreementPdfUrl === 'string')
+    updateFields.signedAgreementPdfUrl = signedAgreementPdfUrl;
+
+  const masterConfig = await PricingConfigModel.findOne({
+    singletonKey: 'MASTER_PRICING',
+  }).lean();
+
+  if (simpleChoices && !complexConfig) {
+    updateFields.simpleChoices = simpleChoices;
+    const evaluatedQuote = evaluateProjectQuote(
+      {
+        ...simpleChoices,
+        clientDescription:
+          typeof clientDescription === 'string' ? clientDescription : simpleChoices.clientDescription,
+      },
+      masterConfig
+    );
+    updateFields.complexConfig = {
+      ...evaluatedQuote.inferredComplexConfig,
+      isAdminComplexOverride: true,
+    };
+    updateFields.evaluatedQuote = evaluatedQuote;
+    updateFields.region = evaluatedQuote.region;
+    updateFields.rushDelivery = Boolean(simpleChoices.rushDelivery);
+  } else if (complexConfig) {
+    if (simpleChoices) {
+      updateFields.simpleChoices = simpleChoices;
+    }
     const evaluatedQuote = evaluateProjectQuote(
       { ...complexConfig, isAdminComplexOverride: true },
       masterConfig
@@ -175,8 +253,6 @@ export async function PUT(req: NextRequest) {
   );
   return NextResponse.json(updated);
 }
-
-
 
 export async function DELETE(req: NextRequest) {
   const token = req.cookies.get('admin_token')?.value;

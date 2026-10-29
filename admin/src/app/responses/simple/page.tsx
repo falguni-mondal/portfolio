@@ -2,18 +2,32 @@
 'use client';
 
 import { useResponses } from '@/context/ResponsesContext';
-import { downloadClientSignedAgreementFromAdmin } from '@/lib/agreementPdfAdmin';
+import {
+  downloadClientSignedAgreementFromAdmin,
+  downloadOfficialClientQuotePdfFromAdmin,
+} from '@/lib/agreementPdfAdmin';
+import { WEBSITE_TYPES, MOTION_TIERS } from '@/lib/pricingConstants';
 
 export default function SimpleResponsePage() {
-  const { selectedQuote, liveEval, sym } = useResponses();
+  const { selectedQuote, liveEval, openEditClientModal, sym } = useResponses();
 
   if (!selectedQuote) return null;
 
-  const customNotesObj = selectedQuote.simpleChoices?.customSectionNotes || {};
-  const selectedFeatureTags: string[] = selectedQuote.simpleChoices?.selectedTags || [];
-  const isRush = Boolean(
-    selectedQuote.rushDelivery ?? selectedQuote.simpleChoices?.rushDelivery
-  );
+  const simpleChoices = selectedQuote.simpleChoices || {};
+  const customNotesObj = simpleChoices.customSectionNotes || {};
+  const selectedFeatureTags: string[] = Array.isArray(simpleChoices.selectedTags)
+    ? simpleChoices.selectedTags
+    : [];
+  const isRush = Boolean(selectedQuote.rushDelivery ?? simpleChoices.rushDelivery);
+  const pagesSelected = simpleChoices.pages ?? 0;
+  const purposeId = simpleChoices.projectPurpose || '';
+  const categoryObj = WEBSITE_TYPES.find((t) => t.id === purposeId);
+  const categoryLabel = categoryObj
+    ? `${categoryObj.title} (${categoryObj.id})`
+    : purposeId || 'Not Selected / Custom';
+  const animTierId = simpleChoices.animationTier || 'NONE';
+  const motionObj = MOTION_TIERS.find((m) => m.id === animTierId);
+  const motionLabel = motionObj ? `${motionObj.title} (${motionObj.badge})` : animTierId;
 
   const cleanExtraBriefNote =
     customNotesObj.briefExtraNote ||
@@ -21,26 +35,47 @@ export default function SimpleResponsePage() {
       .replace(/^Selected Features:.*(\n|$)/i, '')
       .trim();
 
+  const cleanAgreementText = String(
+    selectedQuote.signedAgreementText ||
+      `I, ${selectedQuote.fullName} (representing ${
+        selectedQuote.businessName || 'my business'
+      }), with contact details ${
+        selectedQuote.emailPhone
+      }, hereby confirm that I have read, understood, and agreed to all terms, procedures, processes, scope boundaries, revision policies, and payment structures set forth in the Website Development Service Guide & Client Agreement.`
+  ).replace(/\s*\(Version 3\.1\)/gi, '');
+
   return (
     <div className="mt-6 space-y-6">
       {/* Top Financial & Timeline Summary */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <div className="glass-subcard rounded-2xl p-4">
           <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">
             Client Target Budget
           </span>
           <p className="mt-1 text-xl font-black">
-            {sym}
-            {Number(selectedQuote.budget || 0).toLocaleString()}
+            {Number(selectedQuote.budget || 0) > 0
+              ? `${sym}${Number(selectedQuote.budget).toLocaleString()}`
+              : '0 (Quote requested)'}
           </p>
         </div>
         <div className="glass-subcard rounded-2xl p-4">
           <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">
-            Calculated Quote Total
+            Calculated Estimate Total
           </span>
-          <p className="mt-1 text-xl font-black">
+          <p className="mt-1 text-xl font-black text-[#ff5733]">
             {sym}
             {Number(liveEval?.grandTotal || 0).toLocaleString()}
+          </p>
+        </div>
+        <div className="glass-subcard rounded-2xl p-4">
+          <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">
+            Est. Duration &amp; Revisions
+          </span>
+          <p className="mt-1 text-xs font-bold">
+            {liveEval?.durationEstimate?.realisticDaysMin || 0}–
+            {liveEval?.durationEstimate?.realisticDaysMax || 0} days •{' '}
+            {liveEval?.revisions?.frontendShared || 0} FE /{' '}
+            {liveEval?.revisions?.backendShared || 0} BE rev
           </p>
         </div>
         <div className="glass-subcard rounded-2xl p-4">
@@ -53,29 +88,37 @@ export default function SimpleResponsePage() {
         </div>
         <div className="glass-subcard rounded-2xl p-4">
           <span className="text-[10px] font-bold uppercase tracking-wider opacity-60">
-            Delivery Date
+            Status &amp; Source
           </span>
-          <p className="mt-1 text-sm font-bold">
-            {selectedQuote.deliveryDate || 'Not delivered yet'}
+          <p className="mt-1 text-xs font-bold">
+            {selectedQuote.status || 'NEW'} • {selectedQuote.source || 'WEBAPP'} (
+            {selectedQuote.deliveryDate || 'In Progress'})
           </p>
         </div>
       </div>
 
-      {/* CARD A: TAB 01 — CLIENT PERSONAL & CONTACT DETAILS */}
+      {/* CARD 01: CLIENT PERSONAL, CONTACT, REGION & BUDGET DETAILS */}
       <div className="glass-subcard space-y-3 rounded-2xl p-5">
-        <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
-          01 • Client Personal, Contact &amp; Region Details
-        </span>
-        <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
+            01 • Client Personal, Contact, Region &amp; Target Budget Details
+          </span>
+          <button
+            type="button"
+            onClick={openEditClientModal}
+            className="cursor-pointer text-xs font-bold text-[#ff5733] underline"
+          >
+            ✎ Edit Any Field
+          </button>
+        </div>
+        <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-2 lg:grid-cols-5">
           <div>
             <span className="block text-[10px] font-bold uppercase opacity-50">Full Name</span>
-            <p className="mt-0.5 text-sm font-bold">{selectedQuote.fullName}</p>
+            <p className="mt-0.5 text-sm font-bold">{selectedQuote.fullName || '—'}</p>
           </div>
           <div>
             <span className="block text-[10px] font-bold uppercase opacity-50">Email Address</span>
-            <p className="mt-0.5 break-all text-sm font-bold">
-              {selectedQuote.email || selectedQuote.emailPhone || '—'}
-            </p>
+            <p className="mt-0.5 break-all text-sm font-bold">{selectedQuote.email || '—'}</p>
           </div>
           <div>
             <span className="block text-[10px] font-bold uppercase opacity-50">
@@ -87,26 +130,148 @@ export default function SimpleResponsePage() {
           </div>
           <div>
             <span className="block text-[10px] font-bold uppercase opacity-50">
-              Region &amp; Currency
+              Country &amp; Region
             </span>
             <p className="mt-0.5 text-sm font-bold">
-              {selectedQuote.countryName} ({selectedQuote.region} • {sym})
+              {selectedQuote.countryName || 'India'} ({selectedQuote.countryCode || 'IN'} •{' '}
+              {selectedQuote.region || 'INDIA'} • {sym})
+            </p>
+          </div>
+          <div>
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              Client Stated Budget
+            </span>
+            <p className="mt-0.5 text-sm font-bold">
+              {Number(selectedQuote.budget || 0) > 0
+                ? `${sym}${Number(selectedQuote.budget).toLocaleString()}`
+                : '0 (Quote requested)'}
             </p>
           </div>
         </div>
       </div>
 
-      {/* CARD B: TAB 05 — TELL ME ABOUT YOUR BUSINESS & DESIGN REFERENCES */}
+      {/* CARD 02: WEBSITE CATEGORY, PAGES & CUSTOM STRUCTURE NOTE */}
       <div className="glass-subcard space-y-4 rounded-2xl p-5">
         <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
-          05 • Tell Me About Your Business &amp; Design References (Mandatory Brief)
+          02 • Website Category, Page Count &amp; Custom Page Note
         </span>
 
         <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-3">
           <div className="rounded-xl border border-neutral-500/15 p-3.5">
             <span className="block text-[10px] font-bold uppercase opacity-50">
-              Business Name &amp; What It Does
+              Selected Website Category
             </span>
+            <p className="mt-1 text-sm font-bold">{categoryLabel}</p>
+          </div>
+
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              Pages Selected by Client
+            </span>
+            <p className="mt-1 text-sm font-bold">
+              {pagesSelected > 0
+                ? `${pagesSelected} ${pagesSelected === 1 ? 'Page' : 'Pages'}`
+                : '0 (Recommend for client)'}
+              {categoryObj && (
+                <span className="ml-1.5 text-[11px] font-normal opacity-65">
+                  (Category recommendation: ~{categoryObj.recommendedPages} pages)
+                </span>
+              )}
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              Custom Category / Pages Note
+            </span>
+            <p className="mt-1 font-semibold">
+              {customNotesObj.pagesAndTypeNote || 'No custom text provided'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CARD 03: WEBSITE FUNCTIONALITY SELECTIONS & CUSTOM WORKFLOW NOTE */}
+      <div className="glass-subcard space-y-4 rounded-2xl p-5">
+        <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
+          03 • Website Functionality Selections &amp; Custom Workflow Note
+        </span>
+
+        <div>
+          <span className="block text-[10px] font-bold uppercase opacity-50">
+            Selected Functionality Toggles ({selectedFeatureTags.length})
+          </span>
+          {selectedFeatureTags.length === 0 ? (
+            <p className="mt-1 text-xs opacity-60">
+              No functionality toggles selected by client.
+            </p>
+          ) : (
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {selectedFeatureTags.map((t: string) => (
+                <span
+                  key={t}
+                  className="rounded-full bg-neutral-500/15 px-3 py-1 text-xs font-semibold"
+                >
+                  ✓ {t}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="rounded-xl border border-neutral-500/15 p-3.5 text-xs">
+          <span className="block text-[10px] font-bold uppercase opacity-50">
+            Custom Functionality &amp; Workflow Note
+          </span>
+          <p className="mt-1 whitespace-pre-wrap font-semibold">
+            {customNotesObj.functionalityNote || 'No custom text provided'}
+          </p>
+        </div>
+      </div>
+
+      {/* CARD 04: MOTION, FEEL, 3D EXPERIENCE & CUSTOM MOTION NOTE */}
+      <div className="glass-subcard space-y-4 rounded-2xl p-5">
+        <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
+          04 • Motion, Feel, 3D Experience &amp; Custom Animation Note
+        </span>
+
+        <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-3">
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              Selected Motion &amp; Feel Tier
+            </span>
+            <p className="mt-1 text-sm font-bold">{motionLabel}</p>
+          </div>
+
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              3D / WebGL Scenes
+            </span>
+            <p className="mt-1 text-sm font-bold">
+              {simpleChoices.webglScenes ?? (animTierId === 'WEBGL_3D' ? 1 : 0)} Scene(s)
+            </p>
+          </div>
+
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">
+              Custom Motion / 3D Note
+            </span>
+            <p className="mt-1 font-semibold">
+              {customNotesObj.motionAndFeelNote || 'No custom text provided'}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* CARD 05: BUSINESS BRIEF, DESIGN REFERENCES & EXTRA NOTES */}
+      <div className="glass-subcard space-y-4 rounded-2xl p-5">
+        <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
+          05 • Tell Me About Your Business &amp; Design References (Project Brief)
+        </span>
+
+        <div className="grid grid-cols-1 gap-4 text-xs sm:grid-cols-3">
+          <div className="rounded-xl border border-neutral-500/15 p-3.5">
+            <span className="block text-[10px] font-bold uppercase opacity-50">Business Name</span>
             <p className="mt-1 text-sm font-bold">{selectedQuote.businessName || '—'}</p>
           </div>
 
@@ -123,20 +288,20 @@ export default function SimpleResponsePage() {
             </span>
             <p className="mt-1 text-sm font-bold">{selectedQuote.launchDateReason || '—'}</p>
           </div>
-
-          <div className="rounded-xl border border-neutral-500/15 p-4">
-            <span className="block text-[10px] font-bold uppercase opacity-50">
-              Description of the Business
-            </span>
-            <p className="mt-1.5 wrap-break-words whitespace-pre-wrap text-sm font-semibold">
-              {selectedQuote.businessDescription || '—'}
-            </p>
-          </div>
         </div>
 
-        <div className="rounded-xl border border-neutral-500/15 p-4">
+        <div className="rounded-xl border border-neutral-500/15 p-4 text-xs">
           <span className="block text-[10px] font-bold uppercase opacity-50">
-            Figma Design Link OR 3 Website URLs That You Love
+            Description of the Business
+          </span>
+          <p className="mt-1.5 wrap-break-words whitespace-pre-wrap text-sm font-semibold">
+            {selectedQuote.businessDescription || '—'}
+          </p>
+        </div>
+
+        <div className="rounded-xl border border-neutral-500/15 p-4 text-xs">
+          <span className="block text-[10px] font-bold uppercase opacity-50">
+            Figma Design Link OR 3 Website URLs That Client Loves
           </span>
           <p className="mt-1.5 break-words whitespace-pre-wrap text-sm font-semibold">
             {selectedQuote.designReferences || '—'}
@@ -145,91 +310,20 @@ export default function SimpleResponsePage() {
 
         <div className="rounded-xl border border-neutral-500/15 p-4 text-xs">
           <span className="block text-[10px] font-bold uppercase opacity-50">
-            Anything Else You Want Me to Know? (Optional Brief Note)
+            Additional Brief Note (&quot;Anything Else You Want Me to Know?&quot;)
           </span>
-          <p className="mt-1 font-medium">
+          <p className="mt-1 whitespace-pre-wrap font-medium">
             {cleanExtraBriefNote || 'No additional brief note written.'}
           </p>
         </div>
       </div>
 
-      {/* CARD C: TABS 02, 03 & 04 — SCOPE CHOICES, FUNCTIONALITIES & CUSTOM NOTES */}
-      <div className="glass-subcard space-y-4 rounded-2xl p-5">
-        <span className="text-[11px] font-bold uppercase tracking-wider opacity-50">
-          02–04 • Website Scope Choices, Functionalities &amp; Section Notes
-        </span>
-
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="glass-input rounded-full px-3.5 py-1.5 font-bold">
-            Website Category: {selectedQuote.simpleChoices?.projectPurpose || 'Custom'}
-          </span>
-          <span className="glass-input rounded-full px-3.5 py-1.5 font-bold">
-            Pages Selected: {selectedQuote.simpleChoices?.pages || 1}
-          </span>
-          <span className="glass-input rounded-full px-3.5 py-1.5 font-bold">
-            Motion &amp; Feel Tier: {selectedQuote.simpleChoices?.animationTier || 'NONE'}
-          </span>
-          <span className="glass-input rounded-full px-3.5 py-1.5 font-bold">
-            Rush Delivery: {isRush ? 'Yes (+30%)' : 'No'}
-          </span>
-        </div>
-
-        <div>
-          <span className="block text-[10px] font-bold uppercase opacity-50">
-            Selected Functionality Options ({selectedFeatureTags.length})
-          </span>
-          {selectedFeatureTags.length === 0 ? (
-            <p className="mt-1 text-xs opacity-60">No functionality tags selected.</p>
-          ) : (
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {selectedFeatureTags.map((t: string) => (
-                <span
-                  key={t}
-                  className="rounded-full bg-neutral-500/15 px-3 py-1 text-xs font-semibold"
-                >
-                  ✓ {t}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 border-t border-neutral-500/15 pt-4 text-xs sm:grid-cols-3">
-          <div className="rounded-xl border border-neutral-500/15 p-3">
-            <span className="block text-[10px] font-bold uppercase opacity-50">
-              Tab 02 Custom Category/Pages Note
-            </span>
-            <p className="mt-1 font-medium">
-              {customNotesObj.pagesAndTypeNote || 'No custom text provided'}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-neutral-500/15 p-3">
-            <span className="block text-[10px] font-bold uppercase opacity-50">
-              Tab 03 Custom Motion/3D Note
-            </span>
-            <p className="mt-1 font-medium">
-              {customNotesObj.motionAndFeelNote || 'No custom text provided'}
-            </p>
-          </div>
-
-          <div className="rounded-xl border border-neutral-500/15 p-3">
-            <span className="block text-[10px] font-bold uppercase opacity-50">
-              Tab 04 Custom Functionality Note
-            </span>
-            <p className="mt-1 font-medium">
-              {customNotesObj.functionalityNote || 'No custom text provided'}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* CARD D: SIGNED SERVICE GUIDE & AGREEMENT RECORD + DOWNLOAD BUTTON */}
+      {/* CARD 06: SIGNED SERVICE GUIDE & AGREEMENT RECORD + DOWNLOAD BUTTONS */}
       <div className="glass-subcard space-y-3 rounded-2xl border border-neutral-500/25 p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#ff5733]">
-              Signed Service Guide &amp; Agreement (v3.1)
+              Signed Service Guide &amp; Agreement
             </span>
             <h4 className="mt-0.5 text-sm font-bold">
               Client Binding Electronic Acceptance Record
@@ -239,8 +333,16 @@ export default function SimpleResponsePage() {
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              onClick={() => downloadClientSignedAgreementFromAdmin(selectedQuote, liveEval)}
+              onClick={() => downloadOfficialClientQuotePdfFromAdmin(selectedQuote, liveEval)}
               className="liquid-glass-active cursor-pointer rounded-full px-5 py-2.5 text-xs font-bold"
+            >
+              ↓ Download Official Quote PDF
+            </button>
+
+            <button
+              type="button"
+              onClick={() => downloadClientSignedAgreementFromAdmin(selectedQuote, liveEval)}
+              className="glass-input cursor-pointer rounded-full px-5 py-2.5 text-xs font-bold"
             >
               ↓ Download Signed Agreement PDF
             </button>
@@ -259,12 +361,7 @@ export default function SimpleResponsePage() {
         </div>
 
         <p className="rounded-xl bg-neutral-500/10 p-4 text-xs font-medium leading-relaxed">
-          {selectedQuote.signedAgreementText ||
-            `I, ${selectedQuote.fullName} (representing ${
-              selectedQuote.businessName || 'my business'
-            }), with contact details ${
-              selectedQuote.emailPhone
-            }, hereby confirm that I have read, understood, and agreed to all agreements, procedures, processes, scope boundaries, revision policies, and payment schedules set forth in the Website Development Service Guide, Pricing & Agreement (Version 3.1).`}
+          {cleanAgreementText}
         </p>
 
         <p className="font-mono text-[11px] opacity-60">
@@ -276,7 +373,7 @@ export default function SimpleResponsePage() {
         </p>
       </div>
 
-      {/* CARD E: UPLOADED CLIENT FILES */}
+      {/* CARD 07: UPLOADED CLIENT FILES */}
       <div className="glass-subcard rounded-2xl p-5">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <span className="text-[11px] font-bold uppercase opacity-50">
@@ -300,7 +397,7 @@ export default function SimpleResponsePage() {
                 rel="noreferrer"
                 className="glass-input cursor-pointer rounded-full px-4 py-2 text-xs font-bold"
               >
-                📎 {a.name} ↗
+                📎 {a.name} {a.size ? `(${(a.size / 1024).toFixed(0)} KB)` : ''} ↗
               </a>
             ))}
           </div>

@@ -3,10 +3,10 @@ import mongoose, { Schema } from 'mongoose';
 
 const ClientQuoteSchema = new Schema(
   {
-    fullName: { type: String, required: true },
+    fullName: { type: String, default: 'Unnamed Client' },
     email: { type: String, default: '' },
     phone: { type: String, default: '' },
-    emailPhone: { type: String, required: true },
+    emailPhone: { type: String, default: '' },
     countryName: { type: String, default: 'India' },
     countryCode: { type: String, default: 'IN' },
     countryFlag: { type: String, default: 'IN' },

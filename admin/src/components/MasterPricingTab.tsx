@@ -35,6 +35,15 @@ const CATEGORIZED_RATES: Record<
       { key: 'pageTransitionsPerPage', label: 'Page Transitions (per page)', desc: 'Smooth route transitions (min 2 pages)' },
       { key: 'customCursorFixed', label: 'Custom Magnetic Cursor (Fixed)', desc: 'Site-wide custom pointer' },
       { key: 'preloaderFixed', label: 'Animated Intro Preloader (Fixed)', desc: 'Site-wide loading screen' },
+      { key: 'whatsappChatWidget', label: 'WhatsApp Direct Chat / Inquiry Button', desc: 'Floating or inline WhatsApp quick inquiry widget' },
+      { key: 'googleMapsEmbed', label: 'Google Maps Location & Store Embed', desc: 'Interactive location pin & directions embed' },
+      { key: 'mediaLightboxGallery', label: 'Image / Video Lightbox Gallery', desc: 'Interactive media carousels, sliders & lightbox' },
+      { key: 'reviewsTestimonials', label: 'Reviews, Star Ratings & Testimonials', desc: 'Customer social proof & review showcase module' },
+      { key: 'pdfDownloadables', label: 'Downloadable PDF Brochures / Menus', desc: 'Catalog, brochure, or menu download integration' },
+      { key: 'socialMediaIntegration', label: 'Social Media Feed & Share Integration', desc: 'Social profile feeds and one-click share buttons' },
+      { key: 'customCalculatorTool', label: 'Custom Price, EMI or ROI Calculator', desc: 'Interactive client-facing formula calculator' },
+      { key: 'multiStepQuizFunnel', label: 'Multi-Step Quiz or Lead Funnel', desc: 'Interactive step-by-step questionnaire or funnel' },
+      { key: 'customMediaPlayer', label: 'Audio / Video Custom Media Player', desc: 'Custom branded audio or video streaming player' },
     ],
   },
   WEBGL_3D: {
@@ -68,6 +77,11 @@ const CATEGORIZED_RATES: Record<
       { key: 'paymentGateway', label: 'Payment Gateway Integration', desc: 'Razorpay, Stripe, or PayPal checkout' },
       { key: 'securityHardening', label: 'Backend Security Hardening', desc: 'Rate limiting, bot & injection shields' },
       { key: 'apiDocumentation', label: 'Written API Documentation', desc: 'Technical endpoint reference guide' },
+      { key: 'liveChatChatbot', label: 'Live Chat / AI Chatbot Assistant', desc: 'Real-time visitor support chat or AI assistant' },
+      { key: 'couponDiscountSystem', label: 'Coupon Codes & Promo Discounts', desc: 'Promotional codes, percentage/flat discounts & rules' },
+      { key: 'pdfGeneratorSystem', label: 'PDF Invoice / Certificate Generator', desc: 'Automated dynamic PDF receipt/certificate generation' },
+      { key: 'orderStatusTracking', label: 'Order / Application Status Lookup', desc: 'Live status tracker by order or reference ID' },
+      { key: 'eventTicketingQr', label: 'Event Countdown & QR Ticket System', desc: 'Event registration & QR pass verification' },
     ],
   },
   SEO_DEPLOY: {
@@ -78,9 +92,6 @@ const CATEGORIZED_RATES: Record<
       { key: 'analyticsSetup', label: 'Analytics Setup', desc: 'Traffic & visitor tracking setup' },
       { key: 'cookieBanner', label: 'Cookie Consent Banner', desc: 'Privacy consent pop-up banner' },
       { key: 'hourlyRate', label: 'Hourly Custom Dev Rate', desc: 'Billed with a 2-hour minimum' },
-      { key: 'hostingFrontend', label: 'One-Time Hosting Setup (Frontend)', desc: 'Vercel / Netlify / Hostinger setup' },
-      { key: 'hostingFullstack', label: 'One-Time Hosting Setup (Full-Stack)', desc: 'Frontend + Backend + MongoDB Atlas' },
-      { key: 'domainDnsSsl', label: 'Domain, DNS & SSL Setup', desc: 'Custom domain connection & HTTPS' },
     ],
   },
 };
@@ -258,6 +269,16 @@ export const MasterPricingTab: FC<Props> = ({ pricingConfig, setPricingConfig })
           ))}
         </div>
 
+        {activeRateCat === 'SEO_DEPLOY' && (
+          <div className="glass-subcard mt-4 rounded-2xl p-4 text-xs">
+            <span className="font-bold text-[#ff5733]">✓ Complimentary Deployment Policy:</span>{' '}
+            <span className="opacity-80">
+              One-Time Hosting Setup and Domain, DNS &amp; SSL Setup are provided free of charge
+              (₹0 / $0).
+            </span>
+          </div>
+        )}
+
         <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {CATEGORIZED_RATES[activeRateCat].items.map((item) => {
             const rateObj = pricingConfig.rates?.[item.key] || { inr: 0, usd: 0 };
@@ -277,10 +298,10 @@ export const MasterPricingTab: FC<Props> = ({ pricingConfig, setPricingConfig })
                       onChange={(e) => {
                         const newInr = Number(e.target.value);
                         const usdRate = Number(pricingConfig.usdPerInrRate || 0.01051);
-                        const autoUsd = Math.max(
-                          1,
-                          Math.round(newInr * usdRate * (1.3 / 0.97))
-                        );
+                        const autoUsd =
+                          newInr === 0
+                            ? 0
+                            : Math.max(1, Math.round(newInr * usdRate * (1.3 / 0.97)));
                         setPricingConfig({
                           ...pricingConfig,
                           rates: {

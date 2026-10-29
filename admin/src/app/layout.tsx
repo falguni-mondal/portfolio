@@ -19,6 +19,21 @@ export const metadata: Metadata = {
   description: 'Admin Dashboard & Serverless Pricing Engine for byfalguni.com',
 };
 
+const themeInitScript = `
+(function() {
+  try {
+    var saved = localStorage.getItem('byf-admin-theme');
+    if (saved === 'light') {
+      document.documentElement.classList.remove('dark');
+    } else {
+      document.documentElement.classList.add('dark');
+    }
+  } catch (e) {
+    document.documentElement.classList.add('dark');
+  }
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,8 +43,11 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`dark ${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body suppressHydrationWarning className="min-h-full flex flex-col">
         <AdminProvider>{children}</AdminProvider>
       </body>

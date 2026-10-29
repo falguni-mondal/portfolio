@@ -9,11 +9,19 @@ const SEO_DEPLOY_ITEMS: RateItemMeta[] = [
   { key: 'analyticsSetup', label: 'Analytics Setup', desc: 'Traffic & visitor tracking setup' },
   { key: 'cookieBanner', label: 'Cookie Consent Banner', desc: 'Privacy consent pop-up banner' },
   { key: 'hourlyRate', label: 'Hourly Custom Dev Rate', desc: 'Billed with a 2-hour minimum' },
-  { key: 'hostingFrontend', label: 'One-Time Hosting Setup (Frontend)', desc: 'Vercel / Netlify / Hostinger setup' },
-  { key: 'hostingFullstack', label: 'One-Time Hosting Setup (Full-Stack)', desc: 'Frontend + Backend + MongoDB Atlas' },
-  { key: 'domainDnsSsl', label: 'Domain, DNS & SSL Setup', desc: 'Custom domain connection & HTTPS' },
 ];
 
 export default function SeoDeployPricingPage() {
-  return <PricingRateGrid items={SEO_DEPLOY_ITEMS} />;
+  return (
+    <div className="space-y-4">
+      <div className="glass-subcard rounded-2xl p-4 text-xs">
+        <span className="font-bold text-[#ff5733]">✓ Complimentary Deployment Policy:</span>{' '}
+        <span className="opacity-80">
+          One-Time Hosting Setup (Frontend &amp; Full-Stack) and Domain, DNS &amp; SSL Setup are
+          provided free of charge (₹0 / $0) and are never billed to clients.
+        </span>
+      </div>
+      <PricingRateGrid items={SEO_DEPLOY_ITEMS} />
+    </div>
+  );
 }

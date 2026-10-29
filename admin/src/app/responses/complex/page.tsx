@@ -2,9 +2,11 @@
 'use client';
 
 import { useResponses } from '@/context/ResponsesContext';
+import { downloadOfficialClientQuotePdfFromAdmin } from '@/lib/agreementPdfAdmin';
 
 export default function ComplexCalculatorPage() {
   const {
+    selectedQuote,
     complexDraft,
     setComplexDraft,
     liveEval,
@@ -61,16 +63,19 @@ export default function ComplexCalculatorPage() {
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {[
-          { key: 'pages', label: 'Static Pages', min: 1 },
+          { key: 'pages', label: 'Static Pages (0+)', min: 0 },
           { key: 'extraSectionsStatic', label: 'Extra Static Sections', min: 0 },
           { key: 'extraSectionsAdvanced', label: 'Extra Adv. Sections', min: 0 },
           { key: 'dynamicTemplates', label: 'Dynamic Templates (20x)', min: 0 },
+          { key: 'extraDynamicItems10x', label: 'Extra 10x Catalog Items', min: 0 },
           { key: 'basicFunctionalityPages', label: 'Basic Func. Pages', min: 0 },
           { key: 'animationPages', label: 'Animated Pages', min: 0 },
           { key: 'webglScenes', label: '3D WebGL Scenes', min: 0 },
           { key: 'crudApiCount', label: 'CRUD Data APIs', min: 0 },
           { key: 'adminScreenCount', label: 'Admin Screens', min: 0 },
+          { key: 'extraDashboardTypes', label: 'Extra Dashboard Data Types', min: 0 },
           { key: 'thirdPartyApiCount', label: 'Third-Party APIs', min: 0 },
+          { key: 'extraLanguages', label: 'Additional Languages', min: 0 },
           { key: 'extraHourlyWorkHours', label: 'Hourly Custom Work', min: 0 },
           { key: 'discountPercent', label: 'Discount %', min: 0 },
         ].map((f) => (
@@ -83,7 +88,7 @@ export default function ComplexCalculatorPage() {
               onChange={(e) =>
                 setComplexDraft({
                   ...complexDraft,
-                  [f.key]: Number(e.target.value),
+                  [f.key]: Math.max(f.min, Number(e.target.value) || 0),
                 })
               }
               className="glass-input mt-1.5 w-full rounded-xl px-3 py-1.5 text-sm font-bold"
@@ -153,7 +158,19 @@ export default function ComplexCalculatorPage() {
       <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
         {[
           { key: 'contactForm', label: 'Contact Form API' },
+          { key: 'whatsappChatWidget', label: 'WhatsApp Chat Button' },
+          { key: 'googleMapsEmbed', label: 'Google Maps Embed' },
+          { key: 'mediaLightboxGallery', label: 'Media Lightbox & Sliders' },
+          { key: 'reviewsTestimonials', label: 'Reviews & Testimonials' },
+          { key: 'pdfDownloadables', label: 'Downloadable PDFs' },
+          { key: 'socialMediaIntegration', label: 'Social Media Integration' },
           { key: 'newsletter', label: 'Newsletter API' },
+          { key: 'darkLightSwitch', label: 'Dark/Light Switch' },
+          { key: 'pageTransitions', label: 'Page Transitions' },
+          { key: 'customCursor', label: 'Custom Cursor' },
+          { key: 'preloader', label: 'Preloader' },
+          { key: 'multiLanguageSetup', label: 'Multi-Language Setup' },
+          { key: 'rtlSurcharge', label: 'RTL Language Surcharge' },
           { key: 'userLogin', label: 'User Login (Auth)' },
           { key: 'roleBasedAccess', label: 'Role-Based Access' },
           { key: 'adminDashboardBundle', label: 'Admin Dashboard Bundle' },
@@ -164,17 +181,23 @@ export default function ComplexCalculatorPage() {
           { key: 'emailTemplates', label: 'HTML Email Templates' },
           { key: 'bookingSystem', label: 'Booking System' },
           { key: 'paymentGateway', label: 'Payment Gateway' },
+          { key: 'liveChatChatbot', label: 'Live Chat / AI Chatbot' },
+          { key: 'customCalculatorTool', label: 'Custom Calculator Tool' },
+          { key: 'multiStepQuizFunnel', label: 'Multi-Step Quiz / Funnel' },
+          { key: 'couponDiscountSystem', label: 'Coupon & Promo Discounts' },
+          { key: 'pdfGeneratorSystem', label: 'PDF Invoice/Cert Generator' },
+          { key: 'orderStatusTracking', label: 'Order / Status Lookup' },
+          { key: 'eventTicketingQr', label: 'Event & QR Ticket System' },
+          { key: 'customMediaPlayer', label: 'Custom Audio/Video Player' },
           { key: 'securityHardening', label: 'Security Hardening' },
           { key: 'apiDocumentation', label: 'API Documentation' },
-          { key: 'darkLightSwitch', label: 'Dark/Light Switch' },
-          { key: 'pageTransitions', label: 'Page Transitions' },
-          { key: 'customCursor', label: 'Custom Cursor' },
-          { key: 'preloader', label: 'Preloader' },
           { key: 'customShader', label: 'Custom Shader' },
           { key: 'scrollLinkedCamera', label: 'Scroll 3D Camera' },
+          { key: 'mobileFallbackTuning', label: '3D Mobile Fallback Tuning' },
           { key: 'nextjsSeo', label: 'Next.js Adv. SEO' },
           { key: 'speedOptimization', label: 'Speed Optimization' },
           { key: 'analyticsSetup', label: 'Analytics Setup' },
+          { key: 'cookieBanner', label: 'Cookie Consent Banner' },
           { key: 'rushDelivery', label: 'Rush Delivery (+30%)' },
         ].map((b) => (
           <button
@@ -204,19 +227,35 @@ export default function ComplexCalculatorPage() {
           {Number(liveEval.grandTotal).toLocaleString()})
         </h4>
         <div className="mt-3 divide-y divide-neutral-500/15 text-xs">
-          {liveEval.items.map((it: any) => (
-            <div key={it.id} className="flex justify-between gap-4 py-2">
-              <span className="font-semibold">{it.label}</span>
-              <span className="shrink-0 font-bold">
-                {sym}
-                {it.cost.toLocaleString()}
-              </span>
-            </div>
-          ))}
+          {liveEval.items.length === 0 ? (
+            <p className="py-2 opacity-60">
+              0 pages and no services selected yet ({sym}0).
+            </p>
+          ) : (
+            liveEval.items.map((it: any) => (
+              <div key={it.id} className="flex justify-between gap-4 py-2">
+                <span className="font-semibold">{it.label}</span>
+                <span className="shrink-0 font-bold">
+                  {sym}
+                  {it.cost.toLocaleString()}
+                </span>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
-      <div className="flex justify-end">
+      <div className="flex flex-wrap items-center justify-end gap-3">
+        {selectedQuote && (
+          <button
+            type="button"
+            onClick={() => downloadOfficialClientQuotePdfFromAdmin(selectedQuote, liveEval)}
+            className="glass-subcard w-full cursor-pointer rounded-full px-6 py-3.5 text-xs font-bold sm:w-auto"
+          >
+            ↓ Download Official Client Quote PDF ({sym}
+            {Number(liveEval.grandTotal).toLocaleString()})
+          </button>
+        )}
         <button
           type="button"
           onClick={saveUpdatedClientQuote}
